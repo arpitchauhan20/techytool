@@ -228,38 +228,184 @@ export default function SettingsModal({
             </div>
           </div>
 
-          {/* User Status Banner */}
+          {/* User Status Banner with Inline Edit */}
           {currentUser ? (
-            <div className="settings-user-banner">
-              <div className="settings-user-avatar">
-                {(currentUser.name || 'U').charAt(0).toUpperCase()}
-              </div>
-              <div className="settings-user-meta">
-                <span className="settings-user-name">{currentUser.name}</span>
-                <span className="settings-user-email">{currentUser.email}</span>
-              </div>
-              <span className="badge-status-pill active" style={{ marginLeft: 'auto' }}>
-                ✓ Signed In
-              </span>
+            <div className={`settings-user-banner ${isEditingProfile ? 'editing' : ''}`}>
+              {!isEditingProfile ? (
+                <>
+                  <div className="settings-user-avatar">
+                    {(name || currentUser.name || 'U').charAt(0).toUpperCase()}
+                  </div>
+                  <div className="settings-user-meta">
+                    <span className="settings-user-name">{name || currentUser.name}</span>
+                    <span className="settings-user-email">{email || currentUser.email}</span>
+                  </div>
+                  <div className="settings-user-actions">
+                    <span className="badge-status-pill active">
+                      ✓ Signed In
+                    </span>
+                    <button
+                      type="button"
+                      className="btn-edit-profile-subtle"
+                      onClick={() => setIsEditingProfile(true)}
+                      title="Edit Display Name &amp; Email"
+                    >
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                      </svg>
+                      <span>Edit</span>
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <div className="settings-user-edit-form">
+                  <div className="settings-edit-title-row">
+                    <strong>Edit Profile Information</strong>
+                  </div>
+                  <div className="settings-edit-inputs-grid">
+                    <div className="form-group">
+                      <label className="form-label" htmlFor="settings-edit-name">Display Name</label>
+                      <input
+                        id="settings-edit-name"
+                        type="text"
+                        className="form-input form-input-styled"
+                        maxLength="30"
+                        value={name}
+                        onChange={e => setName(e.target.value)}
+                        placeholder="e.g. Alex Rivera"
+                        required
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label" htmlFor="settings-edit-email">Default Notification / Calendar Email</label>
+                      <input
+                        id="settings-edit-email"
+                        type="email"
+                        className="form-input form-input-styled"
+                        value={email}
+                        onChange={e => setEmail(e.target.value)}
+                        placeholder="e.g. yourname@gmail.com"
+                      />
+                    </div>
+                  </div>
+                  <div className="settings-edit-actions-row">
+                    <button
+                      type="button"
+                      className="btn btn-secondary btn-sm"
+                      onClick={() => {
+                        setName(userName || '');
+                        setEmail(reminderEmail || (currentUser?.email || ''));
+                        setIsEditingProfile(false);
+                      }}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-primary btn-sm"
+                      onClick={() => {
+                        onSaveProfile({ name: name.trim(), email: email.trim() });
+                        if (onShowToast) onShowToast('success', 'user', 'Profile updated successfully');
+                        setIsEditingProfile(false);
+                      }}
+                    >
+                      Save Profile
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
-            <div className="settings-user-banner guest">
-              <div className="settings-user-meta">
-                <span className="settings-user-name">Local Guest Session</span>
-                <span className="settings-user-email">Sign in to securely sync tasks across devices</span>
-              </div>
-              {onOpenAuthModal && (
-                <button
-                  type="button"
-                  className="btn btn-primary btn-sm"
-                  onClick={() => {
-                    onClose();
-                    onOpenAuthModal('login');
-                  }}
-                  style={{ marginLeft: 'auto' }}
-                >
-                  Sign In
-                </button>
+            <div className={`settings-user-banner guest ${isEditingProfile ? 'editing' : ''}`}>
+              {!isEditingProfile ? (
+                <>
+                  <div className="settings-user-meta">
+                    <span className="settings-user-name">{name || 'Local Guest Session'}</span>
+                    <span className="settings-user-email">{email || 'Sign in to securely sync tasks across devices'}</span>
+                  </div>
+                  <div className="settings-user-actions">
+                    <button
+                      type="button"
+                      className="btn-edit-profile-subtle"
+                      onClick={() => setIsEditingProfile(true)}
+                      title="Edit Local Display Name &amp; Email"
+                    >
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                      </svg>
+                      <span>Edit</span>
+                    </button>
+                    {onOpenAuthModal && (
+                      <button
+                        type="button"
+                        className="btn btn-primary btn-sm"
+                        onClick={() => {
+                          onClose();
+                          onOpenAuthModal('login');
+                        }}
+                      >
+                        Sign In
+                      </button>
+                    )}
+                  </div>
+                </>
+              ) : (
+                <div className="settings-user-edit-form">
+                  <div className="settings-edit-title-row">
+                    <strong>Edit Guest Profile</strong>
+                  </div>
+                  <div className="settings-edit-inputs-grid">
+                    <div className="form-group">
+                      <label className="form-label" htmlFor="settings-edit-guest-name">Display Name</label>
+                      <input
+                        id="settings-edit-guest-name"
+                        type="text"
+                        className="form-input form-input-styled"
+                        maxLength="30"
+                        value={name}
+                        onChange={e => setName(e.target.value)}
+                        placeholder="e.g. Alex Rivera"
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label" htmlFor="settings-edit-guest-email">Notification Email</label>
+                      <input
+                        id="settings-edit-guest-email"
+                        type="email"
+                        className="form-input form-input-styled"
+                        value={email}
+                        onChange={e => setEmail(e.target.value)}
+                        placeholder="e.g. yourname@gmail.com"
+                      />
+                    </div>
+                  </div>
+                  <div className="settings-edit-actions-row">
+                    <button
+                      type="button"
+                      className="btn btn-secondary btn-sm"
+                      onClick={() => {
+                        setName(userName || '');
+                        setEmail(reminderEmail || '');
+                        setIsEditingProfile(false);
+                      }}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-primary btn-sm"
+                      onClick={() => {
+                        onSaveProfile({ name: name.trim(), email: email.trim() });
+                        if (onShowToast) onShowToast('success', 'user', 'Profile updated successfully');
+                        setIsEditingProfile(false);
+                      }}
+                    >
+                      Save Profile
+                    </button>
+                  </div>
+                </div>
               )}
             </div>
           )}
@@ -458,44 +604,6 @@ export default function SettingsModal({
               </div>
             </div>
 
-            {/* Section: Profile Preferences */}
-            <div className="settings-section-divider" style={{ marginTop: '20px' }}>
-              <span className="settings-section-heading">PROFILE PREFERENCES</span>
-            </div>
-
-            {/* Display Name & Default Email in 2-Column Grid */}
-            <div className="settings-form-row-2col">
-              <div className="form-group">
-                <label className="form-label" htmlFor="settings-name-input">
-                  Display Name
-                </label>
-                <input
-                  id="settings-name-input"
-                  className="form-input"
-                  type="text"
-                  maxLength="30"
-                  value={name}
-                  onChange={e => setName(e.target.value)}
-                  placeholder="e.g. Alex Rivera"
-                  required
-                />
-              </div>
-
-              <div className="form-group">
-                <label className="form-label" htmlFor="settings-email-input">
-                  Default Notification / Calendar Email
-                </label>
-                <input
-                  id="settings-email-input"
-                  className="form-input"
-                  type="email"
-                  placeholder="e.g. yourname@gmail.com"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                />
-              </div>
-            </div>
-
             {/* Security & Password section for logged-in users */}
             {currentUser && (
               <>
@@ -542,17 +650,11 @@ export default function SettingsModal({
                 </button>
               )}
               <button
-                type="submit"
+                type="button"
                 className="btn btn-primary"
-                disabled={!hasChanges}
-                style={{
-                  opacity: hasChanges ? 1 : 0.35,
-                  cursor: hasChanges ? 'pointer' : 'not-allowed',
-                  boxShadow: hasChanges ? '0 4px 14px rgba(99, 102, 241, 0.4)' : 'none',
-                  transition: 'all 0.2s ease'
-                }}
+                onClick={onClose}
               >
-                Save Changes
+                Done
               </button>
             </div>
           </form>
