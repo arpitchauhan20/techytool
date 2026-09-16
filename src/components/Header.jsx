@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ZapIcon, SearchIcon, BellIcon, RefreshCwIcon, PlusIcon, XIcon, ArrowLeftIcon } from './Icons';
+import { ZapIcon, SearchIcon, BellIcon, RefreshCwIcon, PlusIcon, XIcon } from './Icons';
 
 export default function Header({
   activeDashboardBoard,
@@ -27,14 +27,14 @@ export default function Header({
   }, []);
 
   const getSectionTitle = () => {
-    if (activeDashboardBoard === 'calendar') return 'Google Calendar & Reminder Suite';
+    if (activeDashboardBoard === 'calendar') return 'Calendar Reminder Suite';
     if (activeDashboardBoard === 'tasks') return 'Task Details & Workspace';
-    return '';
+    return 'Executive Overview';
   };
 
   return (
     <header className="main-topbar">
-      {/* Mobile Menu & Dynamic Context (Back button + Section name when board active) */}
+      {/* Mobile Menu & Current Window Title */}
       <div className="topbar-context">
         <button
           type="button"
@@ -50,22 +50,9 @@ export default function Header({
           </svg>
         </button>
 
-        {activeDashboardBoard && (
-          <div className="topbar-board-header">
-            <button
-              type="button"
-              className="btn btn-secondary btn-sm topbar-back-btn"
-              onClick={onBackToOverview}
-              title="Back to Executive Overview"
-            >
-              <ArrowLeftIcon size={14} style={{ marginRight: '6px' }} />
-              <span>Back to Overview</span>
-            </button>
-            <div className="topbar-section-title-wrap">
-              <span className="topbar-section-title">{getSectionTitle()}</span>
-            </div>
-          </div>
-        )}
+        <div className="topbar-section-title-wrap">
+          <h1 className="topbar-section-title">{getSectionTitle()}</h1>
+        </div>
       </div>
 
       {/* Flexible Topbar Actions (Date badge shifted to the right) */}
