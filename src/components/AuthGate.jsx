@@ -177,7 +177,14 @@ export default function AuthGate({
             </p>
           </div>
 
-          {/* Feature Showcase Cards */}
+          {/* Mobile Quick Value Chips (Visible on Mobile) */}
+          <div className="authgate-mobile-pills">
+            <span className="authgate-mobile-pill">📅 Google Calendar Sync</span>
+            <span className="authgate-mobile-pill">🔔 Instant Reminders</span>
+            <span className="authgate-mobile-pill">⚡ Priority Engine</span>
+          </div>
+
+          {/* Feature Showcase Cards (Visible on Desktop / Large Tablet) */}
           <div className="authgate-feature-cards">
             <div className="authgate-feature-card">
               <div className="authgate-feature-icon cal">
@@ -346,7 +353,6 @@ export default function AuthGate({
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required
-                    autoFocus
                   />
                 </div>
               </div>
@@ -366,7 +372,6 @@ export default function AuthGate({
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    autoFocus={mode !== 'register'}
                   />
                 </div>
               </div>
