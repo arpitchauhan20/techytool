@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import confetti from 'canvas-confetti';
+import { triggerDualCornerCelebration } from './services/celebrationService';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import StatCards from './components/StatCards';
@@ -721,11 +722,7 @@ export default function App() {
           const nextState = !t.completed;
           if (nextState) {
             SoundFX.playSuccessChord(soundEnabled);
-            confetti({
-              particleCount: 80,
-              spread: 60,
-              origin: { y: 0.7 }
-            });
+            triggerDualCornerCelebration({ duration: 2800 });
             showToast('success', '🎉', 'Task finished! Great momentum.');
             cancelBackendReminder(id);
           } else {

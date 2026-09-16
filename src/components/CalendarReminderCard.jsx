@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import confetti from 'canvas-confetti';
+import { triggerDualCornerCelebration } from '../services/celebrationService';
 import { SoundFX } from '../services/soundEngine';
 import { createCalendarReminder } from '../services/calendarService';
 import {
@@ -243,11 +244,7 @@ export default function CalendarReminderCard({
 
         try {
           SoundFX.playSuccessChord(true);
-          confetti({
-            particleCount: 75,
-            spread: 60,
-            origin: { y: 0.6 }
-          });
+          triggerDualCornerCelebration({ duration: 2800 });
         } catch {}
 
         if (onShowToast) {
