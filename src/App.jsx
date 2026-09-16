@@ -54,6 +54,7 @@ const saveStorage = (key, value) => {
 };
 
 export default function App() {
+  // Base State
   const [tasks, setTasks] = useState(() => {
     const saved = loadStorage('taskflow_tasks', []);
     return Array.isArray(saved) ? saved.filter(t => t.id !== 'task_demo_1') : [];
@@ -85,6 +86,38 @@ export default function App() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authModalMode, setAuthModalMode] = useState('login');
   const [urlResetToken, setUrlResetToken] = useState('');
+
+  // Google Calendar Connection State
+  const [isCalendarConnected, setIsCalendarConnected] = useState(false);
+  const [isCalendarLoading, setIsCalendarLoading] = useState(false);
+
+  // Push Subscription & Toasts
+  const [pushSub, setPushSub] = useState(null);
+  const [toasts, setToasts] = useState([]);
+
+  const showToast = useCallback((type, icon, message) => {
+    const id = 'toast_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6);
+    setToasts(prev => [...prev, { id, type, icon, message }]);
+    const duration = (type === 'reminder' || type === 'error') ? 11000 : 4500;
+    setTimeout(() => {
+      setToasts(prev => prev.filter(t => t.id !== id));
+    }, duration);
+  }, []);
+
+  const handleTogglePet = useCallback((val) => {
+    setPetEnabled(prev => {
+      const next = typeof val === 'boolean' ? val : !prev;
+      saveStorage('taskflow_pet_enabled', next);
+      return next;
+    });
+  }, []);
+
+  // Mobile Pull-to-Refresh Gesture Refs & State
+  const scrollRef = useRef(null);
+  const [pullDistance, setPullDistance] = useState(0);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const touchStartY = useRef(0);
+  const isPulling = useRef(false);
 
   // Check existing session on load & listen for ?resetToken in URL
   useEffect(() => {
@@ -182,10 +215,6 @@ export default function App() {
     setIsAuthModalOpen(true);
   };
 
-  // Google Calendar Connection State
-  const [isCalendarConnected, setIsCalendarConnected] = useState(false);
-  const [isCalendarLoading, setIsCalendarLoading] = useState(false);
-
   // Sync Google Calendar connection status and handle OAuth callback redirects
   useEffect(() => {
     const isJustConnected = typeof window !== 'undefined' &&
@@ -249,27 +278,7 @@ export default function App() {
     }
   };
 
-  // Toasts
-  const [toasts, setToasts] = useState([]);
-
-  const showToast = useCallback((type, icon, message) => {
-    const id = 'toast_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6);
-    setToasts(prev => [...prev, { id, type, icon, message }]);
-    const duration = (type === 'reminder' || type === 'error') ? 11000 : 4500;
-    setTimeout(() => {
-      setToasts(prev => prev.filter(t => t.id !== id));
-    }, duration);
-  }, []);
-
-  const [pushSub, setPushSub] = useState(null);
-
-  // Mobile Pull-to-Refresh Gesture
-  const scrollRef = useRef(null);
-  const [pullDistance, setPullDistance] = useState(0);
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const touchStartY = useRef(0);
-  const isPulling = useRef(false);
-
+  // Mobile Touch Gestures
   const handleTouchStart = (e) => {
     if (scrollRef.current && scrollRef.current.scrollTop <= 0) {
       touchStartY.current = e.touches[0].clientY;
@@ -465,6 +474,7 @@ export default function App() {
     document.documentElement.setAttribute('data-theme', palette);
   }, [palette]);
   useEffect(() => { saveStorage('taskflow_sound', soundEnabled); }, [soundEnabled]);
+  useEffect(() => { saveStorage('taskflow_pet_enabled', petEnabled); }, [petEnabled]);
   useEffect(() => { saveStorage('taskflow_sidebar_collapsed', isSidebarCollapsed); }, [isSidebarCollapsed]);
 
   // Global Keyboard Shortcuts (N for New Task, Escape for Modals)
