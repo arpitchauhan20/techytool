@@ -52,6 +52,7 @@ export default function AuthGate({
   const [infoMessage, setInfoMessage] = useState('');
 
   useEffect(() => {
+    document.documentElement.setAttribute('data-theme', 'indigo');
     if (initialResetToken) {
       setTokenInput(initialResetToken);
       setMode('reset');

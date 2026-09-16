@@ -47,15 +47,15 @@ export function triggerCornerWaterBubbles({ duration = 3600 } = {}) {
 
   function createBubble(origin) {
     const isLeft = origin === 'left';
-    const startX = isLeft ? Math.random() * 45 : width - Math.random() * 45;
+    const startX = isLeft ? Math.random() * 50 : width - Math.random() * 50;
     const startY = height + 10;
 
     // Physics launch angles (directed diagonally upward toward the center screen)
-    const angleDeg = isLeft ? 52 + Math.random() * 26 : 102 + Math.random() * 26;
+    const angleDeg = isLeft ? 54 + Math.random() * 22 : 104 + Math.random() * 22;
     const angleRad = (angleDeg * Math.PI) / 180;
-    const speed = 16 + Math.random() * 15; // Initial explosive thrust
+    const speed = 20 + Math.random() * 10; // Initial explosive thrust
 
-    const radius = Math.floor(Math.random() * 24) + 14; // 14px to 38px
+    const radius = Math.floor(Math.random() * 22) + 14; // 14px to 36px
     const tint = bubbleTints[Math.floor(Math.random() * bubbleTints.length)];
 
     return {
@@ -67,13 +67,13 @@ export function triggerCornerWaterBubbles({ duration = 3600 } = {}) {
       baseRadius: radius,
       tint,
       age: 0,
-      maxAge: Math.floor(Math.random() * 120) + 180, // 3 to 5 seconds
+      maxAge: Math.floor(Math.random() * 120) + 240, // 4 to 6 seconds total
       wobblePhase: Math.random() * Math.PI * 2,
-      wobbleSpeed: 0.04 + Math.random() * 0.04,
-      wobbleAmount: 0.8 + Math.random() * 1.4,
-      buoyancy: 0.14 + Math.random() * 0.08,
-      alpha: 0.88,
-      popping: false
+      wobbleSpeed: 0.035 + Math.random() * 0.035,
+      wobbleAmount: 1.2 + Math.random() * 1.5,
+      terminalFallSpeed: 0.75 + Math.random() * 0.85, // Slow gentle descent like floating soap bubbles
+      gravity: 0.045 + Math.random() * 0.03,
+      alpha: 0.92
     };
   }
 
@@ -89,15 +89,15 @@ export function triggerCornerWaterBubbles({ duration = 3600 } = {}) {
         vy: Math.sin(angle) * speed,
         radius: Math.random() * 2 + 1,
         tint,
-        alpha: 0.8,
+        alpha: 0.85,
         life: 0,
-        maxLife: 20
+        maxLife: 22
       });
     }
   }
 
   // Initial energetic blast
-  for (let i = 0; i < 22; i++) {
+  for (let i = 0; i < 20; i++) {
     bubbles.push(createBubble('left'));
     bubbles.push(createBubble('right'));
   }
@@ -112,7 +112,7 @@ export function triggerCornerWaterBubbles({ duration = 3600 } = {}) {
       bubbles.push(createBubble('left'));
       bubbles.push(createBubble('right'));
     }
-  }, 160);
+  }, 180);
 
   function animate() {
     ctx.clearRect(0, 0, width, height);
@@ -121,9 +121,9 @@ export function triggerCornerWaterBubbles({ duration = 3600 } = {}) {
     for (let i = popDroplets.length - 1; i >= 0; i--) {
       const d = popDroplets[i];
       d.x += d.vx;
-      d.y += d.vy + 0.1; // gentle gravity on droplets
+      d.y += d.vy + 0.12; // gentle gravity on droplets
       d.life++;
-      d.alpha = Math.max(0, 0.8 * (1 - d.life / d.maxLife));
+      d.alpha = Math.max(0, 0.85 * (1 - d.life / d.maxLife));
 
       ctx.beginPath();
       ctx.arc(d.x, d.y, d.radius, 0, Math.PI * 2);
@@ -135,20 +135,36 @@ export function triggerCornerWaterBubbles({ duration = 3600 } = {}) {
       }
     }
 
-    // 2. Render & Update Physics Bubbles
+    // 2. Render & Update Physics Bubbles (Launch -> Stay on screen -> Cascade down like party popper)
     for (let i = bubbles.length - 1; i >= 0; i--) {
       const b = bubbles[i];
       b.age++;
 
-      // Physics integration: drag + buoyancy
-      b.vx *= 0.984; // Horizontal air resistance
-      b.vy *= 0.982; // Vertical launch dampening
-      b.vy -= b.buoyancy; // Smooth buoyant lift upward
+      // Physics integration
+      if (b.vy < 0) {
+        // Launch deceleration (rises smoothly and stays on screen)
+        b.vx *= 0.965; // Horizontal drag
+        b.vy *= 0.962; // Vertical launch drag
 
-      // Natural fluid sway
+        // Prevent exiting top of viewport
+        if (b.y < height * 0.08) {
+          b.vy = Math.min(b.vy + 0.35, 0.2);
+        }
+      } else {
+        // Apex & Party Popper Gentle Descent phase (drifts down gracefully)
+        b.vx *= 0.985;
+        b.vy += b.gravity;
+        b.vy = Math.min(b.vy, b.terminalFallSpeed);
+      }
+
+      // Natural fluid sway & hover
       const sway = Math.sin(b.age * b.wobbleSpeed + b.wobblePhase) * b.wobbleAmount;
       b.x += b.vx + sway;
       b.y += b.vy;
+
+      // Keep within horizontal bounds
+      if (b.x < 15) b.vx = Math.abs(b.vx) * 0.5 + 0.2;
+      if (b.x > width - 15) b.vx = -Math.abs(b.vx) * 0.5 - 0.2;
 
       // Draw Iridescent Bubble
       ctx.save();
@@ -164,18 +180,18 @@ export function triggerCornerWaterBubbles({ duration = 3600 } = {}) {
         b.y,
         b.radius
       );
-      grad.addColorStop(0, `rgba(255, 255, 255, ${0.9 * b.alpha})`);
-      grad.addColorStop(0.3, `rgba(${b.tint.r}, ${b.tint.g}, ${b.tint.b}, ${0.35 * b.alpha})`);
-      grad.addColorStop(0.7, `rgba(200, 230, 255, ${0.2 * b.alpha})`);
-      grad.addColorStop(0.92, `rgba(${b.tint.r}, ${b.tint.g}, ${b.tint.b}, ${0.55 * b.alpha})`);
-      grad.addColorStop(1, `rgba(255, 255, 255, ${0.85 * b.alpha})`);
+      grad.addColorStop(0, `rgba(255, 255, 255, ${0.92 * b.alpha})`);
+      grad.addColorStop(0.3, `rgba(${b.tint.r}, ${b.tint.g}, ${b.tint.b}, ${0.38 * b.alpha})`);
+      grad.addColorStop(0.7, `rgba(200, 230, 255, ${0.22 * b.alpha})`);
+      grad.addColorStop(0.92, `rgba(${b.tint.r}, ${b.tint.g}, ${b.tint.b}, ${0.58 * b.alpha})`);
+      grad.addColorStop(1, `rgba(255, 255, 255, ${0.88 * b.alpha})`);
 
       ctx.fillStyle = grad;
       ctx.fill();
 
       // Outer delicate iridescent boundary stroke
       ctx.lineWidth = 1.2;
-      ctx.strokeStyle = `rgba(255, 255, 255, ${0.75 * b.alpha})`;
+      ctx.strokeStyle = `rgba(255, 255, 255, ${0.78 * b.alpha})`;
       ctx.stroke();
 
       // Specular Highlight (Top-Left reflective shine dot)
@@ -189,7 +205,7 @@ export function triggerCornerWaterBubbles({ duration = 3600 } = {}) {
         0,
         Math.PI * 2
       );
-      ctx.fillStyle = `rgba(255, 255, 255, ${0.92 * b.alpha})`;
+      ctx.fillStyle = `rgba(255, 255, 255, ${0.95 * b.alpha})`;
       ctx.fill();
 
       // Secondary subtle lower crescent reflection
@@ -201,8 +217,8 @@ export function triggerCornerWaterBubbles({ duration = 3600 } = {}) {
 
       ctx.restore();
 
-      // Check Pop condition
-      if (b.y < -60 || b.age >= b.maxAge) {
+      // Check Pop condition (pops when landing near bottom of screen or at max lifetime)
+      if (b.y > height - 25 || b.age >= b.maxAge) {
         spawnPopEffect(b.x, b.y, b.tint, b.radius);
         bubbles.splice(i, 1);
       }

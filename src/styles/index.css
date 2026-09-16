@@ -451,7 +451,6 @@
 [data-theme^="light-"] .dashboard-module-card,
 [data-theme^="light-"] .stat-card,
 [data-theme^="light-"] .modal,
-[data-theme^="light-"] .authgate-card,
 [data-theme^="light-"] .settings-card-section {
   box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 0 1px rgba(0, 0, 0, 0.06);
 }
@@ -519,75 +518,6 @@
 
 [data-theme^="light-"] .footer-grid-right .footer-dot {
   color: var(--text-tertiary);
-}
-
-[data-theme^="light-"] .authgate-card {
-  background: rgba(255, 255, 255, 0.92);
-  border-color: var(--border-default);
-}
-
-[data-theme^="light-"] .authgate-card-title,
-[data-theme^="light-"] .authgate-label,
-[data-theme^="light-"] .authgate-headline {
-  color: var(--text-primary);
-}
-
-[data-theme^="light-"] .authgate-logo-badge {
-  background: rgba(255, 255, 255, 0.85);
-  border-color: var(--border-default);
-}
-
-[data-theme^="light-"] .authgate-logo-title {
-  color: var(--text-primary);
-}
-
-[data-theme^="light-"] .authgate-tab-pills {
-  background: rgba(0, 0, 0, 0.05);
-  border-color: var(--border-default);
-}
-
-[data-theme^="light-"] .authgate-input {
-  background: #ffffff;
-  color: var(--text-primary);
-  border-color: var(--border-default);
-}
-
-[data-theme^="light-"] .authgate-feature-card {
-  background: rgba(255, 255, 255, 0.85);
-  border-color: rgba(0, 0, 0, 0.08);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
-}
-
-[data-theme^="light-"] .authgate-feature-card:hover {
-  background: #ffffff;
-  border-color: var(--accent);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-}
-
-[data-theme^="light-"] .authgate-feature-title-row h4 {
-  color: var(--text-primary);
-}
-
-[data-theme^="light-"] .authgate-feature-info p {
-  color: var(--text-secondary);
-}
-
-[data-theme^="light-"] .authgate-mini-badge {
-  background: rgba(0, 0, 0, 0.05);
-  color: var(--text-secondary);
-  border-color: rgba(0, 0, 0, 0.08);
-}
-
-[data-theme^="light-"] .authgate-mini-badge.highlight {
-  background: var(--accent-subtle);
-  color: var(--accent);
-  border-color: var(--accent-glow);
-}
-
-[data-theme^="light-"] .authgate-telemetry-widget {
-  background: rgba(255, 255, 255, 0.88);
-  border-color: rgba(0, 0, 0, 0.08);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
 }
 
 /* ---------- Global Reset ---------- */
@@ -7864,7 +7794,7 @@ body {
   background: var(--surface-card);
   border: 1.5px solid var(--border-default);
   border-radius: 12px;
-  cursor: pointer;
+  cursor: default;
   user-select: none;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -7872,13 +7802,12 @@ body {
 .channel-toggle-card:hover {
   border-color: var(--border-strong);
   background: var(--surface-card-hover);
-  transform: translateY(-1px);
 }
 
 .channel-toggle-card.is-active {
-  border-color: var(--accent);
-  background: var(--surface-card-hover);
-  box-shadow: 0 4px 14px var(--accent-subtle);
+  border-color: var(--border-strong);
+  background: var(--surface-card);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
 }
 
 .channel-card-left {
@@ -7930,39 +7859,124 @@ body {
   margin-top: 2px;
 }
 
-/* iOS Style Sleek Toggle Switch */
+/* ==========================================================================
+   FUTURISTIC NEON TOGGLE SWITCH (Dedicated Clickable Element)
+   ========================================================================== */
 .toggle-switch-wrapper {
   flex-shrink: 0;
   margin-left: 8px;
+  display: flex;
+  align-items: center;
 }
 
-.switch-track {
-  width: 38px;
-  height: 22px;
-  border-radius: 11px;
-  background: var(--border-strong, #334155);
+.cool-switch-btn {
+  background: transparent;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+  border-radius: 20px;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.cool-switch-btn:hover {
+  transform: scale(1.1);
+}
+
+.cool-switch-btn:active {
+  transform: scale(0.92);
+}
+
+.cool-switch-track {
+  width: 44px;
+  height: 24px;
+  border-radius: 12px;
+  background: rgba(148, 163, 184, 0.2);
+  border: 1.5px solid var(--border-strong, rgba(255, 255, 255, 0.18));
   position: relative;
-  transition: background 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  align-items: center;
+  padding: 2px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.switch-track.active {
-  background: var(--accent);
+/* Specific Channel Active Neon Gradients & Glows */
+.cool-switch-btn.is-on.chan-push .cool-switch-track {
+  background: linear-gradient(135deg, #6366f1 0%, #818cf8 100%);
+  border-color: #6366f1;
+  box-shadow: 0 0 14px rgba(99, 102, 241, 0.5), inset 0 1px 2px rgba(255, 255, 255, 0.35);
 }
 
-.switch-thumb {
+.cool-switch-btn.is-on.chan-sound .cool-switch-track {
+  background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+  border-color: #f59e0b;
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.5), inset 0 1px 2px rgba(255, 255, 255, 0.35);
+}
+
+.cool-switch-btn.is-on.chan-gcal .cool-switch-track {
+  background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+  border-color: #10b981;
+  box-shadow: 0 0 14px rgba(16, 185, 129, 0.5), inset 0 1px 2px rgba(255, 255, 255, 0.35);
+}
+
+.cool-switch-btn.is-on.chan-email .cool-switch-track {
+  background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%);
+  border-color: #0284c7;
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.5), inset 0 1px 2px rgba(255, 255, 255, 0.35);
+}
+
+/* Metallic Gliding Thumb */
+.cool-switch-thumb {
   position: absolute;
   top: 2px;
   left: 2px;
-  width: 18px;
-  height: 18px;
+  width: 17px;
+  height: 17px;
   border-radius: 50%;
   background: #ffffff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.28);
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35), 0 0 1px rgba(0, 0, 0, 0.2);
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform: translateX(0);
 }
 
-.switch-track.active .switch-thumb {
-  transform: translateX(16px);
+.cool-switch-btn.is-on .cool-switch-thumb {
+  transform: translateX(20px);
+}
+
+/* Inner Pulse Indicator Ring inside Thumb */
+.cool-thumb-ring {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #94a3b8;
+  transition: all 0.25s ease;
+}
+
+.cool-switch-btn.is-on.chan-push .cool-thumb-ring {
+  background: #6366f1;
+  box-shadow: 0 0 4px #6366f1;
+}
+
+.cool-switch-btn.is-on.chan-sound .cool-thumb-ring {
+  background: #f59e0b;
+  box-shadow: 0 0 4px #f59e0b;
+}
+
+.cool-switch-btn.is-on.chan-gcal .cool-thumb-ring {
+  background: #10b981;
+  box-shadow: 0 0 4px #10b981;
+}
+
+.cool-switch-btn.is-on.chan-email .cool-thumb-ring {
+  background: #0284c7;
+  box-shadow: 0 0 4px #0284c7;
 }
 
 .channel-email-drawer {

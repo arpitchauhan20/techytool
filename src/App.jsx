@@ -176,6 +176,7 @@ export default function App() {
     if (user.google_calendar_connected) {
       setIsCalendarConnected(true);
     }
+    document.documentElement.setAttribute('data-theme', palette);
     TaskClient.getTasks().then(serverTasks => {
       if (Array.isArray(serverTasks) && serverTasks.length > 0) {
         setTasks(serverTasks);
@@ -195,6 +196,7 @@ export default function App() {
     await AuthClient.logout();
     setCurrentUser(null);
     setIsCalendarConnected(false);
+    document.documentElement.setAttribute('data-theme', 'indigo');
     showToast('info', '👋', 'You have been logged out.');
   };
 
@@ -459,8 +461,12 @@ export default function App() {
   useEffect(() => { saveStorage('taskflow_email', reminderEmail); }, [reminderEmail]);
   useEffect(() => {
     saveStorage('taskflow_palette', palette);
-    document.documentElement.setAttribute('data-theme', palette);
-  }, [palette]);
+    if (currentUser) {
+      document.documentElement.setAttribute('data-theme', palette);
+    } else {
+      document.documentElement.setAttribute('data-theme', 'indigo');
+    }
+  }, [palette, currentUser]);
   useEffect(() => { saveStorage('taskflow_sound', soundEnabled); }, [soundEnabled]);
   useEffect(() => { saveStorage('taskflow_sidebar_collapsed', isSidebarCollapsed); }, [isSidebarCollapsed]);
 
