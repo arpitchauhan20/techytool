@@ -50,6 +50,11 @@ export const AuthClient = {
         localStorage.setItem('taskflow_auth_token', data.token);
       } catch {}
     }
+    if (data.user) {
+      try {
+        localStorage.setItem('taskflow_auth_user', JSON.stringify(data.user));
+      } catch {}
+    }
     return data;
   },
 
@@ -64,6 +69,11 @@ export const AuthClient = {
         localStorage.setItem('taskflow_auth_token', data.token);
       } catch {}
     }
+    if (data.user) {
+      try {
+        localStorage.setItem('taskflow_auth_user', JSON.stringify(data.user));
+      } catch {}
+    }
     return data;
   },
 
@@ -74,29 +84,51 @@ export const AuthClient = {
     } catch {}
     try {
       localStorage.removeItem('taskflow_auth_token');
+      localStorage.removeItem('taskflow_auth_user');
     } catch {}
     return { success: true };
   },
 
   // 4. Get Current User (/me)
   async getCurrentUser() {
+    // 1. Instant fallback from localStorage
+    let cachedUser = null;
     try {
-      const data = await request('/me', { method: 'GET' });
-      return data.user || null;
+      const saved = localStorage.getItem('taskflow_auth_user');
+      if (saved) cachedUser = JSON.parse(saved);
+    } catch {}
+
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 2000);
+
+      const data = await request('/me', { method: 'GET', signal: controller.signal });
+      clearTimeout(timeoutId);
+
+      if (data?.user) {
+        try {
+          localStorage.setItem('taskflow_auth_user', JSON.stringify(data.user));
+        } catch {}
+        return data.user;
+      }
+      return cachedUser;
     } catch {
-      try {
-        localStorage.removeItem('taskflow_auth_token');
-      } catch {}
-      return null;
+      return cachedUser;
     }
   },
 
   // 4.1 Update Profile
   async updateProfile({ name }) {
-    return request('/profile', {
+    const res = await request('/profile', {
       method: 'PUT',
       body: JSON.stringify({ name })
     });
+    if (res?.user) {
+      try {
+        localStorage.setItem('taskflow_auth_user', JSON.stringify(res.user));
+      } catch {}
+    }
+    return res;
   },
 
   // 5. Change Password

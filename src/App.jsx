@@ -80,18 +80,25 @@ export default function App() {
   const [activeDashboardBoard, setActiveDashboardBoard] = useState(null); // null (overview) | 'calendar' | 'tasks'
 
   // Authentication & Gate State
-  const [isAuthChecking, setIsAuthChecking] = useState(true);
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState(() => loadStorage('taskflow_auth_user', null));
+  const [isAuthChecking, setIsAuthChecking] = useState(() => !loadStorage('taskflow_auth_user', null));
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authModalMode, setAuthModalMode] = useState('login');
   const [urlResetToken, setUrlResetToken] = useState('');
 
   // Check existing session on load & listen for ?resetToken in URL
   useEffect(() => {
+    let isMounted = true;
+    const safetyTimer = setTimeout(() => {
+      if (isMounted) setIsAuthChecking(false);
+    }, 800);
+
     AuthClient.getCurrentUser()
       .then(user => {
+        if (!isMounted) return;
         if (user) {
           setCurrentUser(user);
+          saveStorage('taskflow_auth_user', user);
           if (user.name) setUserName(user.name);
           if (user.email) setReminderEmail(user.email);
           if (user.google_calendar_connected) {
@@ -101,7 +108,10 @@ export default function App() {
       })
       .catch(() => {})
       .finally(() => {
-        setIsAuthChecking(false);
+        if (isMounted) {
+          clearTimeout(safetyTimer);
+          setIsAuthChecking(false);
+        }
       });
 
     if (typeof window !== 'undefined') {
@@ -112,6 +122,11 @@ export default function App() {
         setAuthModalMode('reset');
       }
     }
+
+    return () => {
+      isMounted = false;
+      clearTimeout(safetyTimer);
+    };
   }, []);
 
   // Sync tasks from server / Google Sheets whenever authenticated user changes
@@ -134,6 +149,7 @@ export default function App() {
 
   const handleAuthSuccess = (user) => {
     setCurrentUser(user);
+    saveStorage('taskflow_auth_user', user);
     if (user.name) setUserName(user.name);
     if (user.email) setReminderEmail(user.email);
     if (user.google_calendar_connected) {
@@ -151,6 +167,10 @@ export default function App() {
   };
 
   const handleLogout = async () => {
+    try {
+      localStorage.removeItem('taskflow_auth_user');
+      localStorage.removeItem('taskflow_auth_token');
+    } catch {}
     await AuthClient.logout();
     setCurrentUser(null);
     setIsCalendarConnected(false);
