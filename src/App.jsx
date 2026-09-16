@@ -869,9 +869,12 @@ export default function App() {
         onClose={() => setIsMobileSidebarOpen(false)}
         isCollapsed={isSidebarCollapsed}
         onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+        activeDashboardBoard={activeDashboardBoard}
+        onSelectDashboardBoard={setActiveDashboardBoard}
         currentFilter={currentFilter}
         onSelectFilter={setCurrentFilter}
         taskCounts={taskCounts}
+        isCalendarConnected={isCalendarConnected}
         currentPalette={palette}
         onChangePalette={setPalette}
         soundEnabled={soundEnabled}

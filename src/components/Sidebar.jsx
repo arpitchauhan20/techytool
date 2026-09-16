@@ -2,12 +2,12 @@ import React, { useEffect } from 'react';
 import {
   ZapIcon,
   ClipboardIcon,
-  SunIcon,
   CalendarIcon,
+  KeyIcon,
+  SunIcon,
   FlameIcon,
   AlertTriangleIcon,
-  CheckCircleIcon,
-  KeyIcon
+  CheckCircleIcon
 } from './Icons';
 
 export default function Sidebar({
@@ -15,9 +15,12 @@ export default function Sidebar({
   onClose,
   isCollapsed,
   onToggleCollapse,
+  activeDashboardBoard = null,
+  onSelectDashboardBoard,
   currentFilter,
   onSelectFilter,
-  taskCounts,
+  taskCounts = { all: 0, today: 0, upcoming: 0, high: 0, overdue: 0, completed: 0 },
+  isCalendarConnected = false,
   currentPalette,
   onChangePalette,
   soundEnabled,
@@ -29,13 +32,34 @@ export default function Sidebar({
   onOpenAuthModal,
   onLogout
 }) {
-  const filters = [
-    { id: 'all', label: 'Dashboard', icon: <ClipboardIcon size={16} />, count: taskCounts.all },
-    { id: 'today', label: 'Due Today', icon: <SunIcon size={16} />, count: taskCounts.today },
-    { id: 'upcoming', label: 'Upcoming', icon: <CalendarIcon size={16} />, count: taskCounts.upcoming },
-    { id: 'high', label: 'High Priority', icon: <FlameIcon size={16} />, count: taskCounts.high },
-    { id: 'overdue', label: 'Overdue', icon: <AlertTriangleIcon size={16} />, count: taskCounts.overdue, isOverdue: true },
-    { id: 'completed', label: 'Completed', icon: <CheckCircleIcon size={16} />, count: taskCounts.completed }
+  // Main Suite Tools Navigation List
+  const suiteTools = [
+    {
+      id: 'overview',
+      boardId: null,
+      label: 'Executive Overview',
+      sublabel: 'Dashboard Hub',
+      icon: <ZapIcon size={16} />,
+      badge: 'Hub'
+    },
+    {
+      id: 'calendar',
+      boardId: 'calendar',
+      label: 'Calendar Reminder',
+      sublabel: 'Google Sync & Alarms',
+      icon: <CalendarIcon size={16} />,
+      badge: isCalendarConnected ? 'Synced' : 'Ready',
+      isSuccess: isCalendarConnected
+    },
+    {
+      id: 'tasks',
+      boardId: 'tasks',
+      label: 'Task Details',
+      sublabel: 'Active Workspace',
+      icon: <ClipboardIcon size={16} />,
+      badge: taskCounts.all,
+      isOverdue: taskCounts.overdue > 0
+    }
   ];
 
   // Close sidebar on Escape and lock body scroll on mobile/tablet when open
@@ -97,26 +121,74 @@ export default function Sidebar({
           </button>
         </div>
 
-        {/* Navigation Workspaces */}
+        {/* Tools Menu Section */}
         <nav className="sidebar-nav">
-          <div className="nav-section-title">WORKSPACES</div>
-          {filters.map(item => (
-            <button
-              key={item.id}
-              type="button"
-              className={`nav-item ${currentFilter === item.id ? 'active' : ''}`}
-              onClick={() => {
-                onSelectFilter(item.id);
-                onClose();
-              }}
-            >
-              <span className="nav-icon">{item.icon}</span>
-              <span className="nav-label">{item.label}</span>
-              <span className={`nav-badge ${item.isOverdue && item.count > 0 ? 'danger' : ''}`}>
-                {item.count}
-              </span>
-            </button>
-          ))}
+          <div className="nav-section-title">SUITE TOOLS</div>
+          {suiteTools.map(tool => {
+            const isActive = activeDashboardBoard === tool.boardId;
+            return (
+              <button
+                key={tool.id}
+                type="button"
+                className={`nav-item ${isActive ? 'active' : ''}`}
+                onClick={() => {
+                  if (onSelectDashboardBoard) onSelectDashboardBoard(tool.boardId);
+                  onClose();
+                }}
+                title={`Open ${tool.label}`}
+              >
+                <span className="nav-icon">{tool.icon}</span>
+                <span className="nav-label">{tool.label}</span>
+                {tool.badge !== undefined && (
+                  <span
+                    className={`nav-badge ${tool.isOverdue ? 'danger' : ''} ${tool.isSuccess ? 'highlight' : ''}`}
+                    title={tool.isSuccess ? 'Google Calendar Connected' : ''}
+                  >
+                    {tool.badge}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+
+          {/* Quick Actions Menu */}
+          <div className="nav-section-title" style={{ marginTop: '14px' }}>QUICK ACTIONS</div>
+          <button
+            type="button"
+            className="nav-item"
+            onClick={() => {
+              onOpenNewTask();
+              onClose();
+            }}
+            title="Create New Task"
+          >
+            <span className="nav-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+              </svg>
+            </span>
+            <span className="nav-label">Add New Task</span>
+            <span className="nav-badge" style={{ fontSize: '10px' }}>+ N</span>
+          </button>
+
+          <button
+            type="button"
+            className="nav-item"
+            onClick={() => {
+              onOpenSettings();
+              onClose();
+            }}
+            title="Open Automation & Profile Settings"
+          >
+            <span className="nav-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="3" />
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+              </svg>
+            </span>
+            <span className="nav-label">Settings &amp; Email</span>
+          </button>
         </nav>
 
         {/* Spacer */}

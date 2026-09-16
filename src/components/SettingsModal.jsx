@@ -286,8 +286,9 @@ export default function SettingsModal({
                     {[
                       { id: 'light-lavender', label: 'Irisé Lavande', color: '#7c66dc', bg: '#f4f1f8' },
                       { id: 'light-glacier', label: 'Bleu Glacier', color: '#1e80bf', bg: '#eef5f9' },
-                      { id: 'light-sage', label: 'Sauge Botanique', color: '#3b8658', bg: '#f1f6f2' },
+                      { id: 'light-rose-pale', label: 'Rose Pêche Pâle', color: '#c26750', bg: '#f6ede2' },
                       { id: 'light-rose', label: 'Rose Poudré', color: '#d64976', bg: '#faf1f3' },
+                      { id: 'light-sage', label: 'Sauge Botanique', color: '#3b8658', bg: '#f1f6f2' },
                       { id: 'light-daydream', label: 'Aura Daydream', color: '#5b67e8', bg: '#f3f5fd' }
                     ].map(theme => (
                       <button
