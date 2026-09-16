@@ -3,14 +3,12 @@ import { triggerDualCornerCelebration } from '../services/celebrationService';
 import { AuthClient } from '../services/authClient';
 import {
   ZapIcon,
-  SparklesIcon,
   CalendarIcon,
   BellIcon,
   CheckIcon,
   LockIcon,
   UserIcon,
   MailIcon,
-  ClockIcon,
   AlertTriangleIcon,
   InfoIcon,
   RefreshCwIcon,
@@ -135,19 +133,6 @@ export default function AuthGate({
     }
   };
 
-  const handleGuestDemo = () => {
-    const guestUser = {
-      id: 'guest_' + Date.now().toString(36),
-      name: 'Executive Guest',
-      email: 'guest@techytool.pro',
-      isGuest: true
-    };
-    triggerConfetti();
-    if (onShowToast) {
-      onShowToast('success', '✨', 'Welcome to Techy Tool Demo Workspace!');
-    }
-    onAuthSuccess(guestUser);
-  };
 
   // Password requirements calculation
   const passHasLength = password.length >= 8;
@@ -514,23 +499,6 @@ export default function AuthGate({
             </button>
           </form>
 
-          {/* Quick Guest Demo Option (when on login/register) */}
-          {(mode === 'login' || mode === 'register') && (
-            <>
-              <div className="authgate-divider">
-                <span>OR EXPLORE INSTANTLY</span>
-              </div>
-              <button
-                type="button"
-                className="authgate-guest-btn"
-                onClick={handleGuestDemo}
-              >
-                <SparklesIcon size={16} className="authgate-guest-sparkle" />
-                <span>Try Instant Guest Demo Mode</span>
-                <span className="authgate-guest-tag">1-Click</span>
-              </button>
-            </>
-          )}
 
           {/* Card Footer Info */}
           <div className="authgate-card-footer">
