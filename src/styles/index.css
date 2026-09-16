@@ -225,6 +225,278 @@
   --secondary-glow: rgba(129, 140, 248, 0.2);
 }
 
+/* ==========================================================================
+   LIGHT MODE PASTEL THEMES (Client Reference Palettes)
+   ========================================================================== */
+
+/* Theme 1: Irisé Lavande / Dreamy Lavender (Pearly Lilac & Lavender) */
+[data-theme="light-lavender"] {
+  --bg-app: #f4f1f8;
+  --surface-sidebar: #eae4f5;
+  --surface-topbar: rgba(244, 241, 248, 0.9);
+  --surface-canvas: #f4f1f8;
+  --surface-row: #ffffff;
+  --surface-row-hover: #f1ecfa;
+  --surface-card: #ffffff;
+  --surface-card-hover: #f9f7fd;
+  --surface-modal: #ffffff;
+  --surface-input: #f7f5fc;
+
+  --border-subtle: rgba(124, 102, 220, 0.09);
+  --border-default: rgba(124, 102, 220, 0.16);
+  --border-strong: rgba(124, 102, 220, 0.28);
+  --border-focus: rgba(124, 102, 220, 0.65);
+
+  --text-primary: #1d1838;
+  --text-secondary: #5d537d;
+  --text-tertiary: #847a9f;
+  --text-muted: #aba3c2;
+
+  --accent: #7c66dc;
+  --accent-hover: #6a53cb;
+  --accent-light: #c9c2e8;
+  --accent-glow: rgba(124, 102, 220, 0.22);
+  --accent-subtle: rgba(124, 102, 220, 0.08);
+
+  --secondary: #abc0f6;
+  --secondary-glow: rgba(171, 192, 246, 0.3);
+}
+
+/* Theme 2: Bleu Glacier / Glacier Azure (Ice Blue & Periwinkle) */
+[data-theme="light-glacier"] {
+  --bg-app: #eef5f9;
+  --surface-sidebar: #e0ecf5;
+  --surface-topbar: rgba(238, 245, 249, 0.9);
+  --surface-canvas: #eef5f9;
+  --surface-row: #ffffff;
+  --surface-row-hover: #eaf3fa;
+  --surface-card: #ffffff;
+  --surface-card-hover: #f7fbfe;
+  --surface-modal: #ffffff;
+  --surface-input: #f4f8fc;
+
+  --border-subtle: rgba(30, 128, 191, 0.09);
+  --border-default: rgba(30, 128, 191, 0.16);
+  --border-strong: rgba(30, 128, 191, 0.28);
+  --border-focus: rgba(30, 128, 191, 0.65);
+
+  --text-primary: #0f2438;
+  --text-secondary: #41627d;
+  --text-tertiary: #6b8ea8;
+  --text-muted: #9ab6cb;
+
+  --accent: #1e80bf;
+  --accent-hover: #126fa9;
+  --accent-light: #cfe7f2;
+  --accent-glow: rgba(30, 128, 191, 0.22);
+  --accent-subtle: rgba(30, 128, 191, 0.08);
+
+  --secondary: #abc0f6;
+  --secondary-glow: rgba(171, 192, 246, 0.3);
+}
+
+/* Theme 3: Sauge Botanique / Sage Meadow (Floral Celadon & Soft Green) */
+[data-theme="light-sage"] {
+  --bg-app: #f1f6f2;
+  --surface-sidebar: #e3ede5;
+  --surface-topbar: rgba(241, 246, 242, 0.9);
+  --surface-canvas: #f1f6f2;
+  --surface-row: #ffffff;
+  --surface-row-hover: #ebf4ed;
+  --surface-card: #ffffff;
+  --surface-card-hover: #f7fbf8;
+  --surface-modal: #ffffff;
+  --surface-input: #f5f9f6;
+
+  --border-subtle: rgba(61, 136, 90, 0.09);
+  --border-default: rgba(61, 136, 90, 0.16);
+  --border-strong: rgba(61, 136, 90, 0.28);
+  --border-focus: rgba(61, 136, 90, 0.65);
+
+  --text-primary: #11281a;
+  --text-secondary: #466750;
+  --text-tertiary: #6f9078;
+  --text-muted: #9bb8a3;
+
+  --accent: #3b8658;
+  --accent-hover: #2d7346;
+  --accent-light: #cfe0b7;
+  --accent-glow: rgba(59, 134, 88, 0.22);
+  --accent-subtle: rgba(59, 134, 88, 0.08);
+
+  --secondary: #95ca9f;
+  --secondary-glow: rgba(149, 202, 159, 0.3);
+}
+
+/* Theme 4: Rose Poudré / Blossom Pastel (Soft Rose Petal & Apricot) */
+[data-theme="light-rose"] {
+  --bg-app: #faf1f3;
+  --surface-sidebar: #f5e2e6;
+  --surface-topbar: rgba(250, 241, 243, 0.9);
+  --surface-canvas: #faf1f3;
+  --surface-row: #ffffff;
+  --surface-row-hover: #f8ebef;
+  --surface-card: #ffffff;
+  --surface-card-hover: #fdf8f9;
+  --surface-modal: #ffffff;
+  --surface-input: #fcf4f6;
+
+  --border-subtle: rgba(214, 73, 118, 0.09);
+  --border-default: rgba(214, 73, 118, 0.16);
+  --border-strong: rgba(214, 73, 118, 0.28);
+  --border-focus: rgba(214, 73, 118, 0.65);
+
+  --text-primary: #331320;
+  --text-secondary: #744658;
+  --text-tertiary: #9d6f81;
+  --text-muted: #c89dae;
+
+  --accent: #d64976;
+  --accent-hover: #be3561;
+  --accent-light: #f6dde4;
+  --accent-glow: rgba(214, 73, 118, 0.22);
+  --accent-subtle: rgba(214, 73, 118, 0.08);
+
+  --secondary: #fed8d9;
+  --secondary-glow: rgba(254, 216, 217, 0.3);
+}
+
+/* Theme 5: Aura Daydream / Kawaii Cloud (Lilac Dream, Sky & Butter Puff) */
+[data-theme="light-daydream"] {
+  --bg-app: #f3f5fd;
+  --surface-sidebar: #e3e9fb;
+  --surface-topbar: rgba(243, 245, 253, 0.9);
+  --surface-canvas: #f3f5fd;
+  --surface-row: #ffffff;
+  --surface-row-hover: #ecf0fc;
+  --surface-card: #ffffff;
+  --surface-card-hover: #f8fafd;
+  --surface-modal: #ffffff;
+  --surface-input: #f6f8fd;
+
+  --border-subtle: rgba(91, 103, 232, 0.09);
+  --border-default: rgba(91, 103, 232, 0.16);
+  --border-strong: rgba(91, 103, 232, 0.28);
+  --border-focus: rgba(91, 103, 232, 0.65);
+
+  --text-primary: #151a36;
+  --text-secondary: #4a557b;
+  --text-tertiary: #737fa5;
+  --text-muted: #9fa9cc;
+
+  --accent: #5b67e8;
+  --accent-hover: #4753d3;
+  --accent-light: #e0cdfe;
+  --accent-glow: rgba(91, 103, 232, 0.22);
+  --accent-subtle: rgba(91, 103, 232, 0.08);
+
+  --secondary: #cfe4fe;
+  --secondary-glow: rgba(207, 228, 254, 0.3);
+}
+
+/* Light Theme Universal Component Adjustments */
+[data-theme^="light-"] .task-row,
+[data-theme^="light-"] .dashboard-module-card,
+[data-theme^="light-"] .stat-card,
+[data-theme^="light-"] .modal,
+[data-theme^="light-"] .authgate-card,
+[data-theme^="light-"] .settings-card-section {
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 0 1px rgba(0, 0, 0, 0.06);
+}
+
+[data-theme^="light-"] .task-item {
+  background: var(--surface-row);
+  border-color: var(--border-default);
+}
+
+[data-theme^="light-"] .task-item:hover {
+  background: var(--surface-row-hover);
+  border-color: var(--border-strong);
+}
+
+[data-theme^="light-"] .btn-secondary {
+  background: rgba(0, 0, 0, 0.04);
+  color: var(--text-primary);
+  border-color: var(--border-default);
+}
+
+[data-theme^="light-"] .btn-secondary:hover {
+  background: rgba(0, 0, 0, 0.08);
+  border-color: var(--border-strong);
+}
+
+[data-theme^="light-"] .topbar-search input {
+  background: rgba(0, 0, 0, 0.04);
+  color: var(--text-primary);
+}
+
+[data-theme^="light-"] .date-badge {
+  background: rgba(0, 0, 0, 0.04);
+  color: var(--text-secondary);
+  border-color: var(--border-subtle);
+}
+
+[data-theme^="light-"] .quick-task-bar {
+  background: var(--surface-card);
+  border-color: var(--border-default);
+  box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme^="light-"] .quick-task-input {
+  background: transparent;
+  color: var(--text-primary);
+}
+
+[data-theme^="light-"] .app-main-footer {
+  background: var(--surface-topbar);
+  border-top-color: var(--border-subtle);
+}
+
+[data-theme^="light-"] .authgate-card {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: var(--border-default);
+}
+
+[data-theme^="light-"] .authgate-card-title,
+[data-theme^="light-"] .authgate-label,
+[data-theme^="light-"] .authgate-headline {
+  color: var(--text-primary);
+}
+
+[data-theme^="light-"] .authgate-logo-badge {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: var(--border-default);
+}
+
+[data-theme^="light-"] .authgate-logo-title {
+  color: var(--text-primary);
+}
+
+[data-theme^="light-"] .authgate-tab-pills {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: var(--border-default);
+}
+
+[data-theme^="light-"] .authgate-input {
+  background: #ffffff;
+  color: var(--text-primary);
+  border-color: var(--border-default);
+}
+
+[data-theme^="light-"] .authgate-feature-card {
+  background: rgba(255, 255, 255, 0.7);
+  border-color: var(--border-default);
+}
+
+[data-theme^="light-"] .authgate-feature-title-row h4 {
+  color: var(--text-primary);
+}
+
+[data-theme^="light-"] .authgate-telemetry-widget {
+  background: rgba(255, 255, 255, 0.8);
+  border-color: var(--border-default);
+}
+
 /* ---------- Global Reset ---------- */
 *, *::before, *::after {
   margin: 0;

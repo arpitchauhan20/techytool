@@ -272,36 +272,76 @@ export default function SettingsModal({
             <div className="settings-card-section">
               {/* 1. Theme Color Selector */}
               <div>
-                <div style={{ marginBottom: '8px' }}>
-                  <strong className="settings-card-title">Color Theme</strong>
-                  <div className="settings-card-desc">Personalize your workspace palette</div>
+                <div style={{ marginBottom: '12px' }}>
+                  <strong className="settings-card-title">Color Themes &amp; Appearance</strong>
+                  <div className="settings-card-desc">Choose from light aesthetic pastels or sleek dark obsidian palettes</div>
                 </div>
-                <div className="settings-theme-grid">
-                  {[
-                    { id: 'indigo', label: 'Obsidian Indigo', color: '#6366f1', bg: '#080b13' },
-                    { id: 'emerald', label: 'Emerald Mint', color: '#10b981', bg: '#050d09' },
-                    { id: 'cyan', label: 'Midnight Cyan', color: '#06b6d4', bg: '#060c16' },
-                    { id: 'violet', label: 'Nebula Violet', color: '#a855f7', bg: '#090614' },
-                    { id: 'amber', label: 'Sunset Amber', color: '#f59e0b', bg: '#0d0a06' },
-                    { id: 'slate', label: 'Titanium Slate', color: '#38bdf8', bg: '#080a0f' }
-                  ].map(theme => (
-                    <button
-                      key={theme.id}
-                      type="button"
-                      className={`settings-theme-option ${currentPalette === theme.id ? 'active' : ''}`}
-                      onClick={() => onChangePalette && onChangePalette(theme.id)}
-                    >
-                      <div className="theme-option-preview" style={{ background: theme.bg }}>
-                        <div className="theme-option-accent" style={{ background: theme.color }} />
-                      </div>
-                      <span className="theme-option-name">{theme.label}</span>
-                      {currentPalette === theme.id && (
-                        <span className="theme-option-check">
-                          <CheckIcon size={13} />
-                        </span>
-                      )}
-                    </button>
-                  ))}
+
+                {/* Light Pastel Themes (Client Reference Palettes) */}
+                <div style={{ marginBottom: '14px' }}>
+                  <div style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--text-tertiary, #64748b)', marginBottom: '8px' }}>
+                    ✨ Light Pastel Palettes
+                  </div>
+                  <div className="settings-theme-grid">
+                    {[
+                      { id: 'light-lavender', label: 'Irisé Lavande', color: '#7c66dc', bg: '#f4f1f8' },
+                      { id: 'light-glacier', label: 'Bleu Glacier', color: '#1e80bf', bg: '#eef5f9' },
+                      { id: 'light-sage', label: 'Sauge Botanique', color: '#3b8658', bg: '#f1f6f2' },
+                      { id: 'light-rose', label: 'Rose Poudré', color: '#d64976', bg: '#faf1f3' },
+                      { id: 'light-daydream', label: 'Aura Daydream', color: '#5b67e8', bg: '#f3f5fd' }
+                    ].map(theme => (
+                      <button
+                        key={theme.id}
+                        type="button"
+                        className={`settings-theme-option ${currentPalette === theme.id ? 'active' : ''}`}
+                        onClick={() => onChangePalette && onChangePalette(theme.id)}
+                      >
+                        <div className="theme-option-preview" style={{ background: theme.bg, border: '1px solid rgba(0,0,0,0.1)' }}>
+                          <div className="theme-option-accent" style={{ background: theme.color }} />
+                        </div>
+                        <span className="theme-option-name">{theme.label}</span>
+                        {currentPalette === theme.id && (
+                          <span className="theme-option-check">
+                            <CheckIcon size={13} />
+                          </span>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Dark Obsidian Themes */}
+                <div>
+                  <div style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--text-tertiary, #64748b)', marginBottom: '8px' }}>
+                    🌙 Dark Obsidian Palettes
+                  </div>
+                  <div className="settings-theme-grid">
+                    {[
+                      { id: 'indigo', label: 'Obsidian Indigo', color: '#6366f1', bg: '#080b13' },
+                      { id: 'emerald', label: 'Emerald Mint', color: '#10b981', bg: '#050d09' },
+                      { id: 'cyan', label: 'Midnight Cyan', color: '#06b6d4', bg: '#060c16' },
+                      { id: 'violet', label: 'Nebula Violet', color: '#a855f7', bg: '#090614' },
+                      { id: 'amber', label: 'Sunset Amber', color: '#f59e0b', bg: '#0d0a06' },
+                      { id: 'slate', label: 'Titanium Slate', color: '#38bdf8', bg: '#080a0f' }
+                    ].map(theme => (
+                      <button
+                        key={theme.id}
+                        type="button"
+                        className={`settings-theme-option ${currentPalette === theme.id ? 'active' : ''}`}
+                        onClick={() => onChangePalette && onChangePalette(theme.id)}
+                      >
+                        <div className="theme-option-preview" style={{ background: theme.bg }}>
+                          <div className="theme-option-accent" style={{ background: theme.color }} />
+                        </div>
+                        <span className="theme-option-name">{theme.label}</span>
+                        {currentPalette === theme.id && (
+                          <span className="theme-option-check">
+                            <CheckIcon size={13} />
+                          </span>
+                        )}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
 
