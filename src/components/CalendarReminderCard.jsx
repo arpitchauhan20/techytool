@@ -1,4 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+import confetti from 'canvas-confetti';
+import { SoundFX } from '../services/soundEngine';
 import { createCalendarReminder } from '../services/calendarService';
 import {
   CalendarIcon,
@@ -48,8 +50,23 @@ export default function CalendarReminderCard({
   });
   const [reminderMinutes, setReminderMinutes] = useState(10);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [recentEvents, setRecentEvents] = useState([]);
+  const [recentEvents, setRecentEvents] = useState(() => {
+    try {
+      const saved = localStorage.getItem('taskflow_calendar_events');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
   const [lastCreatedEvent, setLastCreatedEvent] = useState(null);
+  const [lastAddedDate, setLastAddedDate] = useState(null);
+
+  // Sync recent events to storage
+  useEffect(() => {
+    try {
+      localStorage.setItem('taskflow_calendar_events', JSON.stringify(recentEvents));
+    } catch {}
+  }, [recentEvents]);
 
   // Detect local IANA timezone
   const localTimeZone = typeof Intl !== 'undefined'
@@ -129,8 +146,14 @@ export default function CalendarReminderCard({
         map[dStr] = (map[dStr] || 0) + 1;
       }
     });
+    recentEvents.forEach(e => {
+      if (e.startTime) {
+        const dStr = e.startTime.slice(0, 10);
+        map[dStr] = (map[dStr] || 0) + 1;
+      }
+    });
     return map;
-  }, [tasks]);
+  }, [tasks, recentEvents]);
 
   // All scheduled reminders / events for history
   const allScheduledEvents = useMemo(() => {
@@ -213,11 +236,24 @@ export default function CalendarReminderCard({
         };
         setRecentEvents(prev => [newEv, ...prev]);
         setLastCreatedEvent(res.event);
+        setSelectedDate(date);
+        setLastAddedDate(date);
         setTitle('');
         setDescription('');
+
+        try {
+          SoundFX.playSuccessChord(true);
+          confetti({
+            particleCount: 75,
+            spread: 60,
+            origin: { y: 0.6 }
+          });
+        } catch {}
+
         if (onShowToast) {
-          onShowToast('success', 'calendar', 'Added to Google Calendar');
+          onShowToast('success', '📅', `Reminder scheduled for ${new Date(`${date}T12:00:00`).toLocaleDateString([], { month: 'short', day: 'numeric' })}!`);
         }
+        setTimeout(() => setLastAddedDate(null), 3500);
       } else {
         throw new Error(res.error || 'Could not create reminder');
       }
@@ -239,22 +275,6 @@ export default function CalendarReminderCard({
 
   return (
     <div className="calendar-board-wrapper tab-view-animated">
-      {/* Top Status Context Bar (Compact, No Duplicate Back Button Strip) */}
-      <div className="calendar-status-bar">
-        <div className="cal-status-left">
-          <span className="cal-section-tagline">Visual scheduling, 1-click Google sync &amp; reminder history</span>
-        </div>
-        <div className="cal-status-right">
-          <span className={`badge-status-pill ${isCalendarConnected ? 'active' : ''}`}>
-            {isCalendarConnected ? '✓ Google Synced' : 'Offline'}
-          </span>
-          <span className="badge-tz-pill">
-            <GlobeIcon size={12} style={{ marginRight: '4px', verticalAlign: '-1px' }} />
-            {localTimeZone}
-          </span>
-        </div>
-      </div>
-
       {/* Main Two-Column Grid: Left Visual Calendar, Right Add Reminder Form */}
       <div className="calendar-suite-grid">
         {/* Left Column: Interactive Visual Calendar Widget */}
@@ -305,18 +325,28 @@ export default function CalendarReminderCard({
             {calendarDays.map((item, idx) => {
               const isToday = item.dateStr === todayStr;
               const isSelected = item.dateStr === selectedDate;
-              const hasEvents = Boolean(taskDatesMap[item.dateStr]);
+              const eventCount = taskDatesMap[item.dateStr] || 0;
+              const hasEvents = eventCount > 0;
+              const isJustAdded = lastAddedDate === item.dateStr;
 
               return (
                 <button
                   key={idx}
                   type="button"
-                  className={`cal-day-cell ${!item.isCurrentMonth ? 'other-month' : ''} ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''}`}
+                  className={`cal-day-cell ${!item.isCurrentMonth ? 'other-month' : ''} ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''} ${hasEvents ? 'has-events' : ''} ${isJustAdded ? 'just-added-pulse' : ''}`}
                   onClick={() => handleSelectDay(item.dateStr)}
-                  title={item.dateStr}
+                  title={`${item.dateStr}${hasEvents ? ` • ${eventCount} scheduled reminder${eventCount > 1 ? 's' : ''}` : ''}`}
                 >
                   <span className="day-number">{item.dayNumber}</span>
-                  {hasEvents && <span className="day-event-dot" />}
+                  {hasEvents && (
+                    <span className="day-reminder-pill animate-pop-in">
+                      <span className="day-bell-icon">🔔</span>
+                      {eventCount > 1 && <span className="day-event-num">{eventCount}</span>}
+                    </span>
+                  )}
+                  {isJustAdded && (
+                    <span className="day-sparkle-burst animate-pop-in">✨</span>
+                  )}
                 </button>
               );
             })}
@@ -329,13 +359,14 @@ export default function CalendarReminderCard({
                 {new Date(`${selectedDate}T12:00:00`).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}
               </strong>
               <span className="selected-date-count">
-                {selectedDateEvents.length} event{selectedDateEvents.length === 1 ? '' : 's'} scheduled
+                {selectedDateEvents.length} reminder{selectedDateEvents.length === 1 ? '' : 's'} scheduled
               </span>
             </div>
             {selectedDateEvents.length > 0 && (
               <div className="selected-date-events-preview">
-                {selectedDateEvents.slice(0, 3).map((ev, i) => (
+                {selectedDateEvents.slice(0, 4).map((ev, i) => (
                   <div key={i} className="mini-event-chip">
+                    <span className="event-chip-bell">🔔</span>
                     <span className="event-chip-time">{ev.startTime ? ev.startTime.slice(11, 16) : ''}</span>
                     <span className="event-chip-title">{ev.title}</span>
                   </div>
@@ -407,14 +438,14 @@ export default function CalendarReminderCard({
           )}
 
           <form onSubmit={handleSubmit} className="reminder-form">
-            <div className="reminder-form-grid" style={{ gap: '12px' }}>
+            <div className="reminder-form-grid">
               {/* Title */}
               <div className="form-group title-group">
-                <label htmlFor="reminder-title">Reminder Title</label>
+                <label htmlFor="reminder-title" className="form-label-styled">Reminder Title</label>
                 <input
                   id="reminder-title"
                   type="text"
-                  className="form-input"
+                  className="form-input form-input-styled"
                   placeholder="e.g. Executive Sync & Project Review"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
@@ -424,74 +455,73 @@ export default function CalendarReminderCard({
 
               {/* Description */}
               <div className="form-group desc-group">
-                <label htmlFor="reminder-desc">Notes / Agenda (Optional)</label>
+                <label htmlFor="reminder-desc" className="form-label-styled">Notes / Agenda (Optional)</label>
                 <input
                   id="reminder-desc"
                   type="text"
-                  className="form-input"
+                  className="form-input form-input-styled"
                   placeholder="Brief agenda notes or meeting link"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                 />
               </div>
 
-              {/* Date */}
-              <div className="form-group date-group">
-                <label htmlFor="reminder-date">Date</label>
-                <input
-                  id="reminder-date"
-                  type="date"
-                  className="form-input"
-                  value={date}
-                  onChange={(e) => {
-                    setDate(e.target.value);
-                    setSelectedDate(e.target.value);
-                  }}
-                  required
-                />
-              </div>
+              {/* Timing Row: Date, Time, Alarm */}
+              <div className="reminder-timing-row">
+                <div className="form-group date-group">
+                  <label htmlFor="reminder-date" className="form-label-styled">Date</label>
+                  <input
+                    id="reminder-date"
+                    type="date"
+                    className="form-input form-input-styled"
+                    value={date}
+                    onChange={(e) => {
+                      setDate(e.target.value);
+                      setSelectedDate(e.target.value);
+                    }}
+                    required
+                  />
+                </div>
 
-              {/* Time */}
-              <div className="form-group time-group">
-                <label htmlFor="reminder-time">Time</label>
-                <input
-                  id="reminder-time"
-                  type="time"
-                  className="form-input"
-                  value={time}
-                  onChange={(e) => setTime(e.target.value)}
-                  required
-                />
-              </div>
+                <div className="form-group time-group">
+                  <label htmlFor="reminder-time" className="form-label-styled">Time</label>
+                  <input
+                    id="reminder-time"
+                    type="time"
+                    className="form-input form-input-styled"
+                    value={time}
+                    onChange={(e) => setTime(e.target.value)}
+                    required
+                  />
+                </div>
 
-              {/* Remind Me Override */}
-              <div className="form-group remind-group">
-                <label htmlFor="reminder-minutes">Alarm Notice</label>
-                <select
-                  id="reminder-minutes"
-                  className="form-input form-select"
-                  value={reminderMinutes}
-                  onChange={(e) => setReminderMinutes(Number(e.target.value))}
-                >
-                  <option value={0}>At time of event</option>
-                  <option value={5}>5 minutes before</option>
-                  <option value={10}>10 minutes before</option>
-                  <option value={15}>15 minutes before</option>
-                  <option value={30}>30 minutes before</option>
-                  <option value={60}>1 hour before</option>
-                  <option value={1440}>1 day before</option>
-                </select>
+                <div className="form-group remind-group">
+                  <label htmlFor="reminder-minutes" className="form-label-styled">Alarm Notice</label>
+                  <select
+                    id="reminder-minutes"
+                    className="form-input form-select form-input-styled"
+                    value={reminderMinutes}
+                    onChange={(e) => setReminderMinutes(Number(e.target.value))}
+                  >
+                    <option value={0}>At time of event</option>
+                    <option value={5}>5 min before</option>
+                    <option value={10}>10 min before</option>
+                    <option value={15}>15 min before</option>
+                    <option value={30}>30 min before</option>
+                    <option value={60}>1 hour before</option>
+                    <option value={1440}>1 day before</option>
+                  </select>
+                </div>
               </div>
             </div>
 
-            <div className="reminder-form-footer" style={{ marginTop: '16px' }}>
+            <div className="reminder-form-footer">
               <button
                 type="submit"
-                className="btn btn-primary"
+                className="btn btn-primary btn-submit-reminder"
                 disabled={isSubmitting}
-                style={{ width: '100%', justifyContent: 'center' }}
               >
-                <ZapIcon size={14} style={{ marginRight: '6px' }} />
+                <ZapIcon size={16} />
                 <span>{isSubmitting ? 'Syncing with Google...' : 'Add to Google Calendar'}</span>
               </button>
             </div>

@@ -422,45 +422,28 @@ export default function SettingsModal({
             <div className="settings-card-section">
               {/* 1. Google Calendar Integration */}
               <div className="settings-sub-section">
-                <div className="settings-card-header">
+                <div className="settings-card-header" style={{ marginBottom: 0, alignItems: 'center' }}>
                   <div className="settings-card-icon-wrap cal">
                     <CalendarIcon size={20} />
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <strong className="settings-card-title">Google Calendar</strong>
-                    <div className="settings-card-desc">
-                      {gcalConnected
-                        ? `Connected (${gcalEmail || 'Active Session'}) | 1-click & background auto-sync active`
-                        : 'Connect your Google account to sync scheduled tasks and reminders'}
-                    </div>
                   </div>
-                  <span className={`badge-status-pill ${gcalConnected ? 'active' : ''}`}>
-                    {gcalConnected ? '✓ Connected' : 'Disconnected'}
-                  </span>
-                </div>
-
-                <div className="btn-group-row" style={{ marginTop: '12px', justifyContent: 'flex-start', gap: '8px', flexWrap: 'wrap' }}>
-                  {!gcalConnected ? (
-                    <button
-                      type="button"
-                      className="btn btn-primary btn-sm"
-                      onClick={handleConnectGoogle}
-                      disabled={isConnectingGCal || isCalendarLoading}
-                    >
-                      <LinkIcon size={14} style={{ marginRight: '4px' }} />
-                      <span>{isConnectingGCal || isCalendarLoading ? 'Connecting...' : 'Connect Google Calendar'}</span>
-                    </button>
-                  ) : (
-                    <>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <span className={`badge-status-pill ${gcalConnected ? 'active' : ''}`}>
+                      {gcalConnected ? '✓ Connected' : 'Disconnected'}
+                    </span>
+                    {!gcalConnected ? (
                       <button
                         type="button"
                         className="btn btn-primary btn-sm"
-                        onClick={handleTestGoogleCalendar}
-                        disabled={isTestingGCal}
+                        onClick={handleConnectGoogle}
+                        disabled={isConnectingGCal || isCalendarLoading}
                       >
-                        <ZapIcon size={13} style={{ marginRight: '4px' }} />
-                        <span>{isTestingGCal ? 'Saving...' : 'Test Calendar Sync'}</span>
+                        <LinkIcon size={13} style={{ marginRight: '4px' }} />
+                        <span>{isConnectingGCal || isCalendarLoading ? 'Connecting...' : 'Connect'}</span>
                       </button>
+                    ) : (
                       <button
                         type="button"
                         className="btn btn-secondary btn-sm"
@@ -469,99 +452,8 @@ export default function SettingsModal({
                       >
                         Disconnect
                       </button>
-                    </>
-                  )}
-                </div>
-              </div>
-
-              {/* Inner Divider */}
-              <div className="settings-card-inner-divider" />
-
-              {/* 2. Automated Resend Email Dispatcher */}
-              <div className="settings-sub-section">
-                <div className="settings-card-header">
-                  <div className="settings-card-icon-wrap email">
-                    <MailIcon size={20} />
+                    )}
                   </div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <strong className="settings-card-title">Resend Email &amp; Calendar Invites</strong>
-                    <div className="settings-card-desc">Delivers instant task notifications &amp; calendar invite attachments over Port 443</div>
-                  </div>
-                  <span className="badge-status-pill active" id="email-cfg-badge">
-                    Active (Port 443)
-                  </span>
-                </div>
-
-                <div className="btn-group-row" style={{ marginTop: '10px' }}>
-                  <button
-                    type="button"
-                    className="btn btn-secondary btn-sm"
-                    onClick={handleTestEmail}
-                    disabled={isTesting}
-                  >
-                    <ZapIcon size={13} style={{ marginRight: '4px' }} />
-                    <span>{isTesting ? 'Dispatching...' : 'Send Test Email & Invite'}</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Inner Divider */}
-              <div className="settings-card-inner-divider" />
-
-              {/* 3. Request Google OAuth Test Access for a Friend */}
-              <div className="settings-sub-section">
-                <div className="settings-card-header">
-                  <div className="settings-card-icon-wrap cal" style={{ background: 'rgba(99, 102, 241, 0.15)', color: '#818cf8' }}>
-                    <UserPlusIcon size={18} />
-                  </div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <strong className="settings-card-title">Request Friend Invite / Google OAuth Access</strong>
-                    <div className="settings-card-desc">
-                      Fill in your friend's details to automatically dispatch an invite request to the administrator for adding them to Google OAuth test users.
-                    </div>
-                  </div>
-                </div>
-
-                <div className="settings-form-row-2col" style={{ marginTop: '12px' }}>
-                  <div className="form-group" style={{ marginBottom: 0 }}>
-                    <label className="form-label" htmlFor="friend-name-input" style={{ fontSize: '11.5px' }}>
-                      Friend Name
-                    </label>
-                    <input
-                      id="friend-name-input"
-                      className="form-input"
-                      type="text"
-                      placeholder="e.g. Alex Taylor"
-                      value={friendName}
-                      onChange={e => setFriendName(e.target.value)}
-                    />
-                  </div>
-
-                  <div className="form-group" style={{ marginBottom: 0 }}>
-                    <label className="form-label" htmlFor="friend-email-input" style={{ fontSize: '11.5px' }}>
-                      Friend Gmail Address
-                    </label>
-                    <input
-                      id="friend-email-input"
-                      className="form-input"
-                      type="email"
-                      placeholder="e.g. friend@gmail.com"
-                      value={friendEmail}
-                      onChange={e => setFriendEmail(e.target.value)}
-                    />
-                  </div>
-                </div>
-
-                <div className="btn-group-row" style={{ marginTop: '12px', justifyContent: 'flex-start' }}>
-                  <button
-                    type="button"
-                    className="btn btn-primary btn-sm"
-                    onClick={handleSendFriendInviteRequest}
-                    disabled={isSendingFriendInvite || !friendEmail.trim()}
-                  >
-                    <SendIcon size={13} style={{ marginRight: '5px' }} />
-                    <span>{isSendingFriendInvite ? 'Sending Request...' : 'Send Friend Invite Request'}</span>
-                  </button>
                 </div>
               </div>
             </div>

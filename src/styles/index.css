@@ -811,9 +811,19 @@ body {
   color: #fff;
 }
 
-.nav-badge.highlight {
-  background: var(--warning-glow);
-  color: var(--warning);
+.nav-badge.highlight,
+.nav-badge.success {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  font-weight: 700;
+}
+
+.nav-item.active .nav-badge.highlight,
+.nav-item.active .nav-badge.success {
+  background: #10b981;
+  color: #ffffff;
+  border-color: #10b981;
 }
 
 .nav-badge.danger {
@@ -4572,6 +4582,140 @@ body {
 }
 
 /* ==========================================================================
+   IN-WORKSPACE TASK CREATOR & EDITOR PANEL (Modern Non-Popup UI)
+   ========================================================================== */
+.task-inline-creator-card {
+  margin: 16px 0 22px 0;
+  padding: 24px 26px;
+  background: var(--surface-card, rgba(17, 24, 39, 0.75));
+  border: 1px solid var(--border-default);
+  border-radius: 16px;
+  box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.35), 0 0 0 1px var(--accent-subtle);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: taskCreatorExpand 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes taskCreatorExpand {
+  from {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.task-creator-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.task-creator-lead {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.task-creator-icon-wrap {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent), var(--secondary));
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px var(--accent-glow);
+  flex-shrink: 0;
+}
+
+.task-creator-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.2px;
+  line-height: 1.2;
+}
+
+.task-creator-subtitle {
+  font-size: 11.5px;
+  color: var(--text-tertiary);
+  margin-top: 2px;
+  line-height: 1.3;
+}
+
+.task-creator-close-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--surface-input);
+  border: 1px solid var(--border-default);
+  color: var(--text-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.task-creator-close-btn:hover {
+  background: var(--surface-row-hover);
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+  transform: scale(1.05);
+}
+
+.task-creator-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.task-creator-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+[data-theme^="light-"] .task-inline-creator-card {
+  background: #ffffff;
+  border-color: var(--border-default);
+  box-shadow: 0 12px 36px -8px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.04);
+}
+
+@media (max-width: 640px) {
+  .task-inline-creator-card {
+    padding: 18px 16px;
+    margin: 12px 0 16px 0;
+    border-radius: 12px;
+  }
+
+  .task-creator-header {
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+  }
+
+  .task-creator-actions {
+    flex-direction: column-reverse;
+  }
+
+  .task-creator-actions .btn {
+    width: 100%;
+  }
+}
+
+/* ==========================================================================
    Enhanced Settings & Connect Modal Styles
    ========================================================================== */
 .settings-modal-box {
@@ -4915,16 +5059,16 @@ body {
 }
 
 .topbar-section-title {
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 800;
   color: var(--text-primary, #ffffff);
-  letter-spacing: -0.2px;
+  letter-spacing: -0.4px;
   white-space: nowrap;
 }
 
 @media (max-width: 900px) {
   .topbar-section-title {
-    display: none;
+    font-size: 18px;
   }
 }
 
@@ -5098,7 +5242,83 @@ body {
   background: var(--accent, #6366f1) !important;
   color: #ffffff !important;
   font-weight: 700;
-  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 4px 14px var(--accent-glow, rgba(99, 102, 241, 0.45));
+}
+
+.cal-day-cell.has-events {
+  background: var(--accent-subtle, rgba(99, 102, 241, 0.12));
+  border-color: rgba(99, 102, 241, 0.35);
+  font-weight: 700;
+}
+
+.cal-day-cell.has-events:hover {
+  border-color: var(--accent);
+  background: rgba(99, 102, 241, 0.22);
+}
+
+.day-reminder-pill {
+  position: absolute;
+  bottom: 2px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  font-size: 8px;
+  font-weight: 800;
+  padding: 0 4px;
+  border-radius: 6px;
+  background: rgba(99, 102, 241, 0.28);
+  color: var(--accent-hover, #a5b4fc);
+  line-height: 1.2;
+}
+
+.cal-day-cell.selected .day-reminder-pill {
+  background: rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+}
+
+.day-bell-icon {
+  font-size: 8px;
+}
+
+.day-event-num {
+  font-size: 8px;
+  font-family: var(--font-mono, monospace);
+}
+
+.cal-day-cell.just-added-pulse {
+  animation: dateJustAddedPulse 0.5s cubic-bezier(0.16, 1, 0.3, 1) infinite alternate;
+  border-color: var(--accent, #6366f1) !important;
+  box-shadow: 0 0 16px var(--accent-glow, rgba(99, 102, 241, 0.6));
+  z-index: 5;
+}
+
+@keyframes dateJustAddedPulse {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.14);
+  }
+}
+
+.day-sparkle-burst {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  font-size: 13px;
+  pointer-events: none;
+  animation: floatSparkle 0.8s ease-in-out infinite alternate;
+  z-index: 6;
+}
+
+@keyframes floatSparkle {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  100% {
+    transform: translateY(-4px) rotate(18deg);
+  }
 }
 
 .day-event-dot {
@@ -5193,6 +5413,118 @@ body {
   font-weight: 700;
   color: var(--text-primary, #ffffff);
   margin: 0;
+}
+
+/* Reminder Form & Field Layout */
+.reminder-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 4px;
+}
+
+.reminder-form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.reminder-form-grid .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-label-styled {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-secondary, #94a3b8);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin: 0 0 2px 2px;
+}
+
+.form-input-styled {
+  width: 100%;
+  height: 42px;
+  padding: 8px 14px;
+  background: var(--surface-input, rgba(255, 255, 255, 0.05));
+  border: 1px solid var(--border-default, rgba(255, 255, 255, 0.1));
+  border-radius: 9px;
+  color: var(--text-primary, #ffffff);
+  font-size: 13px;
+  font-family: inherit;
+  box-sizing: border-box;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.form-input-styled:hover {
+  border-color: var(--border-strong, rgba(255, 255, 255, 0.2));
+  background: var(--surface-row-hover, rgba(255, 255, 255, 0.08));
+}
+
+.form-input-styled:focus {
+  border-color: var(--accent, #6366f1);
+  box-shadow: 0 0 0 3px var(--accent-glow, rgba(99, 102, 241, 0.25));
+  background: var(--surface-card, rgba(15, 23, 42, 0.9));
+}
+
+.reminder-timing-row {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr 1.15fr;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+@media (max-width: 640px) {
+  .reminder-timing-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
+
+.reminder-form-footer {
+  margin-top: 8px;
+}
+
+/* Polished Add to Google Calendar Submit Button */
+.btn-submit-reminder {
+  width: 100%;
+  height: 48px;
+  padding: 12px 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent, #6366f1), var(--accent-hover, #4f46e5));
+  color: #ffffff;
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 16px var(--accent-glow, rgba(99, 102, 241, 0.4));
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+}
+
+.btn-submit-reminder:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px var(--accent-glow, rgba(99, 102, 241, 0.55));
+  filter: brightness(1.08);
+}
+
+.btn-submit-reminder:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px var(--accent-glow, rgba(99, 102, 241, 0.3));
+}
+
+.btn-submit-reminder:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
 }
 
 /* Total Reminders & History Section */

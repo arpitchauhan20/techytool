@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import TaskRow from './TaskRow';
+import TaskEditorPanel from './TaskEditorPanel';
 import { ClipboardIcon, TargetIcon, PlusIcon } from './Icons';
 
 export default function TaskList({
@@ -13,7 +14,13 @@ export default function TaskList({
   onOpenNewTask,
   currentFilter,
   currentSort = 'deadline-asc',
-  onSortChange
+  onSortChange,
+  isCreatorOpen = false,
+  onCloseCreator,
+  onSaveTask,
+  taskToEdit = null,
+  defaultEmail = '',
+  soundEnabled = true
 }) {
   const [isOpen, setIsOpen] = useState(true);
 
@@ -28,16 +35,19 @@ export default function TaskList({
 
   const pendingCount = tasks.filter(t => !t.completed).length;
 
+  // Auto-expand task list view if creator is opened
+  const effectiveIsOpen = isOpen || isCreatorOpen;
+
   return (
-    <section className={`tasks-container dashboard-mini-card ${isOpen ? 'expanded' : 'collapsed'}`}>
+    <section className={`tasks-container dashboard-mini-card ${effectiveIsOpen ? 'expanded' : 'collapsed'}`}>
       {/* Task Details Card Header Bar (Always Clickable) */}
       <div
         className="mini-card-header"
         onClick={() => setIsOpen(prev => !prev)}
         role="button"
         tabIndex={0}
-        aria-expanded={isOpen}
-        title={isOpen ? 'Click to collapse task details' : 'Click to open task details'}
+        aria-expanded={effectiveIsOpen}
+        title={effectiveIsOpen ? 'Click to collapse task details' : 'Click to open task details'}
       >
         <div className="mini-card-lead">
           <div className="mini-card-icon-wrap task">
@@ -45,7 +55,7 @@ export default function TaskList({
           </div>
           <div className="mini-card-info">
             <div className="mini-card-title-row">
-              <h3 className="mini-card-title">Task Details &amp; Workspace</h3>
+              <h3 className="mini-card-title">Tasks</h3>
               <span className="mini-card-badge filter-badge">
                 {filterNames[currentFilter] || 'All Tasks'} ({tasks.length})
               </span>
@@ -56,7 +66,7 @@ export default function TaskList({
               )}
             </div>
             <p className="mini-card-subtitle">
-              {isOpen
+              {effectiveIsOpen
                 ? 'Manage active tasks, deadlines, priorities & automated reminders'
                 : `${tasks.length} task${tasks.length === 1 ? '' : 's'} in view • Click to expand and manage details`}
             </p>
@@ -101,16 +111,27 @@ export default function TaskList({
               e.stopPropagation();
               setIsOpen(prev => !prev);
             }}
-            aria-label={isOpen ? 'Collapse' : 'Expand'}
+            aria-label={effectiveIsOpen ? 'Collapse' : 'Expand'}
           >
-            <span>{isOpen ? 'Collapse ▴' : 'Open ▾'}</span>
+            <span>{effectiveIsOpen ? 'Collapse ▴' : 'Open ▾'}</span>
           </button>
         </div>
       </div>
 
       {/* Expanded Content Area with Smooth Tab Transition */}
-      {isOpen && (
+      {effectiveIsOpen && (
         <div className="mini-card-body tab-view-animated" key={currentFilter}>
+          {/* In-Window Task Creator & Editor Panel (Zero Popups) */}
+          {isCreatorOpen && (
+            <TaskEditorPanel
+              isOpen={isCreatorOpen}
+              onClose={onCloseCreator}
+              onSave={onSaveTask}
+              taskToEdit={taskToEdit}
+              defaultEmail={defaultEmail}
+              soundEnabled={soundEnabled}
+            />
+          )}
           {tasks.length === 0 ? (
             <div className="empty-state">
               <div className="empty-icon-wrap">

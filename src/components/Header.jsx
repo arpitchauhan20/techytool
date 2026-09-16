@@ -22,7 +22,7 @@ export default function Header({
 
   const getSectionTitle = () => {
     if (activeDashboardBoard === 'calendar') return 'Calendar Reminder Suite';
-    if (activeDashboardBoard === 'tasks') return 'Task Details & Workspace';
+    if (activeDashboardBoard === 'tasks') return 'Tasks';
     return 'Executive Overview';
   };
 

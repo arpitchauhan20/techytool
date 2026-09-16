@@ -3,9 +3,7 @@ import confetti from 'canvas-confetti';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import StatCards from './components/StatCards';
-import QuickTaskBar from './components/QuickTaskBar';
 import TaskList from './components/TaskList';
-import TaskModal from './components/TaskModal';
 import SettingsModal from './components/SettingsModal';
 import ConfirmModal from './components/ConfirmModal';
 import AuthModal from './components/AuthModal';
@@ -477,7 +475,7 @@ export default function App() {
   useEffect(() => { saveStorage('taskflow_pet_enabled', petEnabled); }, [petEnabled]);
   useEffect(() => { saveStorage('taskflow_sidebar_collapsed', isSidebarCollapsed); }, [isSidebarCollapsed]);
 
-  // Global Keyboard Shortcuts (N for New Task, Escape for Modals)
+  // Global Keyboard Shortcuts (N for New Task, Escape for Modals/Panels)
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
@@ -488,13 +486,22 @@ export default function App() {
       }
       if ((e.key === 'n' || e.key === 'N') && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
         e.preventDefault();
-        setTaskToEdit(null);
-        setIsTaskModalOpen(true);
+        handleOpenTaskEditor(null);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
+
+  const handleOpenTaskEditor = (task = null) => {
+    setTaskToEdit(task);
+    setIsTaskModalOpen(true);
+    setActiveDashboardBoard('tasks');
+    setTimeout(() => {
+      const el = document.getElementById('task-creator-panel');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 80);
+  };
 
   // Filter & Search Logic
   const filteredTasks = useMemo(() => {
@@ -913,10 +920,7 @@ export default function App() {
         onToggleSound={() => setSoundEnabled(!soundEnabled)}
         userName={userName}
         onOpenSettings={() => setIsSettingsModalOpen(true)}
-        onOpenNewTask={() => {
-          setTaskToEdit(null);
-          setIsTaskModalOpen(true);
-        }}
+        onOpenNewTask={() => handleOpenTaskEditor(null)}
         currentUser={currentUser}
         onOpenAuthModal={handleOpenAuthModal}
         onLogout={handleLogout}
@@ -1006,7 +1010,7 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Card 2: Task Details */}
+                {/* Card 2: Tasks */}
                 <div className="dashboard-module-card">
                   <div className="module-card-top">
                     <div className="module-card-lead-badge-group">
@@ -1027,7 +1031,7 @@ export default function App() {
                   </div>
 
                   <div className="module-card-body">
-                    <h3 className="module-card-title">Task Details</h3>
+                    <h3 className="module-card-title">Tasks</h3>
                     <p className="module-card-desc">
                       Manage active tasks, deadlines, priorities &amp; automated completion tracking
                     </p>
@@ -1039,7 +1043,7 @@ export default function App() {
                       type="button"
                       className="btn btn-primary module-open-btn"
                       onClick={() => setActiveDashboardBoard('tasks')}
-                      title="Open Task Details Workspace"
+                      title="Open Tasks Workspace"
                     >
                       <span>Open Dashboard →</span>
                     </button>
@@ -1066,14 +1070,11 @@ export default function App() {
             </div>
           )}
 
-          {/* Condition 3: Task Details Dedicated Board (With Quick Task Bar & Task Calculations inside) */}
+          {/* Condition 3: Tasks Dedicated Board (With In-Window Task Creator) */}
           {activeDashboardBoard === 'tasks' && (
             <div className="task-board-wrapper tab-view-animated">
               {/* Task Calculations Telemetry Strip Placed Inside Task Dashboard */}
-              <div className="task-board-telemetry-bar">
-                <div className="task-board-telemetry-left">
-                  <span className="task-board-tagline">Manage active tasks, priorities, deadlines &amp; automated reminders</span>
-                </div>
+              <div className="task-board-telemetry-bar" style={{ justifyContent: 'flex-end', marginBottom: '8px' }}>
                 <div className="task-board-telemetry-right">
                   <StatCards
                     variant="metrics"
@@ -1084,28 +1085,33 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Task Details List */}
+              {/* Task Details List with In-Window Creator (Zero Popups) */}
               <TaskList
                 tasks={filteredTasks}
                 onToggleComplete={handleToggleComplete}
                 onEdit={id => {
                   const target = tasks.find(t => t.id === id);
                   if (target) {
-                    setTaskToEdit(target);
-                    setIsTaskModalOpen(true);
+                    handleOpenTaskEditor(target);
                   }
                 }}
                 onDelete={handleDeleteTask}
                 onSyncGoogleCalendar={handleSyncGoogleCalendar}
                 onDownloadICS={handleDownloadICS}
                 onSendEmail={handleSendEmail}
-                onOpenNewTask={() => {
-                  setTaskToEdit(null);
-                  setIsTaskModalOpen(true);
-                }}
+                onOpenNewTask={() => handleOpenTaskEditor(null)}
                 currentFilter={currentFilter}
                 currentSort={currentSort}
                 onSortChange={setCurrentSort}
+                isCreatorOpen={isTaskModalOpen}
+                onCloseCreator={() => {
+                  setIsTaskModalOpen(false);
+                  setTaskToEdit(null);
+                }}
+                onSaveTask={handleSaveTask}
+                taskToEdit={taskToEdit}
+                defaultEmail={reminderEmail}
+                soundEnabled={soundEnabled}
               />
             </div>
           )}
@@ -1134,19 +1140,7 @@ export default function App() {
         </footer>
       </main>
 
-      {/* Modals */}
-      <TaskModal
-        isOpen={isTaskModalOpen}
-        onClose={() => {
-          setIsTaskModalOpen(false);
-          setTaskToEdit(null);
-        }}
-        onSave={handleSaveTask}
-        taskToEdit={taskToEdit}
-        defaultEmail={reminderEmail}
-        soundEnabled={soundEnabled}
-      />
-
+      {/* Modals (No Task Popup Modal) */}
       <SettingsModal
         isOpen={isSettingsModalOpen}
         onClose={() => setIsSettingsModalOpen(false)}
@@ -1192,10 +1186,7 @@ export default function App() {
       <button
         type="button"
         className="fab"
-        onClick={() => {
-          setTaskToEdit(null);
-          setIsTaskModalOpen(true);
-        }}
+        onClick={() => handleOpenTaskEditor(null)}
         title="Add New Task (Shortcut: N)"
       >
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
