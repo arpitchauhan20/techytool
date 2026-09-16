@@ -278,10 +278,12 @@ export default function SettingsModal({
                 </div>
                 <div className="settings-theme-grid">
                   {[
-                    { id: 'indigo', label: 'Obsidian Indigo', color: '#6366f1', bg: '#080b11' },
-                    { id: 'emerald', label: 'Emerald Forest', color: '#10b981', bg: '#050d09' },
-                    { id: 'cyan', label: 'Midnight Cyan', color: '#00bcd4', bg: '#060b13' },
-                    { id: 'violet', label: 'Nebula Violet', color: '#a855f7', bg: '#0a0614' }
+                    { id: 'indigo', label: 'Obsidian Indigo', color: '#6366f1', bg: '#080b13' },
+                    { id: 'emerald', label: 'Emerald Mint', color: '#10b981', bg: '#050d09' },
+                    { id: 'cyan', label: 'Midnight Cyan', color: '#06b6d4', bg: '#060c16' },
+                    { id: 'violet', label: 'Nebula Violet', color: '#a855f7', bg: '#090614' },
+                    { id: 'amber', label: 'Sunset Amber', color: '#f59e0b', bg: '#0d0a06' },
+                    { id: 'slate', label: 'Titanium Slate', color: '#38bdf8', bg: '#080a0f' }
                   ].map(theme => (
                     <button
                       key={theme.id}

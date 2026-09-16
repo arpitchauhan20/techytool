@@ -45,7 +45,7 @@ export default function AuthGate({
   const [confirmPassword, setConfirmPassword] = useState('');
   const [tokenInput, setTokenInput] = useState(initialResetToken || '');
 
-  // Password visibility
+  // Password visibility toggles
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -98,7 +98,7 @@ export default function AuthGate({
         const res = await AuthClient.register({ name, email, password });
         triggerConfetti();
         if (onShowToast) {
-          onShowToast('success', '✨', `Welcome to TaskFlow, ${res.user.name}!`);
+          onShowToast('success', '✨', `Welcome to Techy Tool, ${res.user.name}!`);
         }
         onAuthSuccess(res.user);
       } else if (mode === 'forgot') {
@@ -135,6 +135,20 @@ export default function AuthGate({
     }
   };
 
+  const handleGuestDemo = () => {
+    const guestUser = {
+      id: 'guest_' + Date.now().toString(36),
+      name: 'Executive Guest',
+      email: 'guest@techytool.pro',
+      isGuest: true
+    };
+    triggerConfetti();
+    if (onShowToast) {
+      onShowToast('success', '✨', 'Welcome to Techy Tool Demo Workspace!');
+    }
+    onAuthSuccess(guestUser);
+  };
+
   // Password requirements calculation
   const passHasLength = password.length >= 8;
   const passHasNumber = /\d/.test(password);
@@ -142,91 +156,105 @@ export default function AuthGate({
 
   return (
     <div className="authgate-root">
-      {/* Dynamic Background Ambient Glow Orbs */}
+      {/* Dynamic Ambient Background Glow Elements */}
       <div className="authgate-bg-glow orb-1" />
       <div className="authgate-bg-glow orb-2" />
       <div className="authgate-bg-glow orb-3" />
       <div className="authgate-bg-mesh" />
 
-      {/* Main Glass Portal Container */}
+      {/* Main Container */}
       <div className="authgate-container">
         
-        {/* Left Side: Brand Showcase & Interactive Feature Highlights */}
+        {/* Left Side: Brand Showcase & Interactive Highlights */}
         <div className="authgate-showcase">
+          {/* Brand Badge */}
           <div className="authgate-brand-header">
             <div className="authgate-logo-badge">
               <div className="authgate-logo-icon">
-                <ZapIcon size={22} />
+                <ZapIcon size={20} />
               </div>
               <div className="authgate-logo-text">
                 <span className="authgate-logo-title">Techy Tool</span>
                 <span className="authgate-logo-tag">PRO</span>
               </div>
             </div>
-            <span className="authgate-edition-pill">v2.0 Automations &amp; Helping Tools</span>
+            <span className="authgate-edition-pill">v2.0 Executive Automations</span>
           </div>
 
+          {/* Hero Typography */}
           <div className="authgate-hero-text">
             <h1 className="authgate-headline">
-              All-in-One Helping Tools <br />
-              <span className="text-gradient-neon">&amp; Smart Automations Suite.</span>
+              Intelligent Helpers <br />
+              <span className="text-gradient-neon">&amp; Smart Automations.</span>
             </h1>
             <p className="authgate-subtext">
-              Accelerate your daily execution with a complete package of intelligent productivity helpers — automated Google Calendar sync, deadline alarms, and live telemetry in one unified workspace.
+              Unified executive productivity suite featuring 2-way Google Calendar synchronization, zero-drift multi-channel reminders, and precision task telemetry.
             </p>
           </div>
 
-          {/* Feature Showcase Cards: Complete Package of Helping Tools */}
+          {/* Feature Showcase Cards */}
           <div className="authgate-feature-cards">
             <div className="authgate-feature-card">
-              <div className="authgate-feature-icon zap">
-                <ZapIcon size={20} />
-              </div>
-              <div className="authgate-feature-info">
-                <div className="authgate-feature-title-row">
-                  <h4>Smart Task &amp; Workflow Automations</h4>
-                  <span className="authgate-mini-badge highlight">Automated</span>
-                </div>
-                <p>Instant deadline calculations, auto-sorted priority queues, and intelligent task scheduling with zero manual friction.</p>
-              </div>
-            </div>
-
-            <div className="authgate-feature-card">
               <div className="authgate-feature-icon cal">
-                <CalendarIcon size={20} />
+                <CalendarIcon size={18} />
               </div>
               <div className="authgate-feature-info">
                 <div className="authgate-feature-title-row">
-                  <h4>Bi-Directional Google Calendar Sync</h4>
-                  <span className="authgate-mini-badge">Live Bridge</span>
+                  <h4>Bi-Directional Calendar Sync</h4>
+                  <span className="authgate-mini-badge highlight">Live Bridge</span>
                 </div>
-                <p>Automatic Google Calendar event generation, 1-click scheduling, and seamless .ics invitation exports.</p>
+                <p>Instant Google Calendar event creation, 1-click schedule sync, and automatic .ics exports.</p>
               </div>
             </div>
 
             <div className="authgate-feature-card">
               <div className="authgate-feature-icon bell">
-                <BellIcon size={20} />
+                <BellIcon size={18} />
               </div>
               <div className="authgate-feature-info">
                 <div className="authgate-feature-title-row">
-                  <h4>Multi-Channel Alert Dispatcher</h4>
+                  <h4>Multi-Channel Dispatcher</h4>
                   <span className="authgate-mini-badge highlight">Zero Drift</span>
                 </div>
-                <p>Harmonic audio chimes, native push notifications, and automated Resend email delivery dispatched right on time.</p>
+                <p>Harmonic audio deadline chimes, native push notifications, and automated Resend email delivery.</p>
               </div>
             </div>
 
             <div className="authgate-feature-card">
-              <div className="authgate-feature-icon zap" style={{ background: 'rgba(6, 182, 212, 0.15)', color: '#06b6d4', borderColor: 'rgba(6, 182, 212, 0.25)' }}>
-                <ClockIcon size={20} />
+              <div className="authgate-feature-icon zap">
+                <ZapIcon size={18} />
               </div>
               <div className="authgate-feature-info">
                 <div className="authgate-feature-title-row">
-                  <h4>Productivity Telemetry &amp; Cloud Hub</h4>
-                  <span className="authgate-mini-badge">Encrypted</span>
+                  <h4>Automated Priority Queue</h4>
+                  <span className="authgate-mini-badge">Optimized</span>
                 </div>
-                <p>Real-time execution analytics, overdue mitigation alerts, and secure cloud synchronization across all devices.</p>
+                <p>Instant deadline calculations, auto-sorted urgency ranks, and intelligent workflow execution.</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Live Telemetry Status Widget */}
+          <div className="authgate-telemetry-widget">
+            <div className="authgate-telemetry-header">
+              <div className="authgate-telemetry-status-pill">
+                <span className="telemetry-live-dot" />
+                <span>SYSTEM TELEMETRY</span>
+              </div>
+              <span className="authgate-telemetry-tag">All Systems Operational</span>
+            </div>
+            <div className="authgate-telemetry-grid">
+              <div className="telemetry-cell">
+                <span className="telemetry-label">Cloud Sync</span>
+                <strong className="telemetry-val text-accent">Active (256-bit)</strong>
+              </div>
+              <div className="telemetry-cell">
+                <span className="telemetry-label">On-Time Rate</span>
+                <strong className="telemetry-val text-success">99.2%</strong>
+              </div>
+              <div className="telemetry-cell">
+                <span className="telemetry-label">Auto-Dispatch</span>
+                <strong className="telemetry-val text-cyan">Zero-Drift</strong>
               </div>
             </div>
           </div>
@@ -241,12 +269,12 @@ export default function AuthGate({
             </div>
             <div className="authgate-trust-text">
               <div className="authgate-stars">★★★★★</div>
-              <span>Powering executive workflows, engineering teams &amp; builders</span>
+              <span>Trusted by executive teams, engineering leads &amp; creators</span>
             </div>
           </div>
         </div>
 
-        {/* Right Side: Auth Form Card */}
+        {/* Right Side: Glass Auth Form Card */}
         <div className="authgate-card">
           {/* Form Mode Selector Tabs */}
           {(mode === 'login' || mode === 'register') && (
@@ -272,14 +300,14 @@ export default function AuthGate({
           <div className="authgate-card-header">
             {mode === 'login' && (
               <>
-                <h2 className="authgate-card-title">Welcome to Techy Tool</h2>
-                <p className="authgate-card-desc">Sign in to access your intelligent tools &amp; automations suite.</p>
+                <h2 className="authgate-card-title">Welcome Back</h2>
+                <p className="authgate-card-desc">Sign in to access your intelligent workspace &amp; automations suite.</p>
               </>
             )}
             {mode === 'register' && (
               <>
-                <h2 className="authgate-card-title">Get Started with Techy Tool</h2>
-                <p className="authgate-card-desc">Create your private workspace and activate all smart automation tools.</p>
+                <h2 className="authgate-card-title">Create Workspace</h2>
+                <p className="authgate-card-desc">Activate your executive account with calendar sync &amp; smart tools.</p>
               </>
             )}
             {mode === 'forgot' && (
@@ -288,7 +316,7 @@ export default function AuthGate({
                   <ArrowLeftIcon size={14} /> Back to Sign In
                 </button>
                 <h2 className="authgate-card-title" style={{ marginTop: '12px' }}>Reset Password</h2>
-                <p className="authgate-card-desc">Enter your account email to receive reset instructions.</p>
+                <p className="authgate-card-desc">Enter your account email to receive instant recovery instructions.</p>
               </>
             )}
             {mode === 'reset' && (
@@ -297,7 +325,7 @@ export default function AuthGate({
                   <ArrowLeftIcon size={14} /> Back to Sign In
                 </button>
                 <h2 className="authgate-card-title" style={{ marginTop: '12px' }}>Set New Password</h2>
-                <p className="authgate-card-desc">Choose a strong, new password for your Techy Tool account.</p>
+                <p className="authgate-card-desc">Choose a strong, secure password for your Techy Tool account.</p>
               </>
             )}
           </div>
@@ -317,14 +345,14 @@ export default function AuthGate({
             </div>
           )}
 
-          {/* Form */}
+          {/* Main Auth Form */}
           <form onSubmit={handleSubmit} className="authgate-form">
-            {/* Name Field (Sign Up Only) */}
+            {/* Full Name Field (Register Only) */}
             {mode === 'register' && (
               <div className="authgate-field">
                 <label className="authgate-label" htmlFor="auth-name">Full Name</label>
                 <div className="authgate-input-wrapper">
-                  <span className="authgate-input-icon"><UserIcon size={18} /></span>
+                  <span className="authgate-input-icon"><UserIcon size={17} /></span>
                   <input
                     id="auth-name"
                     type="text"
@@ -339,12 +367,12 @@ export default function AuthGate({
               </div>
             )}
 
-            {/* Email Field (Sign In, Sign Up, Forgot) */}
+            {/* Email Field (Sign In, Register, Forgot) */}
             {(mode === 'login' || mode === 'register' || mode === 'forgot') && (
               <div className="authgate-field">
                 <label className="authgate-label" htmlFor="auth-email">Email Address</label>
                 <div className="authgate-input-wrapper">
-                  <span className="authgate-input-icon"><MailIcon size={18} /></span>
+                  <span className="authgate-input-icon"><MailIcon size={17} /></span>
                   <input
                     id="auth-email"
                     type="email"
@@ -364,7 +392,7 @@ export default function AuthGate({
               <div className="authgate-field">
                 <label className="authgate-label" htmlFor="auth-token">Reset Token</label>
                 <div className="authgate-input-wrapper">
-                  <span className="authgate-input-icon"><LockIcon size={18} /></span>
+                  <span className="authgate-input-icon"><LockIcon size={17} /></span>
                   <input
                     id="auth-token"
                     type="text"
@@ -378,7 +406,7 @@ export default function AuthGate({
               </div>
             )}
 
-            {/* Password Field (Sign In, Sign Up, Reset) */}
+            {/* Password Field (Sign In, Register, Reset) */}
             {(mode === 'login' || mode === 'register' || mode === 'reset') && (
               <div className="authgate-field">
                 <div className="authgate-label-row">
@@ -396,7 +424,7 @@ export default function AuthGate({
                   )}
                 </div>
                 <div className="authgate-input-wrapper">
-                  <span className="authgate-input-icon"><LockIcon size={18} /></span>
+                  <span className="authgate-input-icon"><LockIcon size={17} /></span>
                   <input
                     id="auth-pass"
                     type={showPassword ? 'text' : 'password'}
@@ -419,12 +447,12 @@ export default function AuthGate({
               </div>
             )}
 
-            {/* Confirm Password Field (Sign Up, Reset) */}
+            {/* Confirm Password Field (Register, Reset) */}
             {(mode === 'register' || mode === 'reset') && (
               <div className="authgate-field">
                 <label className="authgate-label" htmlFor="auth-confirm-pass">Confirm Password</label>
                 <div className="authgate-input-wrapper">
-                  <span className="authgate-input-icon"><LockIcon size={18} /></span>
+                  <span className="authgate-input-icon"><LockIcon size={17} /></span>
                   <input
                     id="auth-confirm-pass"
                     type={showConfirmPassword ? 'text' : 'password'}
@@ -447,7 +475,7 @@ export default function AuthGate({
               </div>
             )}
 
-            {/* Password Validation Checklist for Registration */}
+            {/* Real-Time Password Security Checklist */}
             {(mode === 'register' || mode === 'reset') && password.length > 0 && (
               <div className="authgate-pass-check">
                 <div className={`authgate-check-item ${passHasLength ? 'valid' : ''}`}>
@@ -464,16 +492,16 @@ export default function AuthGate({
               </div>
             )}
 
-            {/* Submit Button */}
+            {/* Submit Action Button */}
             <button
               type="submit"
-              className="btn btn-primary authgate-submit-btn"
+              className="authgate-submit-btn"
               disabled={loading}
             >
               {loading ? (
                 <span className="authgate-btn-loading">
                   <RefreshCwIcon size={16} className="spinning" />
-                  <span>Processing...</span>
+                  <span>Authenticating...</span>
                 </span>
               ) : (
                 <span>
@@ -486,10 +514,28 @@ export default function AuthGate({
             </button>
           </form>
 
+          {/* Quick Guest Demo Option (when on login/register) */}
+          {(mode === 'login' || mode === 'register') && (
+            <>
+              <div className="authgate-divider">
+                <span>OR EXPLORE INSTANTLY</span>
+              </div>
+              <button
+                type="button"
+                className="authgate-guest-btn"
+                onClick={handleGuestDemo}
+              >
+                <SparklesIcon size={16} className="authgate-guest-sparkle" />
+                <span>Try Instant Guest Demo Mode</span>
+                <span className="authgate-guest-tag">1-Click</span>
+              </button>
+            </>
+          )}
+
           {/* Card Footer Info */}
           <div className="authgate-card-footer">
             <div className="authgate-security-note">
-              <LockIcon size={13} />
+              <LockIcon size={12} />
               <span>256-Bit SSL Encrypted &amp; Secure Session</span>
             </div>
             <div className="authgate-legal-links">

@@ -4,21 +4,24 @@
    ========================================================================== */
 
 /* ---------- Color Tokens & Dynamic Themes ---------- */
-:root {
-  /* Default: Obsidian Indigo */
-  --bg-app: #080b11;
-  --surface-sidebar: #0a0e17;
-  --surface-topbar: rgba(10, 14, 23, 0.82);
-  --surface-canvas: #080b11;
-  --surface-row: #0f1422;
-  --surface-row-hover: #141b2e;
-  --surface-modal: #111728;
-  --surface-input: #111726;
+:root,
+[data-theme="indigo"] {
+  /* Obsidian Indigo (Default) */
+  --bg-app: #080b13;
+  --surface-sidebar: #0b101c;
+  --surface-topbar: rgba(11, 16, 28, 0.88);
+  --surface-canvas: #080b13;
+  --surface-row: #0f172a;
+  --surface-row-hover: #16223d;
+  --surface-card: #10192e;
+  --surface-card-hover: #15223e;
+  --surface-modal: #10192e;
+  --surface-input: #0c1424;
 
   --border-subtle: rgba(255, 255, 255, 0.06);
-  --border-default: rgba(255, 255, 255, 0.09);
-  --border-strong: rgba(255, 255, 255, 0.16);
-  --border-focus: rgba(99, 102, 241, 0.45);
+  --border-default: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.18);
+  --border-focus: rgba(99, 102, 241, 0.55);
 
   --text-primary: #f8fafc;
   --text-secondary: #94a3b8;
@@ -28,18 +31,18 @@
   --accent: #6366f1;
   --accent-hover: #818cf8;
   --accent-light: #a5b4fc;
-  --accent-glow: rgba(99, 102, 241, 0.22);
-  --accent-subtle: rgba(99, 102, 241, 0.08);
+  --accent-glow: rgba(99, 102, 241, 0.28);
+  --accent-subtle: rgba(99, 102, 241, 0.1);
 
   --secondary: #06b6d4;
   --secondary-glow: rgba(6, 182, 212, 0.2);
 
   --success: #10b981;
-  --success-glow: rgba(16, 185, 129, 0.15);
+  --success-glow: rgba(16, 185, 129, 0.18);
   --warning: #f59e0b;
-  --warning-glow: rgba(245, 158, 11, 0.15);
+  --warning-glow: rgba(245, 158, 11, 0.18);
   --danger: #f43f5e;
-  --danger-glow: rgba(244, 63, 94, 0.18);
+  --danger-glow: rgba(244, 63, 94, 0.2);
   --info: #3b82f6;
 
   --priority-high: #f43f5e;
@@ -57,88 +60,169 @@
   --duration-base: 220ms;
 }
 
-/* Theme: Emerald Mint */
+/* Theme: Emerald Mint (Deep Forest Carbon) */
 [data-theme="emerald"] {
   --bg-app: #050d09;
-  --surface-sidebar: #07130d;
-  --surface-topbar: rgba(7, 19, 13, 0.82);
+  --surface-sidebar: #08140f;
+  --surface-topbar: rgba(8, 20, 15, 0.88);
   --surface-canvas: #050d09;
-  --surface-row: #0b1c13;
-  --surface-row-hover: #10261a;
-  --surface-modal: #0d2117;
-  --surface-input: #0e2419;
+  --surface-row: #0c1e16;
+  --surface-row-hover: #122a20;
+  --surface-card: #0d2219;
+  --surface-card-hover: #132f23;
+  --surface-modal: #0d2219;
+  --surface-input: #091711;
+
+  --border-subtle: rgba(16, 185, 129, 0.08);
+  --border-default: rgba(16, 185, 129, 0.14);
+  --border-strong: rgba(16, 185, 129, 0.26);
+  --border-focus: rgba(16, 185, 129, 0.55);
+
+  --text-primary: #f0fdf4;
+  --text-secondary: #94a3b8;
+  --text-tertiary: #64748b;
+  --text-muted: #475569;
+
   --accent: #10b981;
   --accent-hover: #34d399;
   --accent-light: #6ee7b7;
-  --accent-glow: rgba(16, 185, 129, 0.25);
-  --accent-subtle: rgba(16, 185, 129, 0.08);
-  --border-focus: rgba(16, 185, 129, 0.5);
+  --accent-glow: rgba(16, 185, 129, 0.28);
+  --accent-subtle: rgba(16, 185, 129, 0.1);
+
+  --secondary: #06b6d4;
+  --secondary-glow: rgba(6, 182, 212, 0.2);
 }
 
-/* Theme: Midnight Cyan (Deep Obsidian Cyber) */
+/* Theme: Midnight Cyan (Deep Cyber Azure) */
 [data-theme="cyan"] {
-  --bg-app: #060b13;
-  --surface-sidebar: #08111c;
-  --surface-topbar: rgba(8, 17, 28, 0.85);
-  --surface-canvas: #060b13;
-  --surface-row: #0c1726;
-  --surface-row-hover: #122137;
-  --surface-modal: #0e1b2d;
-  --surface-input: #091321;
-  --surface-card: rgba(12, 23, 38, 0.85);
-  --surface-card-hover: rgba(18, 33, 55, 0.95);
+  --bg-app: #060c16;
+  --surface-sidebar: #081321;
+  --surface-topbar: rgba(8, 19, 33, 0.88);
+  --surface-canvas: #060c16;
+  --surface-row: #0d1b2f;
+  --surface-row-hover: #122642;
+  --surface-card: #0e1e34;
+  --surface-card-hover: #142a49;
+  --surface-modal: #0e1e34;
+  --surface-input: #091524;
 
-  --border-subtle: rgba(6, 182, 212, 0.1);
-  --border-default: rgba(6, 182, 212, 0.18);
-  --border-strong: rgba(6, 182, 212, 0.32);
-  --border-focus: rgba(6, 182, 212, 0.6);
+  --border-subtle: rgba(6, 182, 212, 0.08);
+  --border-default: rgba(6, 182, 212, 0.14);
+  --border-strong: rgba(6, 182, 212, 0.26);
+  --border-focus: rgba(6, 182, 212, 0.55);
 
   --text-primary: #f0fdfa;
-  --text-secondary: #99f6e4;
-  --text-tertiary: #5eead4;
-  --text-muted: #2dd4bf;
+  --text-secondary: #94a3b8;
+  --text-tertiary: #64748b;
+  --text-muted: #475569;
 
-  --accent: #00bcd4;
-  --accent-hover: #26c6da;
-  --accent-light: #80deea;
-  --accent-glow: rgba(0, 188, 212, 0.3);
-  --accent-subtle: rgba(0, 188, 212, 0.1);
+  --accent: #06b6d4;
+  --accent-hover: #22d3ee;
+  --accent-light: #67e8f9;
+  --accent-glow: rgba(6, 182, 212, 0.28);
+  --accent-subtle: rgba(6, 182, 212, 0.1);
 
-  --secondary: #38bdf8;
-  --secondary-glow: rgba(56, 189, 248, 0.25);
+  --secondary: #3b82f6;
+  --secondary-glow: rgba(59, 130, 246, 0.2);
 }
 
-/* Theme 4: Nebula Violet (Deep Amethyst Luxury) */
+/* Theme: Nebula Violet (Deep Amethyst Luxury) */
 [data-theme="violet"] {
-  --bg-app: #0a0614;
-  --surface-sidebar: #0d091a;
-  --surface-topbar: rgba(13, 9, 26, 0.85);
-  --surface-canvas: #0a0614;
-  --surface-row: #140d28;
-  --surface-row-hover: #1c1338;
-  --surface-modal: #180f30;
-  --surface-input: #110a22;
-  --surface-card: rgba(20, 13, 40, 0.8);
-  --surface-card-hover: rgba(28, 19, 56, 0.9);
+  --bg-app: #090614;
+  --surface-sidebar: #0e0a1f;
+  --surface-topbar: rgba(14, 10, 31, 0.88);
+  --surface-canvas: #090614;
+  --surface-row: #140e2b;
+  --surface-row-hover: #1d143e;
+  --surface-card: #160f30;
+  --surface-card-hover: #1f1644;
+  --surface-modal: #160f30;
+  --surface-input: #0d081e;
 
-  --border-subtle: rgba(168, 85, 247, 0.1);
-  --border-default: rgba(168, 85, 247, 0.18);
-  --border-strong: rgba(168, 85, 247, 0.32);
-  --border-focus: rgba(168, 85, 247, 0.6);
+  --border-subtle: rgba(168, 85, 247, 0.08);
+  --border-default: rgba(168, 85, 247, 0.14);
+  --border-strong: rgba(168, 85, 247, 0.26);
+  --border-focus: rgba(168, 85, 247, 0.55);
 
   --text-primary: #faf5ff;
-  --text-secondary: #e9d5ff;
-  --text-tertiary: #d8b4fe;
-  --text-muted: #c084fc;
+  --text-secondary: #94a3b8;
+  --text-tertiary: #64748b;
+  --text-muted: #475569;
 
   --accent: #a855f7;
   --accent-hover: #c084fc;
   --accent-light: #e9d5ff;
-  --accent-glow: rgba(168, 85, 247, 0.3);
+  --accent-glow: rgba(168, 85, 247, 0.28);
   --accent-subtle: rgba(168, 85, 247, 0.1);
 
   --secondary: #ec4899;
-  --secondary-glow: rgba(236, 72, 153, 0.25);
+  --secondary-glow: rgba(236, 72, 153, 0.2);
+}
+
+/* Theme: Sunset Amber (Deep Solar Espresso) */
+[data-theme="amber"] {
+  --bg-app: #0d0a06;
+  --surface-sidebar: #141009;
+  --surface-topbar: rgba(20, 16, 9, 0.88);
+  --surface-canvas: #0d0a06;
+  --surface-row: #1c160c;
+  --surface-row-hover: #261f11;
+  --surface-card: #1f180e;
+  --surface-card-hover: #2a2114;
+  --surface-modal: #1f180e;
+  --surface-input: #130f08;
+
+  --border-subtle: rgba(245, 158, 11, 0.08);
+  --border-default: rgba(245, 158, 11, 0.14);
+  --border-strong: rgba(245, 158, 11, 0.26);
+  --border-focus: rgba(245, 158, 11, 0.55);
+
+  --text-primary: #fffbeb;
+  --text-secondary: #94a3b8;
+  --text-tertiary: #64748b;
+  --text-muted: #475569;
+
+  --accent: #f59e0b;
+  --accent-hover: #fbbf24;
+  --accent-light: #fde68a;
+  --accent-glow: rgba(245, 158, 11, 0.28);
+  --accent-subtle: rgba(245, 158, 11, 0.1);
+
+  --secondary: #f97316;
+  --secondary-glow: rgba(249, 115, 22, 0.2);
+}
+
+/* Theme: Titanium Slate (Precision Monochrome & Ice Blue) */
+[data-theme="slate"] {
+  --bg-app: #080a0f;
+  --surface-sidebar: #0c0f17;
+  --surface-topbar: rgba(12, 15, 23, 0.88);
+  --surface-canvas: #080a0f;
+  --surface-row: #121722;
+  --surface-row-hover: #19202f;
+  --surface-card: #131926;
+  --surface-card-hover: #1a2233;
+  --surface-modal: #131926;
+  --surface-input: #0b0e16;
+
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-default: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.18);
+  --border-focus: rgba(56, 189, 248, 0.55);
+
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-tertiary: #64748b;
+  --text-muted: #475569;
+
+  --accent: #38bdf8;
+  --accent-hover: #7dd3fc;
+  --accent-light: #bae6fd;
+  --accent-glow: rgba(56, 189, 248, 0.28);
+  --accent-subtle: rgba(56, 189, 248, 0.1);
+
+  --secondary: #818cf8;
+  --secondary-glow: rgba(129, 140, 248, 0.2);
 }
 
 /* ---------- Global Reset ---------- */
@@ -4877,17 +4961,18 @@ html, body {
 
 .authgate-root {
   min-height: 100vh;
+  min-height: 100dvh;
   width: 100%;
   position: relative;
-  background-color: #06080e;
+  background-color: var(--bg-app, #080b13);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 32px 24px;
+  padding: 40px 24px;
   overflow-x: hidden;
   overflow-y: auto;
   font-family: var(--font-sans, 'Plus Jakarta Sans', sans-serif);
-  color: #f8fafc;
+  color: var(--text-primary, #f8fafc);
 }
 
 /* Ambient Animated Glow Orbs */
@@ -4902,17 +4987,17 @@ html, body {
 }
 
 .authgate-bg-glow.orb-1 {
-  width: 520px;
-  height: 520px;
-  background: radial-gradient(circle, rgba(99, 102, 241, 0.35) 0%, rgba(79, 70, 229, 0.05) 70%, transparent 100%);
-  top: -100px;
-  left: -100px;
+  width: 540px;
+  height: 540px;
+  background: radial-gradient(circle, var(--accent-glow, rgba(99, 102, 241, 0.35)) 0%, transparent 70%);
+  top: -120px;
+  left: -120px;
 }
 
 .authgate-bg-glow.orb-2 {
   width: 600px;
   height: 600px;
-  background: radial-gradient(circle, rgba(168, 85, 247, 0.28) 0%, rgba(139, 92, 246, 0.05) 70%, transparent 100%);
+  background: radial-gradient(circle, var(--secondary-glow, rgba(6, 182, 212, 0.25)) 0%, transparent 70%);
   bottom: -120px;
   right: -100px;
   animation-duration: 15s;
@@ -4920,10 +5005,10 @@ html, body {
 }
 
 .authgate-bg-glow.orb-3 {
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(6, 182, 212, 0.22) 0%, transparent 70%);
-  top: 40%;
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.22) 0%, transparent 70%);
+  top: 35%;
   left: 45%;
   animation-duration: 18s;
 }
@@ -4933,24 +5018,18 @@ html, body {
   inset: 0;
   background-image: 
     radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-    radial-gradient(rgba(99, 102, 241, 0.05) 1px, transparent 1px);
+    radial-gradient(var(--accent-subtle, rgba(99, 102, 241, 0.06)) 1px, transparent 1px);
   background-size: 36px 36px, 72px 72px;
   background-position: 0 0, 18px 18px;
-  opacity: 0.6;
+  opacity: 0.65;
   pointer-events: none;
   z-index: 1;
 }
 
 @keyframes floatOrb {
-  0% {
-    transform: translate(0, 0) scale(1);
-  }
-  50% {
-    transform: translate(30px, -25px) scale(1.08);
-  }
-  100% {
-    transform: translate(-20px, 35px) scale(0.95);
-  }
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(30px, -25px) scale(1.08); }
+  100% { transform: translate(-20px, 35px) scale(0.95); }
 }
 
 /* Layout Grid Container */
@@ -4960,7 +5039,7 @@ html, body {
   width: 100%;
   max-width: 1140px;
   display: grid;
-  grid-template-columns: 1.15fr 0.95fr;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.95fr);
   gap: 48px;
   align-items: center;
   margin: auto;
@@ -4970,38 +5049,39 @@ html, body {
 .authgate-showcase {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  padding-right: 12px;
+  gap: 22px;
+  padding-right: 8px;
 }
 
 .authgate-brand-header {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
   flex-wrap: wrap;
 }
 
 .authgate-logo-badge {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   padding: 6px 14px 6px 8px;
   background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-default, rgba(255, 255, 255, 0.1));
   border-radius: 9999px;
   backdrop-filter: blur(12px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
 .authgate-logo-icon {
-  width: 34px;
-  height: 34px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  background: linear-gradient(135deg, var(--accent, #6366f1), var(--secondary, #06b6d4));
   color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 16px rgba(99, 102, 241, 0.45);
+  box-shadow: 0 0 16px var(--accent-glow, rgba(99, 102, 241, 0.45));
 }
 
 .authgate-logo-text {
@@ -5011,7 +5091,7 @@ html, body {
 }
 
 .authgate-logo-title {
-  font-size: 16px;
+  font-size: 15.5px;
   font-weight: 800;
   letter-spacing: -0.02em;
   color: #ffffff;
@@ -5021,7 +5101,7 @@ html, body {
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 0.06em;
-  background: linear-gradient(135deg, #6366f1, #ec4899);
+  background: linear-gradient(135deg, var(--accent, #6366f1), #ec4899);
   color: #ffffff;
   padding: 2px 6px;
   border-radius: 4px;
@@ -5030,21 +5110,21 @@ html, body {
 .authgate-edition-pill {
   font-size: 11px;
   font-weight: 600;
-  color: #94a3b8;
-  padding: 4px 10px;
+  color: var(--text-secondary, #94a3b8);
+  padding: 5px 12px;
   border-radius: 9999px;
   background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.06));
 }
 
 .authgate-hero-text {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .authgate-headline {
-  font-size: 38px;
+  font-size: 36px;
   font-weight: 800;
   line-height: 1.18;
   letter-spacing: -0.03em;
@@ -5053,16 +5133,16 @@ html, body {
 }
 
 .text-gradient-neon {
-  background: linear-gradient(135deg, #a5b4fc 0%, #818cf8 35%, #c084fc 70%, #f472b6 100%);
+  background: linear-gradient(135deg, var(--accent-light, #a5b4fc) 0%, var(--accent, #818cf8) 35%, var(--secondary, #06b6d4) 75%, #ec4899 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   display: inline-block;
 }
 
 .authgate-subtext {
-  font-size: 15px;
-  line-height: 1.6;
-  color: #94a3b8;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--text-secondary, #94a3b8);
   margin: 0;
   max-width: 520px;
 }
@@ -5071,17 +5151,17 @@ html, body {
 .authgate-feature-cards {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-top: 6px;
+  gap: 10px;
+  margin-top: 4px;
 }
 
 .authgate-feature-card {
   display: flex;
   align-items: flex-start;
   gap: 14px;
-  padding: 14px 16px;
-  background: rgba(15, 23, 42, 0.45);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 13px 16px;
+  background: rgba(15, 23, 42, 0.4);
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.06));
   border-radius: 14px;
   backdrop-filter: blur(16px);
   transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease, background 0.2s ease;
@@ -5089,13 +5169,13 @@ html, body {
 
 .authgate-feature-card:hover {
   transform: translateX(4px);
-  border-color: rgba(99, 102, 241, 0.35);
-  background: rgba(20, 30, 55, 0.65);
+  border-color: var(--border-focus, rgba(99, 102, 241, 0.4));
+  background: rgba(20, 30, 55, 0.6);
 }
 
 .authgate-feature-icon {
-  width: 38px;
-  height: 38px;
+  width: 36px;
+  height: 36px;
   border-radius: 10px;
   display: flex;
   align-items: center;
@@ -5130,39 +5210,124 @@ html, body {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  margin-bottom: 3px;
+  margin-bottom: 2px;
 }
 
 .authgate-feature-title-row h4 {
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 700;
   color: #f1f5f9;
   margin: 0;
 }
 
 .authgate-mini-badge {
-  font-size: 10px;
+  font-size: 9.5px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  padding: 2px 7px;
-  border-radius: 6px;
+  padding: 2px 6px;
+  border-radius: 5px;
   background: rgba(255, 255, 255, 0.05);
-  color: #94a3b8;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-secondary, #94a3b8);
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
 }
 
 .authgate-mini-badge.highlight {
-  background: rgba(99, 102, 241, 0.12);
-  color: #a5b4fc;
-  border-color: rgba(99, 102, 241, 0.3);
+  background: var(--accent-subtle, rgba(99, 102, 241, 0.12));
+  color: var(--accent-light, #a5b4fc);
+  border-color: var(--border-focus, rgba(99, 102, 241, 0.3));
 }
 
 .authgate-feature-info p {
-  font-size: 12.5px;
+  font-size: 12px;
   line-height: 1.45;
-  color: #94a3b8;
+  color: var(--text-secondary, #94a3b8);
   margin: 0;
+}
+
+/* Telemetry Status Widget */
+.authgate-telemetry-widget {
+  background: rgba(10, 15, 28, 0.65);
+  border: 1px solid var(--border-default, rgba(255, 255, 255, 0.1));
+  border-radius: 14px;
+  padding: 12px 14px;
+  backdrop-filter: blur(14px);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.authgate-telemetry-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.authgate-telemetry-status-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary, #94a3b8);
+  text-transform: uppercase;
+}
+
+.telemetry-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+  animation: techyBlink 1.2s infinite alternate;
+}
+
+.authgate-telemetry-tag {
+  font-size: 11px;
+  font-weight: 600;
+  color: #34d399;
+}
+
+.authgate-telemetry-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+}
+
+.telemetry-cell {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.06));
+  border-radius: 9px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.telemetry-label {
+  font-size: 10.5px;
+  color: var(--text-tertiary, #64748b);
+  font-weight: 500;
+}
+
+.telemetry-val {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.telemetry-val.text-accent {
+  color: var(--accent-light, #a5b4fc);
+}
+
+.telemetry-val.text-success {
+  color: #10b981;
+}
+
+.telemetry-val.text-cyan {
+  color: #06b6d4;
 }
 
 /* Trust Footer */
@@ -5170,8 +5335,8 @@ html, body {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding-top: 12px;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 10px;
+  border-top: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.06));
 }
 
 .authgate-avatar-stack {
@@ -5188,7 +5353,7 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid #06080e;
+  border: 2px solid var(--bg-app, #080b13);
   margin-left: -6px;
   color: #ffffff;
 }
@@ -5207,7 +5372,7 @@ html, body {
   flex-direction: column;
   gap: 2px;
   font-size: 12px;
-  color: #94a3b8;
+  color: var(--text-secondary, #94a3b8);
 }
 
 .authgate-stars {
@@ -5222,19 +5387,19 @@ html, body {
 
 .authgate-card {
   position: relative;
-  background: rgba(13, 19, 33, 0.82);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: var(--surface-card, rgba(13, 19, 33, 0.85));
+  border: 1px solid var(--border-default, rgba(255, 255, 255, 0.12));
   border-radius: 24px;
-  padding: 34px 32px;
+  padding: 34px 30px;
   backdrop-filter: blur(28px);
   -webkit-backdrop-filter: blur(28px);
   box-shadow: 
     0 24px 64px -12px rgba(0, 0, 0, 0.65),
     0 0 0 1px rgba(255, 255, 255, 0.04),
-    0 0 40px -10px rgba(99, 102, 241, 0.18);
+    0 0 40px -10px var(--accent-glow, rgba(99, 102, 241, 0.2));
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 18px;
   animation: authCardIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
@@ -5256,19 +5421,19 @@ html, body {
   gap: 6px;
   padding: 5px;
   background: rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.1));
   border-radius: 14px;
 }
 
 .authgate-tab-btn {
-  padding: 12px 18px;
+  padding: 11px 16px;
   min-height: 44px;
-  font-size: 14.5px;
+  font-size: 14px;
   font-weight: 700;
   border-radius: 10px;
   border: none;
   background: transparent;
-  color: #94a3b8;
+  color: var(--text-secondary, #94a3b8);
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   text-align: center;
@@ -5282,10 +5447,10 @@ html, body {
 }
 
 .authgate-tab-btn.active {
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.32), rgba(139, 92, 246, 0.32));
+  background: linear-gradient(135deg, var(--accent-glow, rgba(99, 102, 241, 0.32)), var(--accent-subtle, rgba(139, 92, 246, 0.32)));
   color: #ffffff;
-  border: 1px solid rgba(99, 102, 241, 0.5);
-  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+  border: 1px solid var(--accent, #6366f1);
+  box-shadow: 0 4px 16px var(--accent-glow, rgba(99, 102, 241, 0.3));
 }
 
 /* Card Header */
@@ -5305,7 +5470,7 @@ html, body {
 
 .authgate-card-desc {
   font-size: 13.5px;
-  color: #94a3b8;
+  color: var(--text-secondary, #94a3b8);
   margin: 0;
   line-height: 1.45;
 }
@@ -5316,7 +5481,7 @@ html, body {
   gap: 6px;
   background: none;
   border: none;
-  color: #818cf8;
+  color: var(--accent-hover, #818cf8);
   font-size: 12.5px;
   font-weight: 600;
   cursor: pointer;
@@ -5326,7 +5491,7 @@ html, body {
 }
 
 .authgate-back-link:hover {
-  color: #a5b4fc;
+  color: var(--accent-light, #a5b4fc);
   text-decoration: underline;
 }
 
@@ -5335,7 +5500,7 @@ html, body {
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  padding: 12px 14px;
+  padding: 11px 14px;
   border-radius: 10px;
   font-size: 13px;
   line-height: 1.45;
@@ -5369,7 +5534,7 @@ html, body {
 .authgate-form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 15px;
 }
 
 .authgate-field {
@@ -5394,7 +5559,7 @@ html, body {
 .authgate-forgot-link {
   background: none;
   border: none;
-  color: #818cf8;
+  color: var(--accent-hover, #818cf8);
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
@@ -5403,7 +5568,7 @@ html, body {
 }
 
 .authgate-forgot-link:hover {
-  color: #a5b4fc;
+  color: var(--accent-light, #a5b4fc);
   text-decoration: underline;
 }
 
@@ -5417,7 +5582,7 @@ html, body {
 .authgate-input-icon {
   position: absolute;
   left: 14px;
-  color: #64748b;
+  color: var(--text-tertiary, #64748b);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -5428,11 +5593,11 @@ html, body {
 .authgate-input {
   width: 100%;
   padding: 12px 14px 12px 42px;
-  background: rgba(10, 14, 26, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--surface-input, rgba(10, 14, 26, 0.75));
+  border: 1px solid var(--border-default, rgba(255, 255, 255, 0.1));
   border-radius: 11px;
-  color: #f8fafc;
-  font-size: 14px;
+  color: var(--text-primary, #f8fafc);
+  font-size: 14.5px;
   font-family: var(--font-sans, inherit);
   transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
   outline: none;
@@ -5443,17 +5608,17 @@ html, body {
 }
 
 .authgate-input:focus {
-  border-color: #6366f1;
-  background: rgba(15, 23, 42, 0.95);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+  border-color: var(--accent, #6366f1);
+  background: var(--surface-card-hover, rgba(15, 23, 42, 0.95));
+  box-shadow: 0 0 0 3px var(--accent-glow, rgba(99, 102, 241, 0.25));
 }
 
 .authgate-input-wrapper:focus-within .authgate-input-icon {
-  color: #818cf8;
+  color: var(--accent-hover, #818cf8);
 }
 
 .authgate-input::placeholder {
-  color: #475569;
+  color: var(--text-muted, #475569);
 }
 
 .authgate-eye-toggle {
@@ -5461,7 +5626,7 @@ html, body {
   right: 12px;
   background: none;
   border: none;
-  color: #64748b;
+  color: var(--text-tertiary, #64748b);
   cursor: pointer;
   padding: 4px;
   display: flex;
@@ -5479,8 +5644,8 @@ html, body {
 .authgate-pass-check {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 12px;
-  padding: 6px 2px;
+  gap: 6px 12px;
+  padding: 4px 2px;
 }
 
 .authgate-check-item {
@@ -5488,7 +5653,7 @@ html, body {
   align-items: center;
   gap: 5px;
   font-size: 11.5px;
-  color: #64748b;
+  color: var(--text-tertiary, #64748b);
   font-weight: 500;
   transition: color 0.15s ease;
 }
@@ -5505,19 +5670,19 @@ html, body {
 /* Primary Submit / Register Button */
 .authgate-submit-btn {
   width: 100%;
-  padding: 15px 24px;
-  min-height: 52px;
-  font-size: 15.5px;
+  padding: 14px 24px;
+  min-height: 50px;
+  font-size: 15px;
   font-weight: 800;
   letter-spacing: -0.01em;
-  border-radius: 13px;
-  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--accent, #6366f1) 0%, var(--accent-hover, #4f46e5) 100%);
   color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.18);
-  box-shadow: 0 6px 22px rgba(99, 102, 241, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  box-shadow: 0 6px 22px var(--accent-glow, rgba(99, 102, 241, 0.45)), inset 0 1px 0 rgba(255, 255, 255, 0.25);
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  margin-top: 6px;
+  margin-top: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -5525,8 +5690,8 @@ html, body {
 
 .authgate-submit-btn:hover:not(:disabled) {
   transform: translateY(-1px);
-  box-shadow: 0 10px 28px rgba(99, 102, 241, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.35);
-  background: linear-gradient(135deg, #818cf8 0%, #6366f1 100%);
+  box-shadow: 0 10px 28px var(--accent-glow, rgba(99, 102, 241, 0.55)), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  background: linear-gradient(135deg, var(--accent-hover, #818cf8) 0%, var(--accent, #6366f1) 100%);
 }
 
 .authgate-submit-btn:active:not(:disabled) {
@@ -5557,16 +5722,16 @@ html, body {
 .authgate-divider::after {
   content: '';
   flex: 1;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
 }
 
 .authgate-divider span {
   padding: 0 12px;
-  font-size: 11.5px;
-  color: #64748b;
+  font-size: 11px;
+  color: var(--text-tertiary, #64748b);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: 600;
+  letter-spacing: 0.06em;
+  font-weight: 700;
 }
 
 /* Guest Demo Button */
@@ -5575,10 +5740,11 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
   padding: 11px 16px;
+  min-height: 44px;
   background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-default, rgba(255, 255, 255, 0.1));
   border-radius: 11px;
   color: #e2e8f0;
   font-size: 13.5px;
@@ -5589,7 +5755,7 @@ html, body {
 
 .authgate-guest-btn:hover {
   background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(99, 102, 241, 0.3);
+  border-color: var(--border-focus, rgba(99, 102, 241, 0.3));
   color: #ffffff;
   transform: translateY(-1px);
 }
@@ -5602,8 +5768,8 @@ html, body {
   font-size: 10px;
   padding: 2px 6px;
   border-radius: 4px;
-  background: rgba(99, 102, 241, 0.15);
-  color: #a5b4fc;
+  background: var(--accent-subtle, rgba(99, 102, 241, 0.15));
+  color: var(--accent-light, #a5b4fc);
   font-weight: 700;
   letter-spacing: 0.02em;
 }
@@ -5615,16 +5781,16 @@ html, body {
   align-items: center;
   gap: 8px;
   padding-top: 10px;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.06));
   font-size: 11.5px;
-  color: #64748b;
+  color: var(--text-tertiary, #64748b);
 }
 
 .authgate-security-note {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  color: #64748b;
+  color: var(--text-tertiary, #64748b);
 }
 
 .authgate-legal-links {
@@ -5634,14 +5800,143 @@ html, body {
 }
 
 .authgate-legal-links a {
-  color: #64748b;
+  color: var(--text-secondary, #94a3b8);
   text-decoration: none;
   transition: color 0.15s ease;
 }
 
 .authgate-legal-links a:hover {
-  color: #94a3b8;
+  color: #ffffff;
   text-decoration: underline;
+}
+
+/* ==========================================================================
+   Comprehensive AuthGate Responsiveness (Desktop, Tablet, Mobile)
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .authgate-container {
+    grid-template-columns: 1fr;
+    gap: 36px;
+    max-width: 580px;
+  }
+
+  .authgate-showcase {
+    padding-right: 0;
+    text-align: center;
+    align-items: center;
+  }
+
+  .authgate-brand-header {
+    justify-content: center;
+  }
+
+  .authgate-subtext {
+    max-width: 100%;
+  }
+
+  .authgate-feature-cards {
+    width: 100%;
+    text-align: left;
+  }
+
+  .authgate-telemetry-widget {
+    width: 100%;
+  }
+
+  .authgate-trust-footer {
+    justify-content: center;
+  }
+
+  .authgate-headline {
+    font-size: 32px;
+  }
+}
+
+@media (max-width: 640px) {
+  .authgate-root {
+    padding: 24px 14px calc(24px + env(safe-area-inset-bottom, 0px)) 14px;
+    align-items: flex-start;
+  }
+
+  .authgate-container {
+    gap: 22px;
+    max-width: 100%;
+  }
+
+  .authgate-headline {
+    font-size: 25px;
+    line-height: 1.22;
+  }
+
+  .authgate-subtext {
+    font-size: 13.5px;
+    line-height: 1.5;
+  }
+
+  .authgate-card {
+    padding: 24px 16px;
+    border-radius: 20px;
+    gap: 16px;
+  }
+
+  .authgate-feature-card {
+    padding: 10px 12px;
+    gap: 10px;
+  }
+
+  .authgate-feature-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .authgate-feature-title-row h4 {
+    font-size: 12.5px;
+  }
+
+  .authgate-feature-info p {
+    font-size: 11.5px;
+  }
+
+  .authgate-telemetry-grid {
+    gap: 6px;
+  }
+
+  .telemetry-cell {
+    padding: 6px 6px;
+  }
+
+  .telemetry-label {
+    font-size: 9.5px;
+  }
+
+  .telemetry-val {
+    font-size: 11px;
+  }
+
+  .authgate-input {
+    font-size: 16px; /* Prevents auto-zoom on mobile iOS browsers */
+    min-height: 48px;
+  }
+
+  .authgate-submit-btn {
+    min-height: 48px;
+    font-size: 14.5px;
+  }
+
+  .authgate-tab-btn {
+    padding: 10px 12px;
+    font-size: 13.5px;
+  }
+}
+
+@media (max-width: 380px) {
+  .authgate-headline {
+    font-size: 22px;
+  }
+  .authgate-edition-pill {
+    display: none;
+  }
 }
 
 /* Loading Splash & Futuristic Techy Preloader */
