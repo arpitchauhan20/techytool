@@ -11,7 +11,9 @@ export default function TaskList({
   onDownloadICS,
   onSendEmail,
   onOpenNewTask,
-  currentFilter
+  currentFilter,
+  currentSort = 'deadline-asc',
+  onSortChange
 }) {
   const [isOpen, setIsOpen] = useState(true);
 
@@ -61,7 +63,25 @@ export default function TaskList({
           </div>
         </div>
 
-        <div className="mini-card-actions">
+        <div className="mini-card-actions" onClick={e => e.stopPropagation()}>
+          {/* Timeline Sort Dropdown placed inside Task Details */}
+          {onSortChange && (
+            <div className="sort-wrapper task-details-sort" onClick={e => e.stopPropagation()}>
+              <select
+                className="sort-select"
+                value={currentSort}
+                onChange={e => onSortChange(e.target.value)}
+                title="Sort task timeline"
+              >
+                <option value="deadline-asc">Timeline: Soonest first</option>
+                <option value="deadline-desc">Timeline: Latest first</option>
+                <option value="priority-desc">Priority: High to Low</option>
+                <option value="created-desc">Recently Created</option>
+                <option value="title-asc">Alphabetical (A-Z)</option>
+              </select>
+            </div>
+          )}
+
           <button
             type="button"
             className="btn btn-primary btn-sm"
@@ -77,6 +97,10 @@ export default function TaskList({
           <button
             type="button"
             className="mini-card-toggle-btn"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsOpen(prev => !prev);
+            }}
             aria-label={isOpen ? 'Collapse' : 'Expand'}
           >
             <span>{isOpen ? 'Collapse ▴' : 'Open ▾'}</span>
@@ -111,35 +135,24 @@ export default function TaskList({
                 style={{ marginTop: '14px' }}
               >
                 <PlusIcon size={13} style={{ marginRight: '4px' }} />
-                Create New Task
+                <span>Create New Task</span>
               </button>
             </div>
           ) : (
-            <>
-              <div className="tasks-table-header">
-                <span className="col-status">Status</span>
-                <span className="col-task">Task Details</span>
-                <span className="col-deadline">Deadline &amp; Urgency</span>
-                <span className="col-priority">Priority</span>
-                <span className="col-reminder">Reminder</span>
-                <span className="col-actions">Actions</span>
-              </div>
-
-              <div className="task-list" id="task-list">
-                {tasks.map(task => (
-                  <TaskRow
-                    key={task.id}
-                    task={task}
-                    onToggleComplete={onToggleComplete}
-                    onEdit={onEdit}
-                    onDelete={onDelete}
-                    onSyncGoogleCalendar={onSyncGoogleCalendar}
-                    onDownloadICS={onDownloadICS}
-                    onSendEmail={onSendEmail}
-                  />
-                ))}
-              </div>
-            </>
+            <div className="task-list">
+              {tasks.map(task => (
+                <TaskRow
+                  key={task.id}
+                  task={task}
+                  onToggleComplete={onToggleComplete}
+                  onEdit={onEdit}
+                  onDelete={onDelete}
+                  onSyncGoogleCalendar={onSyncGoogleCalendar}
+                  onDownloadICS={onDownloadICS}
+                  onSendEmail={onSendEmail}
+                />
+              ))}
+            </div>
           )}
         </div>
       )}

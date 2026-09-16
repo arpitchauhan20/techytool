@@ -897,18 +897,9 @@ export default function App() {
         {/* Sticky Topbar */}
         <Header
           activeDashboardBoard={activeDashboardBoard}
-          onBackToOverview={() => setActiveDashboardBoard(null)}
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
-          currentSort={currentSort}
-          onSortChange={setCurrentSort}
           onOpenMobileMenu={() => setIsMobileSidebarOpen(true)}
-          onOpenNewTask={() => {
-            setTaskToEdit(null);
-            setIsTaskModalOpen(true);
-          }}
-          onOpenSettings={() => setIsSettingsModalOpen(true)}
-          onTestAlerts={handleTestAlerts}
         />
 
         {/* Scrollable Canvas Area with Mobile Pull-to-Refresh */}
@@ -1063,17 +1054,6 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Quick Task Bar Placed Inside the Task Details Board */}
-              <div style={{ marginBottom: '16px' }}>
-                <QuickTaskBar
-                  onQuickAdd={handleQuickAdd}
-                  onOpenDetailedModal={() => {
-                    setTaskToEdit(null);
-                    setIsTaskModalOpen(true);
-                  }}
-                />
-              </div>
-
               {/* Task Details List */}
               <TaskList
                 tasks={filteredTasks}
@@ -1094,6 +1074,8 @@ export default function App() {
                   setIsTaskModalOpen(true);
                 }}
                 currentFilter={currentFilter}
+                currentSort={currentSort}
+                onSortChange={setCurrentSort}
               />
             </div>
           )}

@@ -1,17 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { ZapIcon, SearchIcon, BellIcon, RefreshCwIcon, PlusIcon, XIcon } from './Icons';
+import { SearchIcon, XIcon } from './Icons';
 
 export default function Header({
   activeDashboardBoard,
-  onBackToOverview,
   searchQuery,
   onSearchChange,
-  currentSort,
-  onSortChange,
-  onOpenMobileMenu,
-  onOpenNewTask,
-  onOpenSettings,
-  onTestAlerts
+  onOpenMobileMenu
 }) {
   const [currentDateText, setCurrentDateText] = useState('');
 
@@ -55,9 +49,9 @@ export default function Header({
         </div>
       </div>
 
-      {/* Flexible Topbar Actions (Date badge shifted to the right) */}
+      {/* Flexible Topbar Actions: Clean Date badge and Search */}
       <div className="topbar-actions">
-        {/* Date Context Badge shifted to the right */}
+        {/* Date Context Badge */}
         <span className="date-badge">{currentDateText}</span>
 
         {/* Search */}
@@ -80,72 +74,6 @@ export default function Header({
             </button>
           )}
         </div>
-
-        {/* Sort */}
-        <div className="sort-wrapper">
-          <select
-            className="sort-select"
-            value={currentSort}
-            onChange={e => onSortChange(e.target.value)}
-          >
-            <option value="deadline-asc">Timeline: Soonest first</option>
-            <option value="deadline-desc">Timeline: Latest first</option>
-            <option value="priority-desc">Priority: High to Low</option>
-            <option value="created-desc">Recently Created</option>
-            <option value="title-asc">Alphabetical (A-Z)</option>
-          </select>
-        </div>
-
-        {/* Automation Settings Icon */}
-        <button
-          type="button"
-          className="control-btn notif-btn active"
-          onClick={onOpenSettings}
-          title="Open Resend & Google Calendar Automation Settings"
-        >
-          <ZapIcon size={16} />
-          <span className="status-dot" />
-        </button>
-
-        {/* Instant Alert & Audio Bell Test */}
-        <button
-          type="button"
-          className="control-btn notif-btn"
-          onClick={onTestAlerts}
-          title="Test Audio Bell Chime & System Alert Notification (Click to Test)"
-          style={{ position: 'relative' }}
-        >
-          <BellIcon size={16} />
-        </button>
-
-        {/* Instant Refresh Button */}
-        <button
-          type="button"
-          className="control-btn refresh-btn"
-          onClick={() => {
-            if ('caches' in window) {
-              caches.keys().then(names => {
-                names.forEach(name => caches.delete(name));
-              });
-            }
-            window.location.reload();
-          }}
-          title="Refresh Application (Hard Reload)"
-          aria-label="Refresh Application"
-        >
-          <RefreshCwIcon size={14} />
-        </button>
-
-        {/* Add Task Button */}
-        <button
-          type="button"
-          className="btn btn-primary btn-sm"
-          onClick={onOpenNewTask}
-          title="Add New Task (Shortcut: N)"
-        >
-          <PlusIcon size={13} style={{ marginRight: '4px' }} />
-          <span>Add Task</span>
-        </button>
       </div>
     </header>
   );
