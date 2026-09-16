@@ -7485,3 +7485,575 @@ body {
     opacity: 0;
   }
 }
+
+/* ==========================================================================
+   TASK CREATOR & INLINE EDITOR PANEL (Zero Popup Architecture)
+   ========================================================================== */
+.task-inline-creator-card {
+  background: var(--surface-card);
+  border: 1.5px solid var(--border-default);
+  border-radius: 18px;
+  padding: 22px 24px;
+  margin-bottom: 22px;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.16);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.task-creator-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 16px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.task-creator-lead {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.task-creator-icon-wrap {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--accent-subtle);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+}
+
+.task-creator-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 2px 0;
+  letter-spacing: -0.2px;
+}
+
+.task-creator-subtitle {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.task-creator-close-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid var(--border-default);
+  background: transparent;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.task-creator-close-btn:hover {
+  background: var(--surface-row-hover);
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+
+.task-creator-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.task-creator-form .form-row {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 14px;
+}
+
+@media (max-width: 640px) {
+  .task-creator-form .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================================
+   REMINDER & ALERTS SUITE (Segmented Mode & Toggle Switches)
+   ========================================================================== */
+.reminder-suite-card {
+  background: var(--surface-input, rgba(0, 0, 0, 0.12));
+  border: 1.5px solid var(--border-default);
+  border-radius: 16px;
+  padding: 18px 20px;
+  margin-top: 6px;
+}
+
+.reminder-suite-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.reminder-suite-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.reminder-suite-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  background: var(--accent-subtle);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.reminder-suite-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 2px 0;
+}
+
+.reminder-suite-desc {
+  font-size: 11.5px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.reminder-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.reminder-status-pill.active {
+  background: rgba(16, 185, 129, 0.14);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.reminder-status-pill.inactive {
+  background: var(--surface-card);
+  color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 6px currentColor;
+}
+
+/* Mode Segmented Controls */
+.reminder-mode-segmented {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  background: var(--surface-card);
+  padding: 5px;
+  border-radius: 12px;
+  border: 1px solid var(--border-default);
+  margin-bottom: 16px;
+}
+
+@media (max-width: 680px) {
+  .reminder-mode-segmented {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.mode-segment-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+
+.mode-segment-btn:hover {
+  color: var(--text-primary);
+  background: var(--surface-row-hover);
+}
+
+.mode-segment-btn.active {
+  background: var(--accent);
+  color: #ffffff !important;
+  font-weight: 700;
+  box-shadow: 0 2px 8px var(--accent-glow);
+}
+
+/* Reminder Options Section */
+.options-section-header {
+  margin-bottom: 8px;
+}
+
+.options-label {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--text-secondary);
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+
+.preset-timer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(125px, 1fr));
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.preset-timer-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8.5px 10px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border-default);
+  background: var(--surface-card);
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.preset-timer-btn:hover {
+  border-color: var(--accent-hover);
+  background: var(--surface-card-hover);
+  transform: translateY(-1px);
+}
+
+.preset-timer-btn.selected {
+  border-color: var(--accent);
+  background: var(--accent-subtle);
+  color: var(--accent);
+  font-weight: 700;
+  box-shadow: 0 0 0 1px var(--accent), 0 3px 10px var(--accent-glow);
+}
+
+.preset-timer-btn .timer-icon {
+  color: var(--text-muted);
+}
+
+.preset-timer-btn.selected .timer-icon {
+  color: var(--accent);
+}
+
+.preset-timer-btn .timer-check-icon {
+  color: var(--accent);
+  margin-left: 2px;
+}
+
+.custom-offset-inputs {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 6px;
+}
+
+.offset-input-val {
+  max-width: 100px;
+}
+
+.offset-select-unit {
+  flex: 1;
+}
+
+/* Calculated Schedule Banner */
+.reminder-schedule-banner {
+  margin-top: 14px;
+  background: var(--accent-subtle);
+  border: 1px solid var(--border-focus);
+  border-radius: 10px;
+  padding: 9px 14px;
+}
+
+.schedule-banner-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.schedule-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: 0.5px;
+}
+
+.schedule-time {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: var(--font-mono, monospace);
+}
+
+/* Delivery Channels Section */
+.channels-section-block {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.channels-section-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.channels-title-tag {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--text-secondary);
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+.channels-subtitle-tag {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.channel-toggle-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+@media (max-width: 640px) {
+  .channel-toggle-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.channel-toggle-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background: var(--surface-card);
+  border: 1.5px solid var(--border-default);
+  border-radius: 12px;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.channel-toggle-card:hover {
+  border-color: var(--border-strong);
+  background: var(--surface-card-hover);
+  transform: translateY(-1px);
+}
+
+.channel-toggle-card.is-active {
+  border-color: var(--accent);
+  background: var(--surface-card-hover);
+  box-shadow: 0 4px 14px var(--accent-subtle);
+}
+
+.channel-card-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.channel-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.channel-avatar.push-bg {
+  background: rgba(99, 102, 241, 0.15);
+  color: #818cf8;
+}
+
+.channel-avatar.sound-bg {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+}
+
+.channel-avatar.gcal-bg {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+}
+
+.channel-avatar.email-bg {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+}
+
+.channel-card-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.channel-card-desc {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+/* iOS Style Sleek Toggle Switch */
+.toggle-switch-wrapper {
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+.switch-track {
+  width: 38px;
+  height: 22px;
+  border-radius: 11px;
+  background: var(--border-strong, #334155);
+  position: relative;
+  transition: background 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.switch-track.active {
+  background: var(--accent);
+}
+
+.switch-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.28);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.switch-track.active .switch-thumb {
+  transform: translateX(16px);
+}
+
+.channel-email-drawer {
+  margin-top: 10px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: rgba(56, 189, 248, 0.08);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+}
+
+.email-drawer-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.email-drawer-icon {
+  color: #38bdf8;
+}
+
+.email-drawer-label {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.task-creator-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* ==========================================================================
+   TASK ROW ACTION BUTTONS & SYNC PILL (High Contrast)
+   ========================================================================== */
+.action-pill-cal {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 9px;
+  border-radius: 7px;
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff !important;
+  font-size: 11.5px;
+  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.35);
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.action-pill-cal:hover {
+  filter: brightness(1.14);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.5);
+}
+
+.action-pill-cal:active {
+  transform: scale(0.96);
+}
+
+.action-icon-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: 1px solid var(--border-default);
+  background: var(--surface-card);
+  color: var(--text-secondary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.action-icon-btn:hover {
+  background: var(--surface-row-hover);
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+  transform: translateY(-1px);
+}
+
+.action-icon-btn.delete:hover {
+  background: rgba(244, 63, 94, 0.15);
+  color: var(--danger, #f43f5e);
+  border-color: rgba(244, 63, 94, 0.35);
+}
+

@@ -3,6 +3,7 @@ import { SoundFX } from '../services/soundEngine';
 import {
   XIcon,
   ClockIcon,
+  HourglassIcon,
   AlertTriangleIcon,
   BellIcon,
   VolumeIcon,
@@ -149,7 +150,7 @@ export default function TaskEditorPanel({
           <div className="task-creator-icon-wrap">
             {taskToEdit ? <ZapIcon size={18} /> : <PlusIcon size={18} />}
           </div>
-          <div>
+          <div className="task-creator-header-text">
             <h3 className="task-creator-title">
               {taskToEdit ? 'Edit Task Details' : 'Create New Task'}
             </h3>
@@ -208,7 +209,7 @@ export default function TaskEditorPanel({
 
           <div className="form-group">
             <label className="form-label" htmlFor="inline-task-priority">
-              PRIORITY
+              PRIORITY LEVEL
             </label>
             <select
               id="inline-task-priority"
@@ -239,57 +240,68 @@ export default function TaskEditorPanel({
         </div>
 
         {/* Reminder & Smart Alerts Suite */}
-        <div className="reminder-card" style={{ marginTop: '6px' }}>
-          <div className="reminder-card-header">
-            <div className="reminder-header-icon">
-              <ClockIcon size={16} />
+        <div className="reminder-suite-card">
+          <div className="reminder-suite-header">
+            <div className="reminder-suite-left">
+              <div className="reminder-suite-icon">
+                <ClockIcon size={18} />
+              </div>
+              <div className="reminder-suite-text">
+                <h4 className="reminder-suite-title">Reminder &amp; Alerts</h4>
+                <p className="reminder-suite-desc">Customize trigger timing and delivery channels</p>
+              </div>
             </div>
-            <div className="reminder-header-title">
-              <strong>Reminder &amp; Alerts</strong>
-              <span className="reminder-subtitle">Customize trigger timing and delivery channels</span>
+            <div className="reminder-suite-right">
+              <span className={`reminder-status-pill ${reminderMode !== 'none' ? 'active' : 'inactive'}`}>
+                <span className="status-dot"></span>
+                {reminderMode !== 'none' ? 'Alerts Active' : 'No Alert'}
+              </span>
             </div>
-            <span className={`reminder-status-badge ${reminderMode !== 'none' ? 'active' : ''}`}>
-              {reminderMode !== 'none' ? 'ALERTS ACTIVE' : 'NO ALERT'}
-            </span>
           </div>
 
-          {/* Mode Tabs / Chips */}
-          <div className="reminder-mode-tabs">
+          {/* Mode Segmented Controls */}
+          <div className="reminder-mode-segmented">
             <button
               type="button"
-              className={`mode-tab-btn ${reminderMode === 'preset' ? 'active' : ''}`}
+              className={`mode-segment-btn ${reminderMode === 'preset' ? 'active' : ''}`}
               onClick={() => setReminderMode('preset')}
             >
-              Preset Timing
+              <ClockIcon size={13} style={{ marginRight: '6px' }} />
+              <span>Preset Timing</span>
             </button>
             <button
               type="button"
-              className={`mode-tab-btn ${reminderMode === 'offset' ? 'active' : ''}`}
+              className={`mode-segment-btn ${reminderMode === 'offset' ? 'active' : ''}`}
               onClick={() => setReminderMode('offset')}
             >
-              Custom Offset
+              <HourglassIcon size={13} style={{ marginRight: '6px' }} />
+              <span>Custom Offset</span>
             </button>
             <button
               type="button"
-              className={`mode-tab-btn ${reminderMode === 'exact' ? 'active' : ''}`}
+              className={`mode-segment-btn ${reminderMode === 'exact' ? 'active' : ''}`}
               onClick={() => setReminderMode('exact')}
             >
-              Exact Time
+              <CalendarIcon size={13} style={{ marginRight: '6px' }} />
+              <span>Exact Time</span>
             </button>
             <button
               type="button"
-              className={`mode-tab-btn ${reminderMode === 'none' ? 'active' : ''}`}
+              className={`mode-segment-btn ${reminderMode === 'none' ? 'active' : ''}`}
               onClick={() => setReminderMode('none')}
             >
-              No Alert
+              <XIcon size={13} style={{ marginRight: '6px' }} />
+              <span>No Alert</span>
             </button>
           </div>
 
           {/* Preset Panel */}
           {reminderMode === 'preset' && (
-            <div className="reminder-panel visible">
-              <span className="panel-label">Choose advance notice before deadline:</span>
-              <div className="preset-chips">
+            <div className="reminder-options-body animate-fade-in">
+              <div className="options-section-header">
+                <span className="options-label">CHOOSE ADVANCE NOTICE BEFORE DEADLINE:</span>
+              </div>
+              <div className="preset-timer-grid">
                 {[
                   { label: '5m before', val: 5 },
                   { label: '15m before', val: 15 },
@@ -301,10 +313,14 @@ export default function TaskEditorPanel({
                   <button
                     key={p.val}
                     type="button"
-                    className={`preset-chip ${reminderPresetMinutes === p.val ? 'selected' : ''}`}
+                    className={`preset-timer-btn ${reminderPresetMinutes === p.val ? 'selected' : ''}`}
                     onClick={() => setReminderPresetMinutes(p.val)}
                   >
-                    {p.label}
+                    <ClockIcon size={12} className="timer-icon" />
+                    <span>{p.label}</span>
+                    {reminderPresetMinutes === p.val && (
+                      <CheckIcon size={12} className="timer-check-icon" />
+                    )}
                   </button>
                 ))}
               </div>
@@ -313,25 +329,28 @@ export default function TaskEditorPanel({
 
           {/* Custom Offset Panel */}
           {reminderMode === 'offset' && (
-            <div className="reminder-panel visible">
-              <span className="panel-label">Remind me exactly:</span>
-              <div className="custom-offset-row">
+            <div className="reminder-options-body animate-fade-in">
+              <div className="options-section-header">
+                <span className="options-label">CUSTOM ADVANCE NOTICE:</span>
+              </div>
+              <div className="custom-offset-inputs">
                 <input
                   type="number"
                   min="1"
                   max="365"
-                  className="form-input offset-number-input"
+                  className="form-input offset-input-val"
                   value={reminderOffsetValue}
                   onChange={e => setReminderOffsetValue(parseInt(e.target.value) || 1)}
+                  placeholder="2"
                 />
                 <select
-                  className="form-select offset-unit-select"
+                  className="form-select offset-select-unit"
                   value={reminderOffsetUnit}
                   onChange={e => setReminderOffsetUnit(e.target.value)}
                 >
-                  <option value="minutes">Minutes before</option>
-                  <option value="hours">Hours before</option>
-                  <option value="days">Days before</option>
+                  <option value="minutes">Minutes before deadline</option>
+                  <option value="hours">Hours before deadline</option>
+                  <option value="days">Days before deadline</option>
                 </select>
               </div>
             </div>
@@ -339,8 +358,10 @@ export default function TaskEditorPanel({
 
           {/* Exact Time Panel */}
           {reminderMode === 'exact' && (
-            <div className="reminder-panel visible">
-              <span className="panel-label">Select exact reminder date &amp; time:</span>
+            <div className="reminder-options-body animate-fade-in">
+              <div className="options-section-header">
+                <span className="options-label">EXACT NOTIFICATION DATE &amp; TIME:</span>
+              </div>
               <input
                 type="datetime-local"
                 className="form-input"
@@ -350,112 +371,135 @@ export default function TaskEditorPanel({
             </div>
           )}
 
-          {/* Calculated Time Preview */}
+          {/* Calculated Time Trigger Banner */}
           {calculatedTimeStr && (
-            <div className="reminder-preview-box">
-              <div className="preview-indicator">
-                <span className="preview-caption">🔔 Trigger Schedule:</span>
-                <span className="preview-datetime">{calculatedTimeStr}</span>
+            <div className="reminder-schedule-banner">
+              <div className="schedule-banner-content">
+                <span className="schedule-badge">
+                  <BellIcon size={12} style={{ marginRight: '4px' }} />
+                  TRIGGER SCHEDULE
+                </span>
+                <span className="schedule-time">{calculatedTimeStr}</span>
               </div>
             </div>
           )}
 
-          {/* Delivery Channels Grid */}
-          <div className="channels-section">
-            <span className="channels-label">DELIVERY CHANNELS</span>
-            <div className="channels-grid">
+          {/* Delivery Channels Section with Modern Toggle Switches */}
+          <div className="channels-section-block">
+            <div className="channels-section-header">
+              <span className="channels-title-tag">DELIVERY CHANNELS</span>
+              <span className="channels-subtitle-tag">Select one or more notification channels</span>
+            </div>
+
+            <div className="channel-toggle-grid">
               {/* Channel 1: Browser Push */}
               <div
-                className={`channel-pill ${channels.push ? 'checked' : ''}`}
+                className={`channel-toggle-card ${channels.push ? 'is-active' : ''}`}
                 onClick={() => toggleChannel('push')}
                 role="checkbox"
                 aria-checked={channels.push}
                 tabIndex={0}
               >
-                <div className="channel-pill-icon push">
-                  <BellIcon size={14} />
+                <div className="channel-card-left">
+                  <div className="channel-avatar push-bg">
+                    <BellIcon size={16} />
+                  </div>
+                  <div className="channel-card-details">
+                    <div className="channel-card-title">Browser Push</div>
+                    <div className="channel-card-desc">Desktop &amp; mobile alerts</div>
+                  </div>
                 </div>
-                <div className="channel-pill-info">
-                  <strong>Browser Push</strong>
-                  <span>Desktop &amp; mobile alerts</span>
-                </div>
-                <div className="channel-checkbox">
-                  {channels.push && <CheckIcon size={11} />}
+                <div className="toggle-switch-wrapper">
+                  <div className={`switch-track ${channels.push ? 'active' : ''}`}>
+                    <div className="switch-thumb" />
+                  </div>
                 </div>
               </div>
 
               {/* Channel 2: Audio Bell */}
               <div
-                className={`channel-pill ${channels.sound ? 'checked' : ''}`}
+                className={`channel-toggle-card ${channels.sound ? 'is-active' : ''}`}
                 onClick={() => toggleChannel('sound')}
                 role="checkbox"
                 aria-checked={channels.sound}
                 tabIndex={0}
               >
-                <div className="channel-pill-icon sound">
-                  <VolumeIcon size={14} />
+                <div className="channel-card-left">
+                  <div className="channel-avatar sound-bg">
+                    <VolumeIcon size={16} />
+                  </div>
+                  <div className="channel-card-details">
+                    <div className="channel-card-title">Audio Bell</div>
+                    <div className="channel-card-desc">Harmonic chime alert</div>
+                  </div>
                 </div>
-                <div className="channel-pill-info">
-                  <strong>Audio Bell</strong>
-                  <span>Harmonic chime alert</span>
-                </div>
-                <div className="channel-checkbox">
-                  {channels.sound && <CheckIcon size={11} />}
+                <div className="toggle-switch-wrapper">
+                  <div className={`switch-track ${channels.sound ? 'active' : ''}`}>
+                    <div className="switch-thumb" />
+                  </div>
                 </div>
               </div>
 
               {/* Channel 3: Google Calendar */}
               <div
-                className={`channel-pill ${channels.calendar ? 'checked' : ''}`}
+                className={`channel-toggle-card ${channels.calendar ? 'is-active' : ''}`}
                 onClick={() => toggleChannel('calendar')}
                 role="checkbox"
                 aria-checked={channels.calendar}
                 tabIndex={0}
               >
-                <div className="channel-pill-icon gcal">
-                  <CalendarIcon size={14} />
+                <div className="channel-card-left">
+                  <div className="channel-avatar gcal-bg">
+                    <CalendarIcon size={16} />
+                  </div>
+                  <div className="channel-card-details">
+                    <div className="channel-card-title">Google Calendar</div>
+                    <div className="channel-card-desc">1-click sync &amp; alarms</div>
+                  </div>
                 </div>
-                <div className="channel-pill-info">
-                  <strong>Google Calendar</strong>
-                  <span>1-click sync &amp; alarms</span>
-                </div>
-                <div className="channel-checkbox">
-                  {channels.calendar && <CheckIcon size={11} />}
+                <div className="toggle-switch-wrapper">
+                  <div className={`switch-track ${channels.calendar ? 'active' : ''}`}>
+                    <div className="switch-thumb" />
+                  </div>
                 </div>
               </div>
 
               {/* Channel 4: Email */}
               <div
-                className={`channel-pill ${channels.email ? 'checked' : ''}`}
+                className={`channel-toggle-card ${channels.email ? 'is-active' : ''}`}
                 onClick={() => toggleChannel('email')}
                 role="checkbox"
                 aria-checked={channels.email}
                 tabIndex={0}
               >
-                <div className="channel-pill-icon email">
-                  <MailIcon size={14} />
+                <div className="channel-card-left">
+                  <div className="channel-avatar email-bg">
+                    <MailIcon size={16} />
+                  </div>
+                  <div className="channel-card-details">
+                    <div className="channel-card-title">Email Notice</div>
+                    <div className="channel-card-desc">Direct inbox delivery</div>
+                  </div>
                 </div>
-                <div className="channel-pill-info">
-                  <strong>Email Notice</strong>
-                  <span>Direct inbox delivery</span>
-                </div>
-                <div className="channel-checkbox">
-                  {channels.email && <CheckIcon size={11} />}
+                <div className="toggle-switch-wrapper">
+                  <div className={`switch-track ${channels.email ? 'active' : ''}`}>
+                    <div className="switch-thumb" />
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Email Input Field if checked */}
+            {/* Email Input Drawer if Email Channel is active */}
             {channels.email && (
-              <div className="channel-input-card group-email" style={{ marginTop: '10px' }}>
-                <div className="channel-input-header">
-                  <MailIcon size={14} style={{ color: '#38bdf8' }} />
-                  <span>Recipient Email Address</span>
+              <div className="channel-email-drawer animate-fade-in">
+                <div className="email-drawer-header">
+                  <MailIcon size={14} className="email-drawer-icon" />
+                  <span className="email-drawer-label">Recipient Email Address:</span>
                 </div>
                 <input
                   type="email"
-                  className="form-input"
-                  placeholder="recipient@gmail.com"
+                  className="form-input email-drawer-input"
+                  placeholder="recipient@example.com"
                   value={reminderEmail}
                   onChange={e => setReminderEmail(e.target.value)}
                   required={channels.email}

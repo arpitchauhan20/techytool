@@ -94,15 +94,25 @@ export default function TaskList({
 
           <button
             type="button"
-            className="btn btn-primary btn-sm"
+            className={`btn ${isCreatorOpen && !taskToEdit ? 'btn-secondary' : 'btn-primary'} btn-sm`}
             onClick={(e) => {
               e.stopPropagation();
-              onOpenNewTask();
+              if (isCreatorOpen && !taskToEdit) {
+                onCloseCreator();
+              } else {
+                onOpenNewTask();
+              }
             }}
-            title="Create a new task"
+            title={isCreatorOpen && !taskToEdit ? 'Close Task Form' : 'Create a new task'}
           >
-            <PlusIcon size={13} style={{ marginRight: '4px' }} />
-            <span>Add Task</span>
+            {isCreatorOpen && !taskToEdit ? (
+              <span>Cancel</span>
+            ) : (
+              <>
+                <PlusIcon size={13} style={{ marginRight: '4px' }} />
+                <span>Add Task</span>
+              </>
+            )}
           </button>
           <button
             type="button"
@@ -132,7 +142,7 @@ export default function TaskList({
               soundEnabled={soundEnabled}
             />
           )}
-          {tasks.length === 0 ? (
+          {tasks.length === 0 && !isCreatorOpen ? (
             <div className="empty-state">
               <div className="empty-icon-wrap">
                 <TargetIcon size={32} style={{ color: 'var(--accent-light, #818cf8)' }} />
@@ -159,7 +169,7 @@ export default function TaskList({
                 <span>Create New Task</span>
               </button>
             </div>
-          ) : (
+          ) : tasks.length > 0 ? (
             <div className="task-list">
               {tasks.map(task => (
                 <TaskRow
@@ -174,7 +184,7 @@ export default function TaskList({
                 />
               ))}
             </div>
-          )}
+          ) : null}
         </div>
       )}
     </section>
