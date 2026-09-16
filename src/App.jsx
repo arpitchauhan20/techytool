@@ -11,7 +11,6 @@ import AuthGate from './components/AuthGate';
 import CalendarConnectionCard from './components/CalendarConnectionCard';
 import CalendarReminderCard from './components/CalendarReminderCard';
 import ToastContainer from './components/ToastContainer';
-import InteractivePet from './components/InteractivePet';
 import { ZapIcon, RefreshCwIcon, CalendarIcon, ClipboardIcon, ArrowLeftIcon, GlobeIcon } from './components/Icons';
 import { SoundFX } from './services/soundEngine';
 import { AuthClient } from './services/authClient';
@@ -62,7 +61,6 @@ export default function App() {
   const [reminderEmail, setReminderEmail] = useState(() => loadStorage('taskflow_email', ''));
   const [palette, setPalette] = useState(() => loadStorage('taskflow_palette', 'indigo'));
   const [soundEnabled, setSoundEnabled] = useState(() => loadStorage('taskflow_sound', true));
-  const [petEnabled, setPetEnabled] = useState(() => loadStorage('taskflow_pet_enabled', true));
 
   const [currentFilter, setCurrentFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -100,14 +98,6 @@ export default function App() {
     setTimeout(() => {
       setToasts(prev => prev.filter(t => t.id !== id));
     }, duration);
-  }, []);
-
-  const handleTogglePet = useCallback((val) => {
-    setPetEnabled(prev => {
-      const next = typeof val === 'boolean' ? val : !prev;
-      saveStorage('taskflow_pet_enabled', next);
-      return next;
-    });
   }, []);
 
   // Mobile Pull-to-Refresh Gesture Refs & State
@@ -472,7 +462,6 @@ export default function App() {
     document.documentElement.setAttribute('data-theme', palette);
   }, [palette]);
   useEffect(() => { saveStorage('taskflow_sound', soundEnabled); }, [soundEnabled]);
-  useEffect(() => { saveStorage('taskflow_pet_enabled', petEnabled); }, [petEnabled]);
   useEffect(() => { saveStorage('taskflow_sidebar_collapsed', isSidebarCollapsed); }, [isSidebarCollapsed]);
 
   // Global Keyboard Shortcuts (N for New Task, Escape for Modals/Panels)
@@ -1159,8 +1148,6 @@ export default function App() {
         onChangePalette={setPalette}
         soundEnabled={soundEnabled}
         onToggleSound={() => setSoundEnabled(!soundEnabled)}
-        petEnabled={petEnabled}
-        onTogglePet={handleTogglePet}
       />
 
       <AuthModal
@@ -1199,12 +1186,6 @@ export default function App() {
       <ToastContainer
         toasts={toasts}
         onDismiss={id => setToasts(prev => prev.filter(t => t.id !== id))}
-      />
-
-      {/* Interactive Playful Cat Companion */}
-      <InteractivePet
-        isEnabled={petEnabled}
-        onToggleEnabled={handleTogglePet}
       />
     </div>
   );

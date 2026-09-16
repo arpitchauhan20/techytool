@@ -41,12 +41,11 @@ export default function SettingsModal({
   currentPalette = 'indigo',
   onChangePalette,
   soundEnabled = true,
-  onToggleSound,
-  petEnabled = true,
-  onTogglePet
+  onToggleSound
 }) {
   const [name, setName] = useState(userName || '');
   const [email, setEmail] = useState(reminderEmail || '');
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [isTesting, setIsTesting] = useState(false);
 
   // Friend Invite / Google OAuth Request state
@@ -109,6 +108,7 @@ export default function SettingsModal({
       });
     }
     setGcalEmail(getConnectedGoogleEmail() || currentUser?.email || null);
+    setIsEditingProfile(false);
   }, [userName, reminderEmail, isOpen, externalConnected, currentUser]);
 
   if (!isOpen) return null;
@@ -525,33 +525,6 @@ export default function SettingsModal({
                       type="checkbox"
                       checked={soundEnabled}
                       onChange={onToggleSound}
-                    />
-                    <span className="settings-slider" />
-                  </label>
-                </div>
-              </div>
-
-              {/* Inner Divider */}
-              <div className="settings-card-inner-divider" />
-
-              {/* 3. Playful Cat Pet Companion */}
-              <div className="settings-sound-row">
-                <div style={{ flex: 1, minWidth: '200px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span style={{ fontSize: '18px' }}>🐱</span>
-                    <strong className="settings-card-title">Playful Cat Companion</strong>
-                  </div>
-                  <div className="settings-card-desc">
-                    Show playful virtual cat on the main screen that purrs, chases yarn &amp; laser, and keeps you company
-                  </div>
-                </div>
-
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <label className="settings-switch" title={petEnabled ? 'Disable Cat Companion' : 'Enable Cat Companion'}>
-                    <input
-                      type="checkbox"
-                      checked={petEnabled}
-                      onChange={() => onTogglePet && onTogglePet(!petEnabled)}
                     />
                     <span className="settings-slider" />
                   </label>
