@@ -14,6 +14,7 @@ import CalendarReminderCard from './components/CalendarReminderCard';
 import DashboardSkeleton from './components/DashboardSkeleton';
 import ToastContainer from './components/ToastContainer';
 import ExecutiveLaunchButton from './components/ExecutiveLaunchButton';
+import TaskEditorPanel from './components/TaskEditorPanel';
 import { ZapIcon, RefreshCwIcon, CalendarIcon, ClipboardIcon, ArrowLeftIcon, GlobeIcon } from './components/Icons';
 import { SoundFX } from './services/soundEngine';
 import { AuthClient } from './services/authClient';
@@ -87,6 +88,15 @@ export default function App() {
   const [authModalMode, setAuthModalMode] = useState('login');
   const [urlResetToken, setUrlResetToken] = useState('');
   const [isWelcomeAnimating, setIsWelcomeAnimating] = useState(false);
+  const [cardsVisible, setCardsVisible] = useState(!isWelcomeAnimating);
+
+  useEffect(() => {
+    if (isWelcomeAnimating) {
+      setCardsVisible(false);
+    } else {
+      setCardsVisible(true);
+    }
+  }, [isWelcomeAnimating]);
 
   // Google Calendar Connection State
   const [isCalendarConnected, setIsCalendarConnected] = useState(false);
@@ -502,11 +512,6 @@ export default function App() {
   const handleOpenTaskEditor = (task = null) => {
     setTaskToEdit(task);
     setIsTaskModalOpen(true);
-    setActiveDashboardBoard('tasks');
-    setTimeout(() => {
-      const el = document.getElementById('task-creator-panel');
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 80);
   };
 
   // Filter & Search Logic
@@ -989,99 +994,105 @@ export default function App() {
           {/* Condition 1: Overview Mode (No specific board opened) */}
           {activeDashboardBoard === null && (
             <div className="dashboard-overview-container tab-view-animated">
-              {/* Grand Canvas Hero Greeting */}
+              {/* Grand Canvas Hero Greeting with Typewriter Effect */}
               <StatCards
                 variant="greeting"
                 userName={userName}
                 stats={stats}
                 isWelcomeAnimating={isWelcomeAnimating}
-                onWelcomeAnimationComplete={() => setIsWelcomeAnimating(false)}
+                onCardsReady={() => setCardsVisible(true)}
+                onWelcomeAnimationComplete={() => {
+                  setIsWelcomeAnimating(false);
+                  setCardsVisible(true);
+                }}
                 onTriggerWelcomeAnimation={handleTriggerWelcomeAnimation}
               />
 
-              {/* Two Executive Cards Grid */}
-              <div className="dashboard-cards-grid">
-                {/* Card 1: Calendar Reminder */}
-                <div className="dashboard-module-card">
-                  <div className="module-card-row">
-                    <div className="module-card-info-col">
-                      <div className="module-card-top">
-                        <div className="module-card-lead-badge-group">
-                          <div className="module-card-icon-wrap cal">
-                            <CalendarIcon size={20} />
-                          </div>
-                          <div className="module-card-status-badges">
-                            <span className={`badge-status-pill ${isCalendarConnected ? 'active' : ''}`}>
-                              {isCalendarConnected ? '✓ Google Synced' : 'Offline'}
-                            </span>
-                            <span className="badge-tz-pill">
-                              <GlobeIcon size={11} style={{ marginRight: '3px', verticalAlign: '-1px' }} />
-                              {typeof Intl !== 'undefined' ? Intl.DateTimeFormat().resolvedOptions().timeZone : 'UTC'}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="module-card-body">
-                        <h3 className="module-card-title">Calendar Reminder</h3>
-                        <p className="module-card-desc">
-                          Schedule direct calendar events, alarm presets &amp; automated Google Calendar sync
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="module-card-action-col">
-                      <ExecutiveLaunchButton
-                        text="• LAUNCH • LAUNCH "
-                        onClick={() => setActiveDashboardBoard('calendar')}
-                        title="Launch Calendar Suite"
-                        soundEnabled={soundEnabled}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Card 2: Tasks */}
-                <div className="dashboard-module-card">
-                  <div className="module-card-row">
-                    <div className="module-card-info-col">
-                      <div className="module-card-top">
-                        <div className="module-card-lead-badge-group">
-                          <div className="module-card-icon-wrap tasks">
-                            <ClipboardIcon size={20} />
-                          </div>
-                          <div className="module-card-status-badges">
-                            <span className="badge-count-pill">
-                              {taskCounts.all} Active
-                            </span>
-                            {taskCounts.today > 0 && (
-                              <span className="badge-status-pill" style={{ color: '#fbbf24', borderColor: 'rgba(251, 191, 36, 0.3)' }}>
-                                {taskCounts.today} Today
+              {/* Two Executive Cards Grid - Enters one by one after typing animation */}
+              {cardsVisible && (
+                <div className="dashboard-cards-grid">
+                  {/* Card 1: Calendar Reminder */}
+                  <div className={`dashboard-module-card ${isWelcomeAnimating ? 'module-card-enter-1' : ''}`}>
+                    <div className="module-card-row">
+                      <div className="module-card-info-col">
+                        <div className="module-card-top">
+                          <div className="module-card-lead-badge-group">
+                            <div className="module-card-icon-wrap cal">
+                              <CalendarIcon size={20} />
+                            </div>
+                            <div className="module-card-status-badges">
+                              <span className={`badge-status-pill ${isCalendarConnected ? 'active' : ''}`}>
+                                {isCalendarConnected ? '✓ Google Synced' : 'Offline'}
                               </span>
-                            )}
+                              <span className="badge-tz-pill">
+                                <GlobeIcon size={11} style={{ marginRight: '3px', verticalAlign: '-1px' }} />
+                                {typeof Intl !== 'undefined' ? Intl.DateTimeFormat().resolvedOptions().timeZone : 'UTC'}
+                              </span>
+                            </div>
                           </div>
+                        </div>
+
+                        <div className="module-card-body">
+                          <h3 className="module-card-title">Calendar Reminder</h3>
+                          <p className="module-card-desc">
+                            Schedule direct calendar events, alarm presets &amp; automated Google Calendar sync
+                          </p>
                         </div>
                       </div>
 
-                      <div className="module-card-body">
-                        <h3 className="module-card-title">Tasks</h3>
-                        <p className="module-card-desc">
-                          Manage active tasks, deadlines, priorities &amp; automated completion tracking
-                        </p>
+                      <div className="module-card-action-col">
+                        <ExecutiveLaunchButton
+                          text="• LAUNCH • LAUNCH "
+                          onClick={() => setActiveDashboardBoard('calendar')}
+                          title="Launch Calendar Suite"
+                          soundEnabled={soundEnabled}
+                        />
                       </div>
                     </div>
+                  </div>
 
-                    <div className="module-card-action-col">
-                      <ExecutiveLaunchButton
-                        text="• LAUNCH • LAUNCH "
-                        onClick={() => setActiveDashboardBoard('tasks')}
-                        title="Launch Tasks Workspace"
-                        soundEnabled={soundEnabled}
-                      />
+                  {/* Card 2: Tasks */}
+                  <div className={`dashboard-module-card ${isWelcomeAnimating ? 'module-card-enter-2' : ''}`}>
+                    <div className="module-card-row">
+                      <div className="module-card-info-col">
+                        <div className="module-card-top">
+                          <div className="module-card-lead-badge-group">
+                            <div className="module-card-icon-wrap tasks">
+                              <ClipboardIcon size={20} />
+                            </div>
+                            <div className="module-card-status-badges">
+                              <span className="badge-count-pill">
+                                {taskCounts.all} Active
+                              </span>
+                              {taskCounts.today > 0 && (
+                                <span className="badge-status-pill" style={{ color: '#fbbf24', borderColor: 'rgba(251, 191, 36, 0.3)' }}>
+                                  {taskCounts.today} Today
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="module-card-body">
+                          <h3 className="module-card-title">Tasks</h3>
+                          <p className="module-card-desc">
+                            Manage active tasks, deadlines, priorities &amp; automated completion tracking
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="module-card-action-col">
+                        <ExecutiveLaunchButton
+                          text="• LAUNCH • LAUNCH "
+                          onClick={() => setActiveDashboardBoard('tasks')}
+                          title="Launch Tasks Workspace"
+                          soundEnabled={soundEnabled}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
           )}
 
@@ -1120,7 +1131,7 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Task Details List with In-Window Creator (Zero Popups) */}
+              {/* Task Details List */}
               <TaskList
                 tasks={filteredTasks}
                 onToggleComplete={handleToggleComplete}
@@ -1138,13 +1149,6 @@ export default function App() {
                 currentFilter={currentFilter}
                 currentSort={currentSort}
                 onSortChange={setCurrentSort}
-                isCreatorOpen={isTaskModalOpen}
-                onCloseCreator={() => {
-                  setIsTaskModalOpen(false);
-                  setTaskToEdit(null);
-                }}
-                onSaveTask={handleSaveTask}
-                taskToEdit={taskToEdit}
                 defaultEmail={reminderEmail}
                 soundEnabled={soundEnabled}
               />
@@ -1175,7 +1179,36 @@ export default function App() {
         </footer>
       </main>
 
-      {/* Modals (No Task Popup Modal) */}
+      {/* Global Task Editor Modal Dialog (Above ALL Screens) */}
+      {isTaskModalOpen && (
+        <div
+          className="modal-overlay task-editor-overlay active"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setIsTaskModalOpen(false);
+              setTaskToEdit(null);
+            }
+          }}
+          role="dialog"
+          aria-modal="true"
+        >
+          <div className="task-editor-modal-container" onClick={e => e.stopPropagation()}>
+            <TaskEditorPanel
+              isOpen={isTaskModalOpen}
+              onClose={() => {
+                setIsTaskModalOpen(false);
+                setTaskToEdit(null);
+              }}
+              onSave={handleSaveTask}
+              taskToEdit={taskToEdit}
+              defaultEmail={reminderEmail}
+              soundEnabled={soundEnabled}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Settings Modal */}
       <SettingsModal
         isOpen={isSettingsModalOpen}
         onClose={() => setIsSettingsModalOpen(false)}

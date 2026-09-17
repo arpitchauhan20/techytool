@@ -1779,83 +1779,52 @@ body {
 }
 
 /* ==========================================================================
-   WELCOME GREETING SMOOTH CENTER-TO-DOCK TRANSITION
+   WELCOME GREETING SMOOTH TYPEWRITER & STAGGERED CARDS ENTRANCE
    ========================================================================== */
-.welcome-transition-backdrop {
-  position: fixed;
-  inset: 0;
-  background: radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0.78) 0%, rgba(3, 7, 18, 0.92) 100%);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  z-index: 999980;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-[data-theme^="light-"] .welcome-transition-backdrop {
-  background: radial-gradient(circle at 50% 50%, rgba(248, 250, 252, 0.84) 0%, rgba(226, 232, 240, 0.94) 100%);
-}
-
-.welcome-transition-backdrop.is-active {
-  opacity: 1;
-}
-
-.welcome-transition-backdrop.is-fading {
-  opacity: 0;
-  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.welcome-floating-greeting-container {
-  position: fixed;
-  z-index: 999990;
-  pointer-events: none;
-  will-change: transform, opacity;
-}
-
-.welcome-floating-inner {
-  position: relative;
+.typing-cursor {
   display: inline-block;
-  width: 100%;
+  width: 3px;
+  height: 0.9em;
+  background: var(--accent);
+  margin-left: 4px;
+  vertical-align: -0.06em;
+  border-radius: 2px;
+  animation: blinkCursor 0.7s infinite ease-in-out;
+  box-shadow: 0 0 10px var(--accent-glow);
 }
 
-.welcome-center-aura {
-  position: absolute;
-  inset: -28px -36px;
-  background: radial-gradient(ellipse at center, rgba(99, 102, 241, 0.32) 0%, rgba(168, 85, 247, 0.14) 45%, transparent 72%);
-  border-radius: 28px;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.5s ease;
-}
-
-.welcome-floating-inner.has-glow .welcome-center-aura {
-  opacity: 1;
-}
-
-.welcome-floating-greeting-container.phase-center .greeting-text {
-  filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.5));
-}
-
-[data-theme^="light-"] .welcome-floating-greeting-container.phase-center .greeting-text {
-  filter: drop-shadow(0 10px 24px rgba(99, 102, 241, 0.25));
-}
-
-.welcome-floating-greeting-container.phase-center .sparkle-greet {
-  animation: sparkleWelcomeSpin 1.6s ease-in-out infinite alternate;
-}
-
-@keyframes sparkleWelcomeSpin {
-  0% {
-    transform: rotate(-10deg) scale(1);
-    filter: drop-shadow(0 0 6px rgba(129, 140, 248, 0.6));
+@keyframes blinkCursor {
+  0%, 100% {
+    opacity: 1;
   }
-  100% {
-    transform: rotate(20deg) scale(1.25);
-    filter: drop-shadow(0 0 16px rgba(168, 85, 247, 0.9));
+  50% {
+    opacity: 0;
   }
 }
 
+/* One-by-one Staggered Module Cards Entrance (Subtle & Gentle) */
+.module-card-enter-1 {
+  animation: moduleCardSlideIn 0.42s cubic-bezier(0.16, 1, 0.3, 1) 0.04s both;
+}
+
+.module-card-enter-2 {
+  animation: moduleCardSlideIn 0.42s cubic-bezier(0.16, 1, 0.3, 1) 0.16s both;
+}
+
+@keyframes moduleCardSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.99);
+    filter: blur(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+/* Sparkle Replay Button */
 .sparkle-replay-btn {
   background: transparent;
   border: none;
@@ -1866,18 +1835,63 @@ body {
   align-items: center;
   justify-content: center;
   vertical-align: middle;
-  border-radius: 6px;
-  outline: none;
-  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .sparkle-replay-btn:hover {
-  transform: scale(1.22) rotate(14deg);
-  background: rgba(99, 102, 241, 0.14);
+  transform: scale(1.2) rotate(15deg);
 }
 
 .sparkle-replay-btn:active {
   transform: scale(0.95);
+}
+
+/* ==========================================================================
+   GLOBAL TASK EDITOR MODAL (ABOVE ALL SCREENS) - SUBTLE & REFINED
+   ========================================================================== */
+.modal-overlay.task-editor-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(3, 7, 18, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100000;
+  padding: 16px;
+  box-sizing: border-box;
+  animation: modalBackdropFadeIn 0.16s ease-out forwards;
+}
+
+[data-theme^="light-"] .modal-overlay.task-editor-overlay {
+  background: rgba(15, 23, 42, 0.65);
+}
+
+@keyframes modalBackdropFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.task-editor-modal-container {
+  width: 100%;
+  max-width: 680px;
+  max-height: 92vh;
+  overflow-y: auto;
+  border-radius: 18px;
+  box-shadow: 0 28px 70px -12px rgba(0, 0, 0, 0.7), 0 0 0 1px var(--border-default);
+  animation: modalPopupScaleIn 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes modalPopupScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.985) translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 /* Metrics Strip (Minimalist Executive Calculation Telemetry) */
@@ -2561,12 +2575,12 @@ body {
   max-height: 90vh;
   overflow-y: auto;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
-  transform: scale(0.95);
-  transition: transform var(--duration-base) var(--ease-spring);
+  transform: scale(0.985) translateY(4px);
+  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.18s ease;
 }
 
 .modal-overlay.active .modal {
-  transform: scale(1);
+  transform: scale(1) translateY(0);
 }
 
 .modal.modal-sm {

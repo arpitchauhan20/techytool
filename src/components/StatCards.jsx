@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
-import { createPortal } from 'react-dom';
+import React, { useState, useEffect, useRef } from 'react';
 import { SparklesIcon } from './Icons';
 
 export function TaskMetricsStrip({ stats, currentFilter, onSelectFilter }) {
@@ -59,12 +58,9 @@ export function GreetingHero({
   stats,
   isWelcomeAnimating = false,
   onWelcomeAnimationComplete,
-  onTriggerWelcomeAnimation
+  onTriggerWelcomeAnimation,
+  onCardsReady
 }) {
-  const blockRef = useRef(null);
-  const [phase, setPhase] = useState('idle'); // 'idle' | 'init' | 'center' | 'docking'
-  const [targetRect, setTargetRect] = useState(null);
-
   const getGreeting = () => {
     const hour = new Date().getHours();
     if (hour < 12) return 'Good morning';
@@ -72,166 +68,103 @@ export function GreetingHero({
     return 'Good evening';
   };
 
-  const greetingText = getGreeting();
+  const greetingPrefix = getGreeting();
+  const name = userName || 'Arpit Chauhan';
+  const fullTitle = `${greetingPrefix}, ${name}`;
+  const fullSubtitle = `You have ${stats?.today || 0} tasks due today and ${stats?.high || 0} high priority deadlines.`;
 
-  // Trigger measurement when welcome animation is requested
-  useLayoutEffect(() => {
+  // Typing animation states
+  const [typedTitleLength, setTypedTitleLength] = useState(() => isWelcomeAnimating ? 0 : fullTitle.length);
+  const [typedSubtitleLength, setTypedSubtitleLength] = useState(() => isWelcomeAnimating ? 0 : fullSubtitle.length);
+  const [typingStep, setTypingStep] = useState(() => isWelcomeAnimating ? 'title' : 'done');
+
+  // Trigger typing when isWelcomeAnimating is true
+  useEffect(() => {
     if (!isWelcomeAnimating) {
-      if (phase !== 'idle') setPhase('idle');
+      setTypedTitleLength(fullTitle.length);
+      setTypedSubtitleLength(fullSubtitle.length);
+      setTypingStep('done');
       return;
     }
 
-    let isMounted = true;
+    setTypedTitleLength(0);
+    setTypedSubtitleLength(0);
+    setTypingStep('title');
+  }, [isWelcomeAnimating, fullTitle, fullSubtitle]);
 
-    const measureAndStart = () => {
-      if (!isMounted || !blockRef.current) return;
-      const rect = blockRef.current.getBoundingClientRect();
-      if (rect.width > 0 && rect.height > 0) {
-        setTargetRect({
-          left: rect.left,
-          top: rect.top,
-          width: rect.width,
-          height: rect.height,
-        });
-        setPhase('init');
-      } else {
-        requestAnimationFrame(measureAndStart);
-      }
-    };
-
-    const rafId = requestAnimationFrame(measureAndStart);
-    return () => {
-      isMounted = false;
-      cancelAnimationFrame(rafId);
-    };
-  }, [isWelcomeAnimating]);
-
-  // Choreograph phase sequence: init -> center -> docking -> idle
+  // Step 1: Type Title
   useEffect(() => {
-    if (phase === 'init') {
-      const raf1 = requestAnimationFrame(() => {
-        const raf2 = requestAnimationFrame(() => {
-          setPhase('center');
-        });
-        return () => cancelAnimationFrame(raf2);
-      });
-      return () => cancelAnimationFrame(raf1);
-    }
+    if (typingStep !== 'title') return;
 
-    if (phase === 'center') {
-      const holdTimer = setTimeout(() => {
-        setPhase('docking');
-      }, 1100);
-      return () => clearTimeout(holdTimer);
+    if (typedTitleLength < fullTitle.length) {
+      const timer = setTimeout(() => {
+        setTypedTitleLength(prev => prev + 1);
+      }, 30);
+      return () => clearTimeout(timer);
+    } else {
+      const pause = setTimeout(() => {
+        setTypingStep('subtitle');
+      }, 150);
+      return () => clearTimeout(pause);
     }
+  }, [typingStep, typedTitleLength, fullTitle.length]);
 
-    if (phase === 'docking') {
-      const dockTimer = setTimeout(() => {
-        setPhase('idle');
+  // Step 2: Type Subtitle
+  useEffect(() => {
+    if (typingStep !== 'subtitle') return;
+
+    if (typedSubtitleLength < fullSubtitle.length) {
+      const timer = setTimeout(() => {
+        setTypedSubtitleLength(prev => prev + 1);
+      }, 18);
+      return () => clearTimeout(timer);
+    } else {
+      // Subtitle typing completed! Tell parent to reveal module cards one by one!
+      setTypingStep('done');
+      if (onCardsReady) {
+        onCardsReady();
+      }
+      const finishTimer = setTimeout(() => {
         if (onWelcomeAnimationComplete) {
           onWelcomeAnimationComplete();
         }
-      }, 1150);
-      return () => clearTimeout(dockTimer);
+      }, 650);
+      return () => clearTimeout(finishTimer);
     }
-  }, [phase, onWelcomeAnimationComplete]);
+  }, [typingStep, typedSubtitleLength, fullSubtitle.length, onCardsReady, onWelcomeAnimationComplete]);
 
-  // Compute centered window transform
-  let deltaX = 0;
-  let deltaY = 0;
-  let scale = 1.25;
+  const displayedTitle = fullTitle.slice(0, typedTitleLength);
+  const displayedSubtitle = fullSubtitle.slice(0, typedSubtitleLength);
 
-  if (targetRect && typeof window !== 'undefined') {
-    const targetCenterX = targetRect.left + targetRect.width / 2;
-    const targetCenterY = targetRect.top + targetRect.height / 2;
-    const windowCenterX = window.innerWidth / 2;
-    const windowCenterY = window.innerHeight / 2;
-
-    deltaX = windowCenterX - targetCenterX;
-    deltaY = windowCenterY - targetCenterY;
-
-    const maxSafeScale = (window.innerWidth * 0.88) / targetRect.width;
-    scale = Math.min(1.28, Math.max(1.0, maxSafeScale));
-  }
-
-  const isPortalActive = phase !== 'idle' && targetRect;
+  // Format greeting prefix and name with stylish accent
+  const prefixCutoff = Math.min(displayedTitle.length, greetingPrefix.length + 2);
+  const prefixPart = displayedTitle.slice(0, prefixCutoff);
+  const namePart = displayedTitle.slice(prefixCutoff);
 
   return (
     <section className="canvas-hero">
-      {/* Real In-Layout Greeting Block */}
-      <div
-        ref={blockRef}
-        className="greeting-block"
-        style={{
-          visibility: isPortalActive || isWelcomeAnimating ? 'hidden' : 'visible',
-        }}
-      >
+      <div className="greeting-block">
         <h1 className="greeting-text">
-          {greetingText},{' '}
-          <span className="greeting-name">{userName || 'Executive'}</span>
-          <button
-            type="button"
-            className="sparkle-replay-btn"
-            onClick={() => onTriggerWelcomeAnimation && onTriggerWelcomeAnimation()}
-            title="Replay Welcome Greeting"
-            aria-label="Replay Welcome Greeting"
-          >
-            <SparklesIcon size={26} className="sparkle-greet" style={{ display: 'inline-block', verticalAlign: 'middle', color: 'var(--accent-light, #818cf8)' }} />
-          </button>
+          {prefixPart}
+          {namePart && <span className="greeting-name">{namePart}</span>}
+          {typingStep === 'title' && <span className="typing-cursor" aria-hidden="true" />}
+          {typingStep !== 'title' && (
+            <button
+              type="button"
+              className="sparkle-replay-btn"
+              onClick={() => onTriggerWelcomeAnimation && onTriggerWelcomeAnimation()}
+              title="Replay Welcome Greeting"
+              aria-label="Replay Welcome Greeting"
+            >
+              <SparklesIcon size={26} className="sparkle-greet" style={{ display: 'inline-block', verticalAlign: 'middle', color: 'var(--accent-light, #818cf8)' }} />
+            </button>
+          )}
         </h1>
         <p className="greeting-subtitle">
-          You have <strong style={{ color: 'var(--text-primary, #ffffff)' }}>{stats?.today || 0}</strong> tasks due today and <strong style={{ color: stats?.high > 0 ? 'var(--danger, #f43f5e)' : 'var(--text-primary, #ffffff)' }}>{stats?.high || 0}</strong> high priority deadlines.
+          {displayedSubtitle}
+          {typingStep === 'subtitle' && <span className="typing-cursor" aria-hidden="true" />}
         </p>
       </div>
-
-      {/* Floating Transition Portal */}
-      {isPortalActive && typeof document !== 'undefined' && createPortal(
-        <>
-          <div
-            className={`welcome-transition-backdrop ${phase === 'center' ? 'is-active' : ''} ${phase === 'docking' ? 'is-fading' : ''}`}
-            aria-hidden="true"
-          />
-
-          <div
-            className={`welcome-floating-greeting-container phase-${phase}`}
-            style={{
-              position: 'fixed',
-              left: `${targetRect.left}px`,
-              top: `${targetRect.top}px`,
-              width: `${targetRect.width}px`,
-              zIndex: 999990,
-              pointerEvents: 'none',
-              transformOrigin: 'center center',
-              transform: (phase === 'init' || phase === 'center')
-                ? `translate3d(${deltaX}px, ${deltaY}px, 0) scale(${phase === 'init' ? scale * 0.94 : scale})`
-                : 'translate3d(0px, 0px, 0px) scale(1)',
-              opacity: phase === 'init' ? 0 : 1,
-              transition: phase === 'docking'
-                ? 'transform 1150ms cubic-bezier(0.16, 1, 0.3, 1), filter 1150ms ease, opacity 200ms ease'
-                : (phase === 'center'
-                    ? 'transform 550ms cubic-bezier(0.16, 1, 0.3, 1), opacity 350ms cubic-bezier(0.16, 1, 0.3, 1)'
-                    : 'none'),
-            }}
-          >
-            <div className={`welcome-floating-inner ${phase === 'center' ? 'has-glow' : ''}`}>
-              <div className="welcome-center-aura" />
-              <div className="greeting-block">
-                <h1 className="greeting-text">
-                  {greetingText},{' '}
-                  <span className="greeting-name">{userName || 'Executive'}</span>
-                  <span className="sparkle-replay-btn" style={{ cursor: 'default' }}>
-                    <SparklesIcon size={26} className="sparkle-greet" style={{ display: 'inline-block', verticalAlign: 'middle', color: 'var(--accent-light, #818cf8)' }} />
-                  </span>
-                </h1>
-                <p className="greeting-subtitle">
-                  You have <strong style={{ color: 'var(--text-primary, #ffffff)' }}>{stats?.today || 0}</strong> tasks due today and <strong style={{ color: stats?.high > 0 ? 'var(--danger, #f43f5e)' : 'var(--text-primary, #ffffff)' }}>{stats?.high || 0}</strong> high priority deadlines.
-                </p>
-              </div>
-            </div>
-          </div>
-        </>,
-        document.body
-      )}
     </section>
   );
 }
@@ -246,6 +179,7 @@ export default function StatCards(props) {
     isWelcomeAnimating,
     onWelcomeAnimationComplete,
     onTriggerWelcomeAnimation,
+    onCardsReady,
   } = props;
 
   if (variant === 'metrics') {
@@ -260,6 +194,7 @@ export default function StatCards(props) {
         isWelcomeAnimating={isWelcomeAnimating}
         onWelcomeAnimationComplete={onWelcomeAnimationComplete}
         onTriggerWelcomeAnimation={onTriggerWelcomeAnimation}
+        onCardsReady={onCardsReady}
       />
     );
   }
@@ -272,6 +207,7 @@ export default function StatCards(props) {
         isWelcomeAnimating={isWelcomeAnimating}
         onWelcomeAnimationComplete={onWelcomeAnimationComplete}
         onTriggerWelcomeAnimation={onTriggerWelcomeAnimation}
+        onCardsReady={onCardsReady}
       />
       <TaskMetricsStrip stats={stats} currentFilter={currentFilter} onSelectFilter={onSelectFilter} />
     </section>

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import TaskRow from './TaskRow';
-import TaskEditorPanel from './TaskEditorPanel';
 import { ClipboardIcon, TargetIcon, PlusIcon } from './Icons';
 
 export default function TaskList({
@@ -94,25 +93,15 @@ export default function TaskList({
 
           <button
             type="button"
-            className={`btn ${isCreatorOpen && !taskToEdit ? 'btn-secondary' : 'btn-primary'} btn-sm`}
+            className="btn btn-primary btn-sm"
             onClick={(e) => {
               e.stopPropagation();
-              if (isCreatorOpen && !taskToEdit) {
-                onCloseCreator();
-              } else {
-                onOpenNewTask();
-              }
+              onOpenNewTask();
             }}
-            title={isCreatorOpen && !taskToEdit ? 'Close Task Form' : 'Create a new task'}
+            title="Create a new task"
           >
-            {isCreatorOpen && !taskToEdit ? (
-              <span>Cancel</span>
-            ) : (
-              <>
-                <PlusIcon size={13} style={{ marginRight: '4px' }} />
-                <span>Add Task</span>
-              </>
-            )}
+            <PlusIcon size={13} style={{ marginRight: '4px' }} />
+            <span>Add Task</span>
           </button>
           <button
             type="button"
@@ -131,18 +120,7 @@ export default function TaskList({
       {/* Expanded Content Area with Smooth Tab Transition */}
       {effectiveIsOpen && (
         <div className="mini-card-body tab-view-animated" key={currentFilter}>
-          {/* In-Window Task Creator & Editor Panel (Zero Popups) */}
-          {isCreatorOpen && (
-            <TaskEditorPanel
-              isOpen={isCreatorOpen}
-              onClose={onCloseCreator}
-              onSave={onSaveTask}
-              taskToEdit={taskToEdit}
-              defaultEmail={defaultEmail}
-              soundEnabled={soundEnabled}
-            />
-          )}
-          {tasks.length === 0 && !isCreatorOpen ? (
+          {tasks.length === 0 ? (
             <div className="empty-state">
               <div className="empty-icon-wrap">
                 <TargetIcon size={32} style={{ color: 'var(--accent-light, #818cf8)' }} />
