@@ -41,7 +41,8 @@ export default function SettingsModal({
   currentPalette = 'indigo',
   onChangePalette,
   soundEnabled = true,
-  onToggleSound
+  onToggleSound,
+  onTriggerWelcomeAnimation,
 }) {
   const [name, setName] = useState(userName || '');
   const [email, setEmail] = useState(reminderEmail || '');
@@ -256,6 +257,19 @@ export default function SettingsModal({
                       </svg>
                       <span>Edit</span>
                     </button>
+                    {onTriggerWelcomeAnimation && (
+                      <button
+                        type="button"
+                        className="btn-edit-profile-subtle"
+                        onClick={() => {
+                          onClose();
+                          onTriggerWelcomeAnimation();
+                        }}
+                        title="Replay Welcome Center Transition"
+                      >
+                        <span>✨ Preview Welcome</span>
+                      </button>
+                    )}
                   </div>
                 </>
               ) : (

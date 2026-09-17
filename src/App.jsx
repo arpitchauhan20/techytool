@@ -85,6 +85,7 @@ export default function App() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authModalMode, setAuthModalMode] = useState('login');
   const [urlResetToken, setUrlResetToken] = useState('');
+  const [isWelcomeAnimating, setIsWelcomeAnimating] = useState(false);
 
   // Google Calendar Connection State
   const [isCalendarConnected, setIsCalendarConnected] = useState(false);
