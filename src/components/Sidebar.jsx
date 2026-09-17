@@ -98,7 +98,7 @@ export default function Sidebar({
         <div className="sidebar-brand">
           <div className="brand-logo-wrap">
             <div className="brand-icon">
-              <ZapIcon size={18} />
+              <img src="/icons/icon-192.png" alt="Techy Tool Logo" className="brand-logo-img" />
             </div>
             <div className="brand-text">
               <div className="brand-name">
