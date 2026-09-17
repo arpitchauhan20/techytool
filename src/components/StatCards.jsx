@@ -79,6 +79,15 @@ export function GreetingHero({
   const [typingStep, setTypingStep] = useState(() => isWelcomeAnimating ? 'title' : 'done');
   const [isEnlarged, setIsEnlarged] = useState(() => Boolean(isWelcomeAnimating));
 
+  // Store callbacks in refs to prevent timer teardown if parent re-renders
+  const onCardsReadyRef = useRef(onCardsReady);
+  const onWelcomeAnimationCompleteRef = useRef(onWelcomeAnimationComplete);
+
+  useEffect(() => {
+    onCardsReadyRef.current = onCardsReady;
+    onWelcomeAnimationCompleteRef.current = onWelcomeAnimationComplete;
+  });
+
   // Trigger typing when isWelcomeAnimating is true
   useEffect(() => {
     if (!isWelcomeAnimating) {
@@ -86,6 +95,9 @@ export function GreetingHero({
       setTypedSubtitleLength(fullSubtitle.length);
       setTypingStep('done');
       setIsEnlarged(false);
+      if (onCardsReadyRef.current) {
+        onCardsReadyRef.current();
+      }
       return;
     }
 
@@ -112,7 +124,7 @@ export function GreetingHero({
     }
   }, [typingStep, typedTitleLength, fullTitle.length]);
 
-  // Step 2: Type Subtitle, then shrink greeting smoothly, then reveal cards one by one
+  // Step 2: Type Subtitle
   useEffect(() => {
     if (typingStep !== 'subtitle') return;
 
@@ -122,32 +134,42 @@ export function GreetingHero({
       }, 18);
       return () => clearTimeout(timer);
     } else {
-      // Subtitle typing completed!
+      // Subtitle typing completed! Move to shrinking phase
       setTypingStep('shrinking');
-      // Hold briefly, then smoothly reduce font size
-      const holdTimer = setTimeout(() => {
-        setIsEnlarged(false);
-
-        // After the shrink transition completes (360ms), reveal the module cards one by one!
-        const revealTimer = setTimeout(() => {
-          setTypingStep('done');
-          if (onCardsReady) {
-            onCardsReady();
-          }
-          const finishTimer = setTimeout(() => {
-            if (onWelcomeAnimationComplete) {
-              onWelcomeAnimationComplete();
-            }
-          }, 450);
-          return () => clearTimeout(finishTimer);
-        }, 360);
-
-        return () => clearTimeout(revealTimer);
-      }, 180);
-
-      return () => clearTimeout(holdTimer);
     }
-  }, [typingStep, typedSubtitleLength, fullSubtitle.length, onCardsReady, onWelcomeAnimationComplete]);
+  }, [typingStep, typedSubtitleLength, fullSubtitle.length]);
+
+  // Step 3: Smoothly shrink greeting, reveal module cards fast one by one, then finish
+  useEffect(() => {
+    if (typingStep !== 'shrinking') return;
+
+    // Timeline after subtitle typing finishes:
+    // T = 150ms: Begin smooth size reduction
+    // T = 500ms (150ms + 350ms): Size reduction complete -> REVEAL CARDS one by one!
+    // T = 900ms (500ms + 400ms): Cards entrance done -> complete welcome animation
+    const t1 = setTimeout(() => {
+      setIsEnlarged(false);
+    }, 150);
+
+    const t2 = setTimeout(() => {
+      if (onCardsReadyRef.current) {
+        onCardsReadyRef.current();
+      }
+    }, 500);
+
+    const t3 = setTimeout(() => {
+      setTypingStep('done');
+      if (onWelcomeAnimationCompleteRef.current) {
+        onWelcomeAnimationCompleteRef.current();
+      }
+    }, 900);
+
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+    };
+  }, [typingStep]);
 
   const displayedTitle = fullTitle.slice(0, typedTitleLength);
   const displayedSubtitle = fullSubtitle.slice(0, typedSubtitleLength);

@@ -221,6 +221,15 @@ export default function App() {
     setIsWelcomeAnimating(true);
   };
 
+  const handleCardsReady = useCallback(() => {
+    setCardsVisible(true);
+  }, []);
+
+  const handleWelcomeAnimationComplete = useCallback(() => {
+    setIsWelcomeAnimating(false);
+    setCardsVisible(true);
+  }, []);
+
   const handleOpenAuthModal = (mode = 'login') => {
     setAuthModalMode(mode);
     setIsAuthModalOpen(true);
@@ -1000,11 +1009,8 @@ export default function App() {
                 userName={userName}
                 stats={stats}
                 isWelcomeAnimating={isWelcomeAnimating}
-                onCardsReady={() => setCardsVisible(true)}
-                onWelcomeAnimationComplete={() => {
-                  setIsWelcomeAnimating(false);
-                  setCardsVisible(true);
-                }}
+                onCardsReady={handleCardsReady}
+                onWelcomeAnimationComplete={handleWelcomeAnimationComplete}
                 onTriggerWelcomeAnimation={handleTriggerWelcomeAnimation}
               />
 
