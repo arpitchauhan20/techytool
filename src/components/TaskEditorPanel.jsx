@@ -259,92 +259,90 @@ export default function TaskEditorPanel({
             </div>
           </div>
 
-          {/* Mode Segmented Controls */}
-          <div className="reminder-mode-segmented">
-            <button
-              type="button"
-              className={`mode-segment-btn ${reminderMode === 'preset' ? 'active' : ''}`}
-              onClick={() => setReminderMode('preset')}
-            >
-              <ClockIcon size={13} style={{ marginRight: '6px' }} />
-              <span>Preset Timing</span>
-            </button>
-            <button
-              type="button"
-              className={`mode-segment-btn ${reminderMode === 'offset' ? 'active' : ''}`}
-              onClick={() => setReminderMode('offset')}
-            >
-              <HourglassIcon size={13} style={{ marginRight: '6px' }} />
-              <span>Custom Offset</span>
-            </button>
-            <button
-              type="button"
-              className={`mode-segment-btn ${reminderMode === 'none' ? 'active' : ''}`}
-              onClick={() => setReminderMode('none')}
-            >
-              <XIcon size={13} style={{ marginRight: '6px' }} />
-              <span>No Alert</span>
-            </button>
+          {/* Timing Pills Grid (Presets + Custom Date/Time + No Alert) */}
+          <div className="reminder-options-body" style={{ marginTop: '12px' }}>
+            <div className="options-section-header">
+              <span className="options-label">CHOOSE ADVANCE NOTICE OR EXACT ALERT TIME:</span>
+            </div>
+            <div className="preset-timer-grid">
+              {[
+                { label: '5m before', val: 5 },
+                { label: '15m before', val: 15 },
+                { label: '30m before', val: 30 },
+                { label: '1h before', val: 60 },
+                { label: '2h before', val: 120 },
+                { label: '1 day before', val: 1440 }
+              ].map(p => (
+                <button
+                  key={p.val}
+                  type="button"
+                  className={`preset-timer-btn ${reminderMode === 'preset' && reminderPresetMinutes === p.val ? 'selected' : ''}`}
+                  onClick={() => {
+                    setReminderMode('preset');
+                    setReminderPresetMinutes(p.val);
+                  }}
+                >
+                  <ClockIcon size={12} className="timer-icon" />
+                  <span>{p.label}</span>
+                  {reminderMode === 'preset' && reminderPresetMinutes === p.val && (
+                    <CheckIcon size={12} className="timer-check-icon" />
+                  )}
+                </button>
+              ))}
+
+              {/* Custom Date & Time Button */}
+              <button
+                type="button"
+                className={`preset-timer-btn ${reminderMode === 'exact' ? 'selected' : ''}`}
+                onClick={() => {
+                  setReminderMode('exact');
+                  if (!reminderExact) {
+                    if (deadline) {
+                      setReminderExact(deadline);
+                    } else {
+                      const now = new Date();
+                      now.setHours(now.getHours() + 1);
+                      setReminderExact(new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16));
+                    }
+                  }
+                }}
+              >
+                <CalendarIcon size={12} className="timer-icon" />
+                <span>Custom Date &amp; Time</span>
+                {reminderMode === 'exact' && (
+                  <CheckIcon size={12} className="timer-check-icon" />
+                )}
+              </button>
+
+              {/* No Alert Button */}
+              <button
+                type="button"
+                className={`preset-timer-btn ${reminderMode === 'none' ? 'selected' : ''}`}
+                onClick={() => setReminderMode('none')}
+              >
+                <XIcon size={12} className="timer-icon" />
+                <span>No Alert</span>
+                {reminderMode === 'none' && (
+                  <CheckIcon size={12} className="timer-check-icon" />
+                )}
+              </button>
+            </div>
           </div>
 
-          {/* Preset Panel */}
-          {reminderMode === 'preset' && (
-            <div className="reminder-options-body animate-fade-in">
-              <div className="options-section-header">
-                <span className="options-label">CHOOSE ADVANCE NOTICE BEFORE DEADLINE:</span>
-              </div>
-              <div className="preset-timer-grid">
-                {[
-                  { label: '5m before', val: 5 },
-                  { label: '15m before', val: 15 },
-                  { label: '30m before', val: 30 },
-                  { label: '1h before', val: 60 },
-                  { label: '2h before', val: 120 },
-                  { label: '1 day before', val: 1440 }
-                ].map(p => (
-                  <button
-                    key={p.val}
-                    type="button"
-                    className={`preset-timer-btn ${reminderPresetMinutes === p.val ? 'selected' : ''}`}
-                    onClick={() => setReminderPresetMinutes(p.val)}
-                  >
-                    <ClockIcon size={12} className="timer-icon" />
-                    <span>{p.label}</span>
-                    {reminderPresetMinutes === p.val && (
-                      <CheckIcon size={12} className="timer-check-icon" />
-                    )}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Custom Offset Panel */}
-          {reminderMode === 'offset' && (
-            <div className="reminder-options-body animate-fade-in">
-              <div className="options-section-header">
-                <span className="options-label">CUSTOM ADVANCE NOTICE:</span>
-              </div>
-              <div className="custom-offset-inputs">
-                <input
-                  type="number"
-                  min="1"
-                  max="365"
-                  className="form-input offset-input-val"
-                  value={reminderOffsetValue}
-                  onChange={e => setReminderOffsetValue(parseInt(e.target.value) || 1)}
-                  placeholder="2"
-                />
-                <select
-                  className="form-select offset-select-unit"
-                  value={reminderOffsetUnit}
-                  onChange={e => setReminderOffsetUnit(e.target.value)}
-                >
-                  <option value="minutes">Minutes before deadline</option>
-                  <option value="hours">Hours before deadline</option>
-                  <option value="days">Days before deadline</option>
-                </select>
-              </div>
+          {/* Exact Date & Time Picker */}
+          {reminderMode === 'exact' && (
+            <div className="custom-exact-picker-box animate-fade-in" style={{ marginTop: '14px' }}>
+              <label className="form-label" style={{ fontSize: '11px', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <CalendarIcon size={13} style={{ color: 'var(--accent)' }} />
+                <span>SPECIFY EXACT ALERT DATE &amp; TIME:</span>
+              </label>
+              <input
+                type="datetime-local"
+                className="form-input custom-exact-input"
+                value={reminderExact}
+                onChange={e => setReminderExact(e.target.value)}
+                required
+              />
             </div>
           )}
 

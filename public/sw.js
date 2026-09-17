@@ -1,10 +1,10 @@
 /* ==========================================================================
-   TaskFlow Pro — Executive Service Worker
+   Techy Tool — Executive Service Worker
    Web Push with Vibration, Audio Bells, WhatsApp, and Google Calendar Action Hooks
-   Works 100% when browser is closed, tab is shut down, or phone screen is locked
+   Auto-Update System for instant seamless deploys
    ========================================================================== */
 
-const CACHE_NAME = 'taskflow-pro-v6';
+const CACHE_NAME = 'techytool-pwa-v8';
 
 // Install — activate immediately
 self.addEventListener('install', (event) => {
@@ -20,10 +20,19 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch — Network-first strategy for dynamic React SPA & API requests
+// Fetch — Network-first for HTML / API so updates are instantaneous without manual cache clearing
 self.addEventListener('fetch', (event) => {
   if (event.request.url.includes('/api/')) {
     event.respondWith(fetch(event.request));
+    return;
+  }
+
+  // For HTML navigations, always fetch fresh from network to load latest build scripts
+  if (event.request.mode === 'navigate' || (event.request.headers.get('accept') && event.request.headers.get('accept').includes('text/html'))) {
+    event.respondWith(
+      fetch(event.request)
+        .catch(() => caches.match(event.request))
+    );
     return;
   }
 

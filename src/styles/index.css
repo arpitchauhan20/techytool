@@ -578,17 +578,19 @@ body {
   display: flex;
   width: 100vw;
   height: 100vh;
+  height: 100dvh;
   overflow: hidden;
   position: relative;
 }
 
 /* ==========================================================================
-   LEFT SIDEBAR RAIL (260px, Edge-to-Edge Height)
+   LEFT SIDEBAR RAIL (260px, Edge-to-Edge Height with Notch Support)
    ========================================================================== */
 .app-sidebar {
   width: 270px;
   min-width: 270px;
   height: 100vh;
+  height: 100dvh;
   background: var(--surface-sidebar);
   border-right: 1px solid var(--border-subtle);
   display: flex;
@@ -596,6 +598,9 @@ body {
   z-index: 200;
   transition: transform 0.25s var(--ease-spring), width 0.3s cubic-bezier(0.4, 0, 0.2, 1), min-width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
 }
 
 .sidebar-brand {
@@ -615,13 +620,21 @@ body {
 .brand-icon {
   width: 32px;
   height: 32px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-hover));
-  border-radius: 8px;
+  background: var(--surface-card);
+  border-radius: 9px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
-  box-shadow: 0 4px 12px var(--accent-glow);
+  overflow: hidden;
+  box-shadow: 0 4px 14px var(--accent-glow);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.brand-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .brand-name {
@@ -1275,6 +1288,7 @@ body {
 .app-main {
   flex: 1;
   height: 100vh;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -1282,14 +1296,17 @@ body {
   position: relative;
 }
 
-/* Sticky Top Canvas Bar */
+/* Sticky Top Canvas Bar (Notch & Safe Area Aware) */
 .main-topbar {
-  height: 58px;
+  height: calc(58px + env(safe-area-inset-top));
+  padding-top: env(safe-area-inset-top);
+  padding-left: max(32px, env(safe-area-inset-left));
+  padding-right: max(32px, env(safe-area-inset-right));
+  padding-bottom: 0;
   border-bottom: 1px solid var(--border-subtle);
   background: var(--surface-topbar);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  padding: 0 32px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -3826,12 +3843,16 @@ body {
   }
 
   .main-topbar {
-    padding: 0 14px;
+    height: calc(54px + env(safe-area-inset-top));
+    padding-top: env(safe-area-inset-top);
+    padding-left: max(14px, env(safe-area-inset-left));
+    padding-right: max(14px, env(safe-area-inset-right));
+    padding-bottom: 0;
     gap: 10px;
   }
 
   .main-content-scroll {
-    padding: 16px 14px 80px;
+    padding: 16px max(14px, env(safe-area-inset-right)) calc(80px + env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left));
   }
 
   .metrics-strip {
@@ -3875,7 +3896,9 @@ body {
 
 @media (max-width: 640px) {
   .main-topbar {
-    padding: 0 10px;
+    padding-top: env(safe-area-inset-top);
+    padding-left: max(10px, env(safe-area-inset-left));
+    padding-right: max(10px, env(safe-area-inset-right));
     gap: 8px;
   }
 
@@ -4573,12 +4596,14 @@ body {
    IN-WORKSPACE TASK CREATOR & EDITOR PANEL (Modern Non-Popup UI)
    ========================================================================== */
 .task-inline-creator-card {
-  margin: 16px 0 22px 0;
-  padding: 24px 26px;
+  max-width: 740px;
+  width: 100%;
+  margin: 16px auto 24px auto;
+  padding: 24px 28px;
   background: var(--surface-card, rgba(17, 24, 39, 0.75));
   border: 1px solid var(--border-default);
-  border-radius: 16px;
-  box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.35), 0 0 0 1px var(--accent-subtle);
+  border-radius: 18px;
+  box-shadow: 0 18px 45px -10px rgba(0, 0, 0, 0.45), 0 0 0 1px var(--accent-subtle);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -6060,11 +6085,10 @@ body {
    APP MAIN FOOTER (Fixed Bottom Navigation Bar Strip)
    ========================================================================== */
 .app-main-footer {
-  height: 48px;
-  min-height: 48px;
-  max-height: 48px;
+  height: calc(48px + env(safe-area-inset-bottom));
+  min-height: calc(48px + env(safe-area-inset-bottom));
   width: 100%;
-  padding: 0 32px;
+  padding: 0 max(32px, env(safe-area-inset-right)) env(safe-area-inset-bottom) max(32px, env(safe-area-inset-left));
   background: var(--surface-topbar, rgba(10, 14, 23, 0.9));
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
@@ -6133,9 +6157,9 @@ body {
 
 @media (max-width: 720px) {
   .app-main-footer {
-    padding: 8px 16px;
+    padding: 8px max(16px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
     height: auto;
-    min-height: 48px;
+    min-height: calc(48px + env(safe-area-inset-bottom));
     max-height: none;
   }
 
@@ -7758,13 +7782,34 @@ body {
    TASK CREATOR & INLINE EDITOR PANEL (Zero Popup Architecture)
    ========================================================================== */
 .task-inline-creator-card {
+  max-width: 740px;
+  width: 100%;
+  margin: 0 auto 24px auto;
   background: var(--surface-card);
   border: 1.5px solid var(--border-default);
   border-radius: 18px;
-  padding: 22px 24px;
-  margin-bottom: 22px;
-  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.16);
+  padding: 22px 26px;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.28);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.custom-exact-picker-box {
+  background: var(--surface-card);
+  border: 1.5px solid var(--border-focus);
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow: 0 4px 14px var(--accent-glow);
+}
+
+.custom-exact-input {
+  width: 100%;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--surface-input);
+  border: 1px solid var(--border-default);
+  color: var(--text-primary);
 }
 
 .task-creator-header {

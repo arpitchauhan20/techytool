@@ -246,40 +246,43 @@ export default function TaskModal({
 
               {/* Clean Unified Timing Pills */}
               <div className="reminder-mode-pills">
+                {[
+                  { label: '5m before', val: 5 },
+                  { label: '15m before', val: 15 },
+                  { label: '30m before', val: 30 },
+                  { label: '1h before', val: 60 },
+                  { label: '2h before', val: 120 },
+                  { label: '1 day before', val: 1440 }
+                ].map(p => (
+                  <button
+                    key={p.val}
+                    type="button"
+                    className={`reminder-pill-btn ${reminderMode === 'preset' && reminderPresetMinutes === p.val ? 'active' : ''}`}
+                    onClick={() => {
+                      setReminderMode('preset');
+                      setReminderPresetMinutes(p.val);
+                    }}
+                  >
+                    {p.label}
+                  </button>
+                ))}
                 <button
                   type="button"
-                  className={`reminder-pill-btn ${reminderMode === 'preset' && reminderPresetMinutes === 15 ? 'active' : ''}`}
-                  onClick={() => selectPreset(15)}
+                  className={`reminder-pill-btn ${reminderMode === 'exact' ? 'active' : ''}`}
+                  onClick={() => {
+                    setReminderMode('exact');
+                    if (!reminderExact) {
+                      if (deadline) {
+                        setReminderExact(deadline);
+                      } else {
+                        const now = new Date();
+                        now.setHours(now.getHours() + 1);
+                        setReminderExact(new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16));
+                      }
+                    }
+                  }}
                 >
-                  15m before
-                </button>
-                <button
-                  type="button"
-                  className={`reminder-pill-btn ${reminderMode === 'preset' && reminderPresetMinutes === 30 ? 'active' : ''}`}
-                  onClick={() => selectPreset(30)}
-                >
-                  30m before
-                </button>
-                <button
-                  type="button"
-                  className={`reminder-pill-btn ${reminderMode === 'preset' && reminderPresetMinutes === 60 ? 'active' : ''}`}
-                  onClick={() => selectPreset(60)}
-                >
-                  1h before
-                </button>
-                <button
-                  type="button"
-                  className={`reminder-pill-btn ${reminderMode === 'preset' && reminderPresetMinutes === 1440 ? 'active' : ''}`}
-                  onClick={() => selectPreset(1440)}
-                >
-                  1 day before
-                </button>
-                <button
-                  type="button"
-                  className={`reminder-pill-btn ${reminderMode === 'offset' ? 'active' : ''}`}
-                  onClick={() => setReminderMode('offset')}
-                >
-                  Custom
+                  Custom Date &amp; Time
                 </button>
                 <button
                   type="button"
@@ -290,27 +293,19 @@ export default function TaskModal({
                 </button>
               </div>
 
-              {/* Custom Offset Row */}
-              {reminderMode === 'offset' && (
-                <div className="custom-offset-row" style={{ marginBottom: '12px' }}>
+              {/* Exact Date & Time Picker */}
+              {reminderMode === 'exact' && (
+                <div className="custom-exact-picker-box animate-fade-in" style={{ marginTop: '12px', marginBottom: '12px' }}>
+                  <label className="form-label" style={{ fontSize: '11px', marginBottom: '6px' }}>
+                    SPECIFY EXACT ALERT DATE &amp; TIME:
+                  </label>
                   <input
-                    className="form-input offset-value-input"
-                    type="number"
-                    min="1"
-                    max="365"
-                    style={{ width: '80px' }}
-                    value={reminderOffsetValue}
-                    onChange={e => setReminderOffsetValue(parseFloat(e.target.value) || 1)}
+                    type="datetime-local"
+                    className="form-input"
+                    value={reminderExact}
+                    onChange={e => setReminderExact(e.target.value)}
+                    required
                   />
-                  <select
-                    className="form-input form-select offset-unit-select"
-                    value={reminderOffsetUnit}
-                    onChange={e => setReminderOffsetUnit(e.target.value)}
-                  >
-                    <option value="minutes">Minutes before deadline</option>
-                    <option value="hours">Hours before deadline</option>
-                    <option value="days">Days before deadline</option>
-                  </select>
                 </div>
               )}
 
