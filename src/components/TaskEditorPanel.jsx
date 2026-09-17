@@ -368,124 +368,72 @@ export default function TaskEditorPanel({
 
             <div className="channel-toggle-grid">
               {/* Channel 1: Browser Push */}
-              <div className={`channel-toggle-card ${channels.push ? 'is-active' : ''}`}>
-                <div className="channel-card-left">
-                  <div className="channel-avatar push-bg">
-                    <BellIcon size={16} />
-                  </div>
-                  <div className="channel-card-details">
-                    <div className="channel-card-title">Browser Push</div>
-                    <div className="channel-card-desc">Desktop &amp; mobile alerts</div>
-                  </div>
+              <button
+                type="button"
+                className={`channel-icon-btn ${channels.push ? 'is-active' : ''} chan-push`}
+                onClick={() => toggleChannel('push')}
+                title={channels.push ? 'Browser Push (Active - click to disable)' : 'Browser Push (Inactive - click to enable)'}
+                aria-label="Browser Push notifications"
+                aria-pressed={channels.push}
+              >
+                <div className="channel-icon-avatar push-bg">
+                  <BellIcon size={18} />
                 </div>
-                <div className="toggle-switch-wrapper">
-                  <button
-                    type="button"
-                    className={`cool-switch-btn ${channels.push ? 'is-on' : 'is-off'} chan-push`}
-                    onClick={() => toggleChannel('push')}
-                    role="switch"
-                    aria-checked={channels.push}
-                    aria-label="Toggle Browser Push notifications"
-                    title={channels.push ? 'Disable Browser Push' : 'Enable Browser Push'}
-                  >
-                    <span className="cool-switch-track">
-                      <span className="cool-switch-thumb">
-                        <span className="cool-thumb-ring" />
-                      </span>
-                    </span>
-                  </button>
-                </div>
-              </div>
+                <span className={`channel-icon-badge ${channels.push ? 'active' : ''}`}>
+                  {channels.push ? <CheckIcon size={10} /> : <span className="channel-badge-dot" />}
+                </span>
+              </button>
 
               {/* Channel 2: Audio Bell */}
-              <div className={`channel-toggle-card ${channels.sound ? 'is-active' : ''}`}>
-                <div className="channel-card-left">
-                  <div className="channel-avatar sound-bg">
-                    <VolumeIcon size={16} />
-                  </div>
-                  <div className="channel-card-details">
-                    <div className="channel-card-title">Audio Bell</div>
-                    <div className="channel-card-desc">Harmonic chime alert</div>
-                  </div>
+              <button
+                type="button"
+                className={`channel-icon-btn ${channels.sound ? 'is-active' : ''} chan-sound`}
+                onClick={() => toggleChannel('sound')}
+                title={channels.sound ? 'Audio Bell (Active - click to disable)' : 'Audio Bell (Inactive - click to enable)'}
+                aria-label="Audio Bell chime alerts"
+                aria-pressed={channels.sound}
+              >
+                <div className="channel-icon-avatar sound-bg">
+                  <VolumeIcon size={18} />
                 </div>
-                <div className="toggle-switch-wrapper">
-                  <button
-                    type="button"
-                    className={`cool-switch-btn ${channels.sound ? 'is-on' : 'is-off'} chan-sound`}
-                    onClick={() => toggleChannel('sound')}
-                    role="switch"
-                    aria-checked={channels.sound}
-                    aria-label="Toggle Audio Bell notifications"
-                    title={channels.sound ? 'Disable Audio Bell' : 'Enable Audio Bell'}
-                  >
-                    <span className="cool-switch-track">
-                      <span className="cool-switch-thumb">
-                        <span className="cool-thumb-ring" />
-                      </span>
-                    </span>
-                  </button>
-                </div>
-              </div>
+                <span className={`channel-icon-badge ${channels.sound ? 'active' : ''}`}>
+                  {channels.sound ? <CheckIcon size={10} /> : <span className="channel-badge-dot" />}
+                </span>
+              </button>
 
               {/* Channel 3: Google Calendar */}
-              <div className={`channel-toggle-card ${channels.calendar ? 'is-active' : ''}`}>
-                <div className="channel-card-left">
-                  <div className="channel-avatar gcal-bg">
-                    <CalendarIcon size={16} />
-                  </div>
-                  <div className="channel-card-details">
-                    <div className="channel-card-title">Google Calendar</div>
-                    <div className="channel-card-desc">1-click sync &amp; alarms</div>
-                  </div>
+              <button
+                type="button"
+                className={`channel-icon-btn ${channels.calendar ? 'is-active' : ''} chan-gcal`}
+                onClick={() => toggleChannel('calendar')}
+                title={channels.calendar ? 'Google Calendar (Active - click to disable)' : 'Google Calendar (Inactive - click to enable)'}
+                aria-label="Google Calendar Sync"
+                aria-pressed={channels.calendar}
+              >
+                <div className="channel-icon-avatar gcal-bg">
+                  <CalendarIcon size={18} />
                 </div>
-                <div className="toggle-switch-wrapper">
-                  <button
-                    type="button"
-                    className={`cool-switch-btn ${channels.calendar ? 'is-on' : 'is-off'} chan-gcal`}
-                    onClick={() => toggleChannel('calendar')}
-                    role="switch"
-                    aria-checked={channels.calendar}
-                    aria-label="Toggle Google Calendar Sync"
-                    title={channels.calendar ? 'Disable Google Calendar' : 'Enable Google Calendar'}
-                  >
-                    <span className="cool-switch-track">
-                      <span className="cool-switch-thumb">
-                        <span className="cool-thumb-ring" />
-                      </span>
-                    </span>
-                  </button>
-                </div>
-              </div>
+                <span className={`channel-icon-badge ${channels.calendar ? 'active' : ''}`}>
+                  {channels.calendar ? <CheckIcon size={10} /> : <span className="channel-badge-dot" />}
+                </span>
+              </button>
 
               {/* Channel 4: Email */}
-              <div className={`channel-toggle-card ${channels.email ? 'is-active' : ''}`}>
-                <div className="channel-card-left">
-                  <div className="channel-avatar email-bg">
-                    <MailIcon size={16} />
-                  </div>
-                  <div className="channel-card-details">
-                    <div className="channel-card-title">Email Notice</div>
-                    <div className="channel-card-desc">Direct inbox delivery</div>
-                  </div>
+              <button
+                type="button"
+                className={`channel-icon-btn ${channels.email ? 'is-active' : ''} chan-email`}
+                onClick={() => toggleChannel('email')}
+                title={channels.email ? 'Email Notice (Active - click to disable)' : 'Email Notice (Inactive - click to enable)'}
+                aria-label="Email notifications"
+                aria-pressed={channels.email}
+              >
+                <div className="channel-icon-avatar email-bg">
+                  <MailIcon size={18} />
                 </div>
-                <div className="toggle-switch-wrapper">
-                  <button
-                    type="button"
-                    className={`cool-switch-btn ${channels.email ? 'is-on' : 'is-off'} chan-email`}
-                    onClick={() => toggleChannel('email')}
-                    role="switch"
-                    aria-checked={channels.email}
-                    aria-label="Toggle Email notifications"
-                    title={channels.email ? 'Disable Email Notice' : 'Enable Email Notice'}
-                  >
-                    <span className="cool-switch-track">
-                      <span className="cool-switch-thumb">
-                        <span className="cool-thumb-ring" />
-                      </span>
-                    </span>
-                  </button>
-                </div>
-              </div>
+                <span className={`channel-icon-badge ${channels.email ? 'active' : ''}`}>
+                  {channels.email ? <CheckIcon size={10} /> : <span className="channel-badge-dot" />}
+                </span>
+              </button>
             </div>
 
             {/* Email Input Drawer if Email Channel is active */}
