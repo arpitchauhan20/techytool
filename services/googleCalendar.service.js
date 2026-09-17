@@ -327,6 +327,30 @@ class GoogleCalendarService {
       throw err;
     }
   }
+
+  /**
+   * Deletes an event directly from the user's primary Google Calendar.
+   */
+  async deleteReminderEvent(user, eventId) {
+    if (!user || !user.google_refresh_token || !user.google_calendar_connected) {
+      return { success: true, localOnly: true };
+    }
+
+    try {
+      const calendar = this.getCalendarClient(user.google_refresh_token);
+      await calendar.events.delete({
+        calendarId: 'primary',
+        eventId: eventId
+      });
+      return { success: true };
+    } catch (apiErr) {
+      console.warn('[GoogleCalendarService] Delete event note (may already be deleted):', apiErr.message);
+      if (apiErr.code === 404 || apiErr.code === 410 || apiErr.status === 404 || apiErr.status === 410) {
+        return { success: true };
+      }
+      return { success: false, error: apiErr.message };
+    }
+  }
 }
 
 module.exports = new GoogleCalendarService();

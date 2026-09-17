@@ -313,4 +313,35 @@ router.post(['/api/calendar/reminders', '/reminders'], authMiddleware, async (re
   }
 });
 
+// -------------------------------------------------------------
+// 6. DELETE GOOGLE CALENDAR REMINDER EVENT
+// DELETE /api/calendar/reminders/:id or /reminders/:id
+// -------------------------------------------------------------
+router.delete(['/api/calendar/reminders/:id', '/reminders/:id'], authMiddleware, async (req, res) => {
+  try {
+    const user = await userStorage.findById(req.user.id);
+    if (!user) {
+      return res.status(401).json({ success: false, error: 'User session not found.' });
+    }
+
+    const eventId = req.params.id;
+    if (!eventId) {
+      return res.status(400).json({ success: false, error: 'Event ID parameter is required.' });
+    }
+
+    const result = await googleCalendarService.deleteReminderEvent(user, eventId);
+    return res.status(200).json({
+      success: true,
+      message: 'Reminder deleted successfully.',
+      result
+    });
+  } catch (err) {
+    console.error('[CalendarRoutes] Error deleting calendar reminder:', err.message);
+    return res.status(err.statusCode || 500).json({
+      success: false,
+      error: err.message || 'Failed to delete reminder.'
+    });
+  }
+});
+
 module.exports = router;

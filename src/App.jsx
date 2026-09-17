@@ -72,6 +72,7 @@ export default function App() {
 
   // Modals
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
+  const [isReminderModalOpen, setIsReminderModalOpen] = useState(false);
   const [taskToEdit, setTaskToEdit] = useState(null);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [taskToDeleteId, setTaskToDeleteId] = useState(null);
@@ -926,6 +927,7 @@ export default function App() {
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
           onOpenMobileMenu={() => setIsMobileSidebarOpen(true)}
+          onBack={() => setActiveDashboardBoard(null)}
         />
 
         {/* Scrollable Canvas Area with Mobile Pull-to-Refresh */}
@@ -1058,6 +1060,9 @@ export default function App() {
                 onShowToast={showToast}
                 onBack={() => setActiveDashboardBoard(null)}
                 tasks={tasks}
+                isCreatorOpen={isReminderModalOpen}
+                onCloseCreator={() => setIsReminderModalOpen(false)}
+                onOpenCreator={() => setIsReminderModalOpen(true)}
               />
             </div>
           )}
@@ -1176,8 +1181,15 @@ export default function App() {
       <button
         type="button"
         className="fab"
-        onClick={() => handleOpenTaskEditor(null)}
-        title="Add New Task (Shortcut: N)"
+        onClick={() => {
+          if (activeDashboardBoard === 'calendar') {
+            setIsReminderModalOpen(true);
+          } else {
+            handleOpenTaskEditor(null);
+          }
+        }}
+        title={activeDashboardBoard === 'calendar' ? 'Add New Reminder' : 'Add New Task (Shortcut: N)'}
+        aria-label={activeDashboardBoard === 'calendar' ? 'Add New Reminder' : 'Add New Task'}
       >
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
           <line x1="12" y1="5" x2="12" y2="19" />

@@ -122,6 +122,25 @@ export async function createCalendarReminder(reminderData) {
 }
 
 /**
+ * Deletes a reminder event from Google Calendar via DELETE /api/calendar/reminders/:id
+ */
+export async function deleteCalendarReminder(eventId) {
+  if (!eventId) return { success: true };
+  try {
+    const res = await fetch(`/api/calendar/reminders/${encodeURIComponent(eventId)}`, {
+      method: 'DELETE',
+      headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
+      credentials: 'include'
+    });
+    const data = await res.json().catch(() => ({ success: true }));
+    return data;
+  } catch (err) {
+    console.warn('[CalendarService] Delete reminder api note:', err);
+    return { success: true };
+  }
+}
+
+/**
  * Disconnects Google Calendar integration and revokes access token.
  */
 export function disconnectGoogleCalendar() {
