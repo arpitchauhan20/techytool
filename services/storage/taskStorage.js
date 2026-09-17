@@ -354,7 +354,7 @@ class TaskStorage {
       try {
         const sheetTasks = await this._getGoogleSheetTasks();
         if (sheetTasks) {
-          const match = sheetTasks.find(item => item.task.user_id === userId && item.task.id === taskId);
+          const match = sheetTasks.find(item => item.task.user_id === userId && String(item.task.id) === String(taskId));
           if (match) {
             await this.sheetsClient.spreadsheets.values.clear({
               spreadsheetId: this.spreadsheetId,
@@ -369,7 +369,7 @@ class TaskStorage {
     }
 
     const tasks = readLocalTasks();
-    const filtered = tasks.filter(t => !(t.user_id === userId && t.id === taskId));
+    const filtered = tasks.filter(t => !(t.user_id === userId && String(t.id) === String(taskId)));
     const wasDeleted = filtered.length < tasks.length;
     if (wasDeleted) {
       writeLocalTasks(filtered);

@@ -30,6 +30,7 @@ export default function CalendarReminderCard({
   onShowToast,
   onBack,
   tasks = [],
+  onDeleteTask,
   isCreatorOpen = false,
   onCloseCreator,
   onOpenCreator
@@ -196,14 +197,14 @@ export default function CalendarReminderCard({
     tasks.forEach(t => {
       if (t.deadline) {
         list.push({
-          id: t.id,
+          id: t.id || t._id,
           title: t.title,
           description: t.description,
           startTime: t.deadline,
           source: 'task',
           priority: t.priority,
           completed: t.completed,
-          isRemovable: false // Tasks are deleted from Tasks workspace
+          isRemovable: true
         });
       }
     });
@@ -331,10 +332,25 @@ export default function CalendarReminderCard({
     setDeletingId(eventId);
 
     try {
-      // 1. Remove from local storage / state
-      setRecentEvents(prev => prev.filter(item => item.id !== reminder.id && item.gcalId !== reminder.id));
+      // 1. If this is a task-backed reminder, trigger task deletion
+      if (reminder.source === 'task' && onDeleteTask) {
+        onDeleteTask(reminder.id);
+      }
 
-      // 2. If it has a Google Calendar event ID and user is connected, delete from Google Calendar
+      // 2. Remove from local storage / state with robust string comparison
+      setRecentEvents(prev => {
+        const next = prev.filter(item => {
+          const matchId = reminder.id && (String(item.id) === String(reminder.id) || String(item.gcalId) === String(reminder.id));
+          const matchGcal = reminder.gcalId && (String(item.gcalId) === String(reminder.gcalId) || String(item.id) === String(reminder.gcalId));
+          return !matchId && !matchGcal;
+        });
+        try {
+          localStorage.setItem('taskflow_calendar_events', JSON.stringify(next));
+        } catch {}
+        return next;
+      });
+
+      // 3. If it has a Google Calendar event ID and user is connected, delete from Google Calendar
       if (reminder.gcalId || reminder.source === 'gcal_reminder' || reminder.htmlLink) {
         const idToDelete = reminder.gcalId || reminder.id;
         try {
@@ -541,7 +557,7 @@ export default function CalendarReminderCard({
             {displayedReminders.map((rem, idx) => {
               const d = rem.startTime ? new Date(rem.startTime) : null;
               const dateStr = d && !isNaN(d.getTime())
-                ? d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })
+                ? d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
                 : 'Flexible Date';
               const timeStr = d && !isNaN(d.getTime())
                 ? d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
@@ -550,72 +566,87 @@ export default function CalendarReminderCard({
               const isDeleting = deletingId === (rem.id || rem.gcalId);
 
               return (
-                <div key={rem.id || idx} className="reminder-item-card">
-                  <div className="reminder-item-main">
-                    <div className="reminder-icon-badge">
-                      <span>🔔</span>
+                <div
+                  key={rem.id || idx}
+                  className={`reminder-mini-card ${rem.priority ? `prio-${rem.priority}` : ''}`}
+                >
+                  {/* Card Top Row: Icon + Source Badge + Action Buttons */}
+                  <div className="reminder-mini-header">
+                    <div className="reminder-mini-lead">
+                      <div className="reminder-mini-icon">
+                        <span>🔔</span>
+                      </div>
+                      {rem.source === 'task' ? (
+                        <span className="badge-task-source" title="Task deadline reminder">Task</span>
+                      ) : rem.htmlLink ? (
+                        <span className="badge-gcal-source" title="Synced with Google Calendar">G-Cal</span>
+                      ) : (
+                        <span className="badge-custom-source" title="Scheduled custom reminder">Alert</span>
+                      )}
                     </div>
 
-                    <div className="reminder-item-details">
-                      <div className="reminder-title-row">
-                        <h4 className="reminder-item-title">{rem.title}</h4>
-                        {rem.source === 'task' && (
-                          <span className="badge-task-source">Task Workspace</span>
-                        )}
-                      </div>
-
-                      {rem.description && (
-                        <p className="reminder-item-desc">{rem.description}</p>
+                    <div className="reminder-mini-actions">
+                      {rem.htmlLink && (
+                        <a
+                          href={rem.htmlLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mini-gcal-link-btn"
+                          title="Open in Google Calendar"
+                          aria-label="Open in Google Calendar"
+                        >
+                          <LinkIcon size={12} />
+                        </a>
                       )}
 
-                      <div className="reminder-meta-row">
-                        <span className="reminder-timing-badge">
-                          📅 {dateStr} {timeStr && `• ${timeStr}`}
-                        </span>
-
-                        {rem.reminderMinutes !== undefined && rem.reminderMinutes >= 0 && (
-                          <span className="reminder-alert-badge">
-                            ⏰ {rem.reminderMinutes === 0 ? 'At time' : `${rem.reminderMinutes}m before`}
-                          </span>
-                        )}
-
-                        {rem.htmlLink && (
-                          <a
-                            href={rem.htmlLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="reminder-gcal-link"
-                            title="View in Google Calendar"
-                          >
-                            <LinkIcon size={11} style={{ marginRight: '3px' }} />
-                            <span>Google Cal ↗</span>
-                          </a>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Actions: Delete Button */}
-                  <div className="reminder-item-actions">
-                    {rem.isRemovable ? (
                       <button
                         type="button"
-                        className="btn-delete-reminder"
+                        className="btn-delete-reminder mini"
                         onClick={(e) => handleDeleteReminder(rem, e)}
                         disabled={isDeleting}
-                        title="Delete this reminder"
+                        title="Delete reminder"
                         aria-label="Delete reminder"
                       >
                         {isDeleting ? (
                           <span className="deleting-spinner">...</span>
                         ) : (
-                          <TrashIcon size={14} />
+                          <TrashIcon size={12} />
                         )}
                       </button>
-                    ) : (
-                      <span className="task-linked-hint" title="Manage deadline in Tasks Workspace">
-                        Task
+                    </div>
+                  </div>
+
+                  {/* Card Body: Title & Optional Description */}
+                  <div className="reminder-mini-body">
+                    <h4 className="reminder-mini-title" title={rem.title}>
+                      {rem.title}
+                    </h4>
+                    {rem.description && (
+                      <p className="reminder-mini-desc" title={rem.description}>
+                        {rem.description}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Card Footer: Date, Time & Reminder Alert Badges */}
+                  <div className="reminder-mini-footer">
+                    <div className="reminder-mini-timing">
+                      <span className="mini-time-chip">
+                        <CalendarIcon size={11} style={{ marginRight: '4px' }} />
+                        {dateStr}
                       </span>
+                      {timeStr && (
+                        <span className="mini-time-chip time-accent">
+                          <ClockIcon size={11} style={{ marginRight: '4px' }} />
+                          {timeStr}
+                        </span>
+                      )}
+                    </div>
+
+                    {rem.reminderMinutes !== undefined && rem.reminderMinutes >= 0 && (
+                      <div className="reminder-mini-alert-pill">
+                        ⏰ {rem.reminderMinutes === 0 ? 'At time' : `${rem.reminderMinutes}m before`}
+                      </div>
                     )}
                   </div>
                 </div>

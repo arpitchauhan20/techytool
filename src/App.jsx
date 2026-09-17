@@ -772,16 +772,26 @@ export default function App() {
   };
 
   const handleDeleteTask = (id) => {
-    setTaskToDeleteId(id);
+    if (id !== null && id !== undefined) {
+      setTaskToDeleteId(String(id));
+    }
   };
 
   const executeDeleteTask = () => {
     if (taskToDeleteId) {
-      const target = tasks.find(t => t.id === taskToDeleteId);
-      cancelBackendReminder(taskToDeleteId);
-      setTasks(prev => prev.filter(t => t.id !== taskToDeleteId));
+      const idToDelete = String(taskToDeleteId);
+      const target = tasks.find(t => String(t.id) === idToDelete || String(t._id || '') === idToDelete);
+      
+      cancelBackendReminder(idToDelete);
+      
+      setTasks(prev => {
+        const nextTasks = prev.filter(t => String(t.id) !== idToDelete && String(t._id || '') !== idToDelete);
+        saveStorage('taskflow_tasks', nextTasks);
+        return nextTasks;
+      });
+
       if (currentUser) {
-        TaskClient.deleteTask(taskToDeleteId);
+        TaskClient.deleteTask(idToDelete);
       }
       showToast('error', '🗑️', `"${target?.title || 'Task'}" deleted`);
       setTaskToDeleteId(null);
@@ -1115,6 +1125,7 @@ export default function App() {
                 onShowToast={showToast}
                 onBack={() => setActiveDashboardBoard(null)}
                 tasks={tasks}
+                onDeleteTask={handleDeleteTask}
                 isCreatorOpen={isReminderModalOpen}
                 onCloseCreator={() => setIsReminderModalOpen(false)}
                 onOpenCreator={() => setIsReminderModalOpen(true)}

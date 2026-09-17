@@ -220,7 +220,10 @@ export default function TaskRow({
         <button
           type="button"
           className="action-icon-btn delete"
-          onClick={() => onDelete(task.id)}
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete(task.id || task._id);
+          }}
           title="Delete Task"
         >
           <TrashIcon size={14} />
