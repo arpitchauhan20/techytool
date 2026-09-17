@@ -4772,11 +4772,16 @@ body {
   }
 
   .task-creator-actions {
-    flex-direction: column-reverse;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
   }
 
   .task-creator-actions .btn {
-    width: 100%;
+    width: auto;
+    flex: 1;
   }
 }
 
@@ -5148,273 +5153,165 @@ body {
 }
 
 /* ==========================================================================
-   CYBER LAUNCH BUTTON — ADVANCED ORBITAL LASER & GLASS PILL
-   Ultra-modern, compact, responsive, with small text 'Launch'
+   MODULE CARD ROW LAYOUT (Button stays in the same row)
    ========================================================================== */
-.cyber-launch-btn {
-  position: relative;
-  display: inline-flex;
+.module-card-row {
+  display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 1.5px; /* Precision gap for rotating laser border beam */
-  border-radius: 9999px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  outline: none;
-  text-decoration: none;
-  user-select: none;
-  overflow: hidden;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
 }
 
-/* Light theme base shadow */
-[data-theme^="light-"] .cyber-launch-btn {
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+.module-card-info-col {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-/* Theme-Adaptive Hover Bloom */
-.cyber-launch-btn:hover {
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 10px 28px -4px var(--accent-glow),
-              0 0 20px -2px var(--accent-glow);
-}
-
-.cyber-launch-btn:active,
-.cyber-launch-btn.is-launching {
-  transform: translateY(0px) scale(0.96);
-  box-shadow: 0 4px 12px var(--accent-glow);
-}
-
-/* 1. Dynamic Rotating Orbital Laser Border Beam */
-.cyber-border-beam {
-  position: absolute;
-  inset: -150%;
-  background: conic-gradient(
-    from 0deg at 50% 50%,
-    transparent 0deg,
-    transparent 60deg,
-    var(--accent) 120deg,
-    var(--accent-hover) 160deg,
-    var(--secondary, #38bdf8) 180deg,
-    transparent 240deg,
-    transparent 360deg
-  );
-  animation: cyberLaserSpin 3.2s linear infinite;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.cyber-launch-btn:hover .cyber-border-beam {
-  animation-duration: 1.6s; /* Speeds up intensely on hover */
-}
-
-@keyframes cyberLaserSpin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-/* 2. Internal Obsidian Glass Core */
-.cyber-glass-core {
-  position: relative;
-  z-index: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 22px;
-  border-radius: 9999px;
-  background: var(--surface-card, #0f172a);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  overflow: hidden;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12),
-              inset 0 -1px 0 rgba(0, 0, 0, 0.5);
-  transition: background 0.25s ease;
-}
-
-[data-theme^="light-"] .cyber-glass-core {
-  background: rgba(255, 255, 255, 0.95);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1),
-              inset 0 -1px 0 rgba(0, 0, 0, 0.08);
-}
-
-.cyber-launch-btn:hover .cyber-glass-core {
-  background: var(--surface-card-hover, #1e293b);
-}
-
-[data-theme^="light-"] .cyber-launch-btn:hover .cyber-glass-core {
-  background: #ffffff;
-}
-
-/* 3. Interactive Mouse Spotlight */
-.cyber-spotlight {
-  position: absolute;
-  inset: 0;
-  border-radius: 9999px;
-  pointer-events: none;
-  opacity: 0;
-  background: radial-gradient(
-    80px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-    var(--accent-glow) 0%,
-    transparent 80%
-  );
-  transition: opacity 0.3s ease;
-  z-index: 1;
-}
-
-.cyber-launch-btn:hover .cyber-spotlight {
-  opacity: 1;
-}
-
-/* 4. Ambient Specular Shimmer */
-.cyber-shimmer {
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 50%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.12) 50%,
-    transparent 100%
-  );
-  transform: skewX(-20deg);
-  pointer-events: none;
-  z-index: 1;
-}
-
-.cyber-launch-btn:hover .cyber-shimmer {
-  animation: cyberShimmerSweep 1.2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
-}
-
-@keyframes cyberShimmerSweep {
-  0% {
-    left: -100%;
-  }
-  100% {
-    left: 200%;
-  }
-}
-
-/* 5. Click Ripple */
-.cyber-ripple {
-  position: absolute;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
-  transform: translate(-50%, -50%) scale(0);
-  animation: cyberRippleExpand 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  pointer-events: none;
-  z-index: 2;
-}
-
-@keyframes cyberRippleExpand {
-  0% {
-    transform: translate(-50%, -50%) scale(0);
-    opacity: 0.9;
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(22);
-    opacity: 0;
-  }
-}
-
-/* 6. Button Content: [✦ Launch →] */
-.cyber-content {
-  position: relative;
-  z-index: 3;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* Live Pulsing Neon Dot */
-.cyber-spark-dot {
-  position: relative;
-  width: 7px;
-  height: 7px;
+.module-card-action-col {
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.cyber-spark-dot .spark-solid {
+/* ==========================================================================
+   ROTATING ORBIT BADGE BUTTON (UIVERSE-INSPIRED CREATLYDEV STYLE)
+   Responsive, circular, spinning text, shoot-through diagonal arrow
+   ========================================================================== */
+.rotating-orbit-btn {
+  cursor: pointer;
+  border: none;
+  background: var(--accent);
+  color: #ffffff;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+  display: grid;
+  place-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 18px var(--accent-glow), 0 0 0 1px rgba(255, 255, 255, 0.14);
+  transition: background 300ms cubic-bezier(0.16, 1, 0.3, 1),
+              transform 220ms cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 300ms ease;
+  user-select: none;
+  outline: none;
+}
+
+@media (max-width: 640px) {
+  .rotating-orbit-btn {
+    width: 66px;
+    height: 66px;
+  }
+}
+
+.rotating-orbit-btn:hover {
+  background: var(--surface-input, #000000);
+  transform: scale(1.06);
+  box-shadow: 0 8px 26px -2px var(--accent-glow), 0 0 0 2px var(--accent);
+}
+
+.rotating-orbit-btn:active {
+  transform: scale(0.95);
+}
+
+/* Spinning Circular Text Ring */
+.rotating-orbit-btn__text {
   position: absolute;
   inset: 0;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 8px var(--accent);
+  margin: 0;
+  animation: text-rotation 8s linear infinite;
+  pointer-events: none;
 }
 
-.cyber-spark-dot .spark-ping {
+.rotating-orbit-btn:hover .rotating-orbit-btn__text {
+  animation-duration: 4s;
+}
+
+.rotating-orbit-btn__text > span {
   position: absolute;
-  inset: -2px;
-  border-radius: 50%;
-  border: 1.5px solid var(--accent);
-  animation: cyberSparkPing 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
-}
-
-@keyframes cyberSparkPing {
-  0% {
-    transform: scale(0.8);
-    opacity: 1;
-  }
-  80%, 100% {
-    transform: scale(2.2);
-    opacity: 0;
-  }
-}
-
-/* Crisp Minimalist Typography */
-.cyber-label {
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.4px;
+  inset: 5px;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
   text-transform: uppercase;
-  color: var(--text-primary);
-  line-height: 1;
-  transition: color 0.2s ease, text-shadow 0.2s ease;
-}
-
-.cyber-launch-btn:hover .cyber-label {
   color: #ffffff;
-  text-shadow: 0 0 10px var(--accent-glow);
+  display: flex;
+  justify-content: center;
+  transform-origin: center center;
 }
 
-[data-theme^="light-"] .cyber-launch-btn:hover .cyber-label {
+@media (max-width: 640px) {
+  .rotating-orbit-btn__text > span {
+    inset: 4px;
+    font-size: 7px;
+  }
+}
+
+/* Center Inner Circle with Arrow */
+.rotating-orbit-btn__circle {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  overflow: hidden;
+  background: #ffffff;
   color: var(--accent);
-  text-shadow: none;
-}
-
-/* Animated Arrow Icon */
-.cyber-arrow {
-  display: inline-flex;
+  border-radius: 50%;
+  display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--accent-hover);
-  transition: transform 0.24s cubic-bezier(0.34, 1.56, 0.64, 1),
-              color 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  transition: background 0.3s ease, color 0.3s ease;
+  z-index: 2;
 }
 
-.cyber-launch-btn:hover .cyber-arrow {
-  color: #ffffff;
-  transform: translateX(4px);
+@media (max-width: 640px) {
+  .rotating-orbit-btn__circle {
+    width: 27px;
+    height: 27px;
+  }
 }
 
-[data-theme^="light-"] .cyber-launch-btn:hover .cyber-arrow {
-  color: var(--accent);
+.rotating-orbit-btn:hover .rotating-orbit-btn__circle {
+  background: #ffffff;
+  color: #000000;
 }
 
-.cyber-launch-btn.is-launching .cyber-arrow {
-  transform: translateX(8px) scale(1.2);
+/* Arrow Shoot-Through Mechanics */
+.rotating-orbit-btn__icon {
+  display: block;
+  flex-shrink: 0;
+}
+
+.rotating-orbit-btn:hover .rotating-orbit-btn__icon:first-child {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translate(150%, -150%);
+}
+
+.rotating-orbit-btn__icon--copy {
+  position: absolute;
+  transform: translate(-150%, 150%);
+}
+
+.rotating-orbit-btn:hover .rotating-orbit-btn__icon--copy {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1) 0.08s;
+  transform: translate(0, 0);
+}
+
+@keyframes text-rotation {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Light Theme Support */
+[data-theme^="light-"] .rotating-orbit-btn {
+  box-shadow: 0 4px 14px var(--accent-glow), 0 0 0 1px rgba(0, 0, 0, 0.08);
 }
 
 /* Topbar Board Header (Integrated seamlessly in sticky main topbar) */
@@ -8178,7 +8075,8 @@ body {
 
 @media (max-width: 640px) {
   .task-creator-form .form-row {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 10px;
   }
 }
 

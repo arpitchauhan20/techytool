@@ -1003,76 +1003,82 @@ export default function App() {
               <div className="dashboard-cards-grid">
                 {/* Card 1: Calendar Reminder */}
                 <div className="dashboard-module-card">
-                  <div className="module-card-top">
-                    <div className="module-card-lead-badge-group">
-                      <div className="module-card-icon-wrap cal">
-                        <CalendarIcon size={20} />
+                  <div className="module-card-row">
+                    <div className="module-card-info-col">
+                      <div className="module-card-top">
+                        <div className="module-card-lead-badge-group">
+                          <div className="module-card-icon-wrap cal">
+                            <CalendarIcon size={20} />
+                          </div>
+                          <div className="module-card-status-badges">
+                            <span className={`badge-status-pill ${isCalendarConnected ? 'active' : ''}`}>
+                              {isCalendarConnected ? '✓ Google Synced' : 'Offline'}
+                            </span>
+                            <span className="badge-tz-pill">
+                              <GlobeIcon size={11} style={{ marginRight: '3px', verticalAlign: '-1px' }} />
+                              {typeof Intl !== 'undefined' ? Intl.DateTimeFormat().resolvedOptions().timeZone : 'UTC'}
+                            </span>
+                          </div>
+                        </div>
                       </div>
-                      <div className="module-card-status-badges">
-                        <span className={`badge-status-pill ${isCalendarConnected ? 'active' : ''}`}>
-                          {isCalendarConnected ? '✓ Google Synced' : 'Offline'}
-                        </span>
-                        <span className="badge-tz-pill">
-                          <GlobeIcon size={11} style={{ marginRight: '3px', verticalAlign: '-1px' }} />
-                          {typeof Intl !== 'undefined' ? Intl.DateTimeFormat().resolvedOptions().timeZone : 'UTC'}
-                        </span>
+
+                      <div className="module-card-body">
+                        <h3 className="module-card-title">Calendar Reminder</h3>
+                        <p className="module-card-desc">
+                          Schedule direct calendar events, alarm presets &amp; automated Google Calendar sync
+                        </p>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="module-card-body">
-                    <h3 className="module-card-title">Calendar Reminder</h3>
-                    <p className="module-card-desc">
-                      Schedule direct calendar events, alarm presets &amp; automated Google Calendar sync
-                    </p>
-                  </div>
-
-                  {/* Executive Interactive Launch Button */}
-                  <div className="module-card-center-action">
-                    <ExecutiveLaunchButton
-                      text="Launch"
-                      onClick={() => setActiveDashboardBoard('calendar')}
-                      title="Launch Calendar Suite"
-                      soundEnabled={soundEnabled}
-                    />
+                    <div className="module-card-action-col">
+                      <ExecutiveLaunchButton
+                        text="• LAUNCH • LAUNCH "
+                        onClick={() => setActiveDashboardBoard('calendar')}
+                        title="Launch Calendar Suite"
+                        soundEnabled={soundEnabled}
+                      />
+                    </div>
                   </div>
                 </div>
 
                 {/* Card 2: Tasks */}
                 <div className="dashboard-module-card">
-                  <div className="module-card-top">
-                    <div className="module-card-lead-badge-group">
-                      <div className="module-card-icon-wrap tasks">
-                        <ClipboardIcon size={20} />
+                  <div className="module-card-row">
+                    <div className="module-card-info-col">
+                      <div className="module-card-top">
+                        <div className="module-card-lead-badge-group">
+                          <div className="module-card-icon-wrap tasks">
+                            <ClipboardIcon size={20} />
+                          </div>
+                          <div className="module-card-status-badges">
+                            <span className="badge-count-pill">
+                              {taskCounts.all} Active
+                            </span>
+                            {taskCounts.today > 0 && (
+                              <span className="badge-status-pill" style={{ color: '#fbbf24', borderColor: 'rgba(251, 191, 36, 0.3)' }}>
+                                {taskCounts.today} Today
+                              </span>
+                            )}
+                          </div>
+                        </div>
                       </div>
-                      <div className="module-card-status-badges">
-                        <span className="badge-count-pill">
-                          {taskCounts.all} Active
-                        </span>
-                        {taskCounts.today > 0 && (
-                          <span className="badge-status-pill" style={{ color: '#fbbf24', borderColor: 'rgba(251, 191, 36, 0.3)' }}>
-                            {taskCounts.today} Today
-                          </span>
-                        )}
+
+                      <div className="module-card-body">
+                        <h3 className="module-card-title">Tasks</h3>
+                        <p className="module-card-desc">
+                          Manage active tasks, deadlines, priorities &amp; automated completion tracking
+                        </p>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="module-card-body">
-                    <h3 className="module-card-title">Tasks</h3>
-                    <p className="module-card-desc">
-                      Manage active tasks, deadlines, priorities &amp; automated completion tracking
-                    </p>
-                  </div>
-
-                  {/* Executive Interactive Launch Button */}
-                  <div className="module-card-center-action">
-                    <ExecutiveLaunchButton
-                      text="Launch"
-                      onClick={() => setActiveDashboardBoard('tasks')}
-                      title="Launch Tasks Workspace"
-                      soundEnabled={soundEnabled}
-                    />
+                    <div className="module-card-action-col">
+                      <ExecutiveLaunchButton
+                        text="• LAUNCH • LAUNCH "
+                        onClick={() => setActiveDashboardBoard('tasks')}
+                        title="Launch Tasks Workspace"
+                        soundEnabled={soundEnabled}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>

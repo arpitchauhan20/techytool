@@ -1,120 +1,77 @@
-import React, { useState, useRef } from 'react';
+import React, { useMemo } from 'react';
 import { SoundFX } from '../services/soundEngine';
 
 export default function ExecutiveLaunchButton({
-  text = 'Launch',
+  text = '• LAUNCH • LAUNCH ',
   onClick,
   title = 'Launch Dashboard',
   soundEnabled = true,
   className = '',
 }) {
-  const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
-  const [isHovered, setIsHovered] = useState(false);
-  const [isLaunching, setIsLaunching] = useState(false);
-  const [ripples, setRipples] = useState([]);
-  const btnRef = useRef(null);
-
-  const handleMouseMove = (e) => {
-    if (!btnRef.current) return;
-    const rect = btnRef.current.getBoundingClientRect();
-    setMousePos({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    });
-  };
-
-  const handleMouseEnter = (e) => {
-    setIsHovered(true);
-    handleMouseMove(e);
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovered(false);
-  };
+  const chars = useMemo(() => text.split(''), [text]);
+  const angleStep = useMemo(() => 360 / (chars.length || 1), [chars]);
 
   const handleClick = (e) => {
-    if (btnRef.current) {
-      const rect = btnRef.current.getBoundingClientRect();
-      const rippleX = e.clientX - rect.left;
-      const rippleY = e.clientY - rect.top;
-      const rippleId = Date.now() + Math.random();
-      setRipples((prev) => [...prev, { id: rippleId, x: rippleX, y: rippleY }]);
-      setTimeout(() => {
-        setRipples((prev) => prev.filter((r) => r.id !== rippleId));
-      }, 500);
-    }
-
     if (soundEnabled && SoundFX.playLaunchChord) {
       SoundFX.playLaunchChord(soundEnabled);
     }
-
-    setIsLaunching(true);
-    setTimeout(() => {
-      setIsLaunching(false);
-      if (onClick) onClick();
-    }, 130);
+    if (onClick) onClick(e);
   };
 
   return (
     <button
-      ref={btnRef}
       type="button"
-      className={`cyber-launch-btn ${isHovered ? 'is-hovered' : ''} ${isLaunching ? 'is-launching' : ''} ${className}`}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      className={`rotating-orbit-btn ${className}`}
       onClick={handleClick}
       title={title}
-      style={{
-        '--mouse-x': `${mousePos.x}px`,
-        '--mouse-y': `${mousePos.y}px`,
-      }}
+      aria-label={title}
     >
-      {/* Dynamic Animated Orbital Laser Border */}
-      <span className="cyber-border-beam" aria-hidden="true" />
-
-      {/* Internal Glass Core */}
-      <span className="cyber-glass-core">
-        {/* Mouse Position Spotlight */}
-        <span className="cyber-spotlight" aria-hidden="true" />
-
-        {/* Ambient Specular Shimmer */}
-        <span className="cyber-shimmer" aria-hidden="true" />
-
-        {/* Click Ripple */}
-        {ripples.map((r) => (
+      {/* Spinning Circular Text Ring */}
+      <p className="rotating-orbit-btn__text" aria-hidden="true">
+        {chars.map((char, index) => (
           <span
-            key={r.id}
-            className="cyber-ripple"
-            style={{ left: `${r.x}px`, top: `${r.y}px` }}
-            aria-hidden="true"
-          />
+            key={index}
+            style={{
+              transform: `rotate(${angleStep * index}deg)`,
+            }}
+          >
+            {char}
+          </span>
         ))}
+      </p>
 
-        {/* Small, Clean Button Content: [✦ Launch →] */}
-        <span className="cyber-content">
-          <span className="cyber-spark-dot" aria-hidden="true">
-            <span className="spark-ping" />
-            <span className="spark-solid" />
-          </span>
-          <span className="cyber-label">{text}</span>
-          <span className="cyber-arrow" aria-hidden="true">
-            <svg
-              width="13"
-              height="13"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <line x1="5" y1="12" x2="19" y2="12" />
-              <polyline points="12 5 19 12 12 19" />
-            </svg>
-          </span>
-        </span>
-      </span>
+      {/* Center Circle with Diagonal Shoot-Through Arrow */}
+      <div className="rotating-orbit-btn__circle">
+        {/* Primary Arrow Icon */}
+        <svg
+          viewBox="0 0 14 15"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="rotating-orbit-btn__icon"
+          width="13"
+          height="14"
+        >
+          <path
+            d="M13.376 11.552l-.264-10.44-10.44-.24.024 2.28 6.96-.048L.2 12.56l1.488 1.488 9.432-9.432-.048 6.912 2.304.024z"
+            fill="currentColor"
+          />
+        </svg>
+
+        {/* Secondary Shoot-Through Arrow Icon */}
+        <svg
+          viewBox="0 0 14 15"
+          fill="none"
+          width="13"
+          height="14"
+          xmlns="http://www.w3.org/2000/svg"
+          className="rotating-orbit-btn__icon rotating-orbit-btn__icon--copy"
+        >
+          <path
+            d="M13.376 11.552l-.264-10.44-10.44-.24.024 2.28 6.96-.048L.2 12.56l1.488 1.488 9.432-9.432-.048 6.912 2.304.024z"
+            fill="currentColor"
+          />
+        </svg>
+      </div>
     </button>
   );
 }
