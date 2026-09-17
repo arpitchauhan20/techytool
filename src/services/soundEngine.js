@@ -137,6 +137,33 @@ export const SoundFX = {
     return this.playReminderChime(soundEnabled);
   },
 
+  // Crisp, tactile futuristic launch chime
+  playLaunchChord(soundEnabled = true) {
+    if (!soundEnabled) return;
+    try {
+      const ctx = getAudioContext();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      [440, 659.25, 880].forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now + i * 0.04);
+        gain.gain.setValueAtTime(0, now + i * 0.04);
+        gain.gain.linearRampToValueAtTime(0.18, now + i * 0.04 + 0.015);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.04 + 0.35);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + i * 0.04);
+        osc.stop(now + i * 0.04 + 0.38);
+        activeNodes.add(osc);
+        osc.onended = () => activeNodes.delete(osc);
+      });
+    } catch (e) {
+      // Ignored
+    }
+  },
+
   // Urgent, executive alarm sound that rings continuously for at least 10 seconds (10.5s total)
   playAlarm(soundEnabled = true) {
     if (!soundEnabled) return;

@@ -13,6 +13,7 @@ import CalendarConnectionCard from './components/CalendarConnectionCard';
 import CalendarReminderCard from './components/CalendarReminderCard';
 import DashboardSkeleton from './components/DashboardSkeleton';
 import ToastContainer from './components/ToastContainer';
+import ExecutiveLaunchButton from './components/ExecutiveLaunchButton';
 import { ZapIcon, RefreshCwIcon, CalendarIcon, ClipboardIcon, ArrowLeftIcon, GlobeIcon } from './components/Icons';
 import { SoundFX } from './services/soundEngine';
 import { AuthClient } from './services/authClient';
@@ -177,6 +178,9 @@ export default function App() {
       setIsCalendarConnected(true);
     }
     document.documentElement.setAttribute('data-theme', palette);
+    setActiveDashboardBoard(null);
+    if (scrollRef.current) scrollRef.current.scrollTop = 0;
+    setIsWelcomeAnimating(true);
     TaskClient.getTasks().then(serverTasks => {
       if (Array.isArray(serverTasks) && serverTasks.length > 0) {
         setTasks(serverTasks);
@@ -196,8 +200,15 @@ export default function App() {
     await AuthClient.logout();
     setCurrentUser(null);
     setIsCalendarConnected(false);
+    setIsWelcomeAnimating(false);
     document.documentElement.setAttribute('data-theme', 'indigo');
     showToast('info', '👋', 'You have been logged out.');
+  };
+
+  const handleTriggerWelcomeAnimation = () => {
+    setActiveDashboardBoard(null);
+    if (scrollRef.current) scrollRef.current.scrollTop = 0;
+    setIsWelcomeAnimating(true);
   };
 
   const handleOpenAuthModal = (mode = 'login') => {
@@ -983,6 +994,9 @@ export default function App() {
                 variant="greeting"
                 userName={userName}
                 stats={stats}
+                isWelcomeAnimating={isWelcomeAnimating}
+                onWelcomeAnimationComplete={() => setIsWelcomeAnimating(false)}
+                onTriggerWelcomeAnimation={handleTriggerWelcomeAnimation}
               />
 
               {/* Two Executive Cards Grid */}
@@ -1013,16 +1027,16 @@ export default function App() {
                     </p>
                   </div>
 
-                  {/* Centered Prominent Open Dashboard Button */}
+                  {/* Executive Interactive Launch Button */}
                   <div className="module-card-center-action">
-                    <button
-                      type="button"
-                      className="btn btn-primary module-open-btn"
+                    <ExecutiveLaunchButton
+                      label="Open Calendar Suite"
+                      sublabel="Direct events &amp; Google sync"
+                      icon={<CalendarIcon size={16} />}
                       onClick={() => setActiveDashboardBoard('calendar')}
                       title="Open Calendar Reminder Suite"
-                    >
-                      <span>Open Dashboard →</span>
-                    </button>
+                      soundEnabled={soundEnabled}
+                    />
                   </div>
                 </div>
 
@@ -1053,16 +1067,16 @@ export default function App() {
                     </p>
                   </div>
 
-                  {/* Centered Prominent Open Dashboard Button */}
+                  {/* Executive Interactive Launch Button */}
                   <div className="module-card-center-action">
-                    <button
-                      type="button"
-                      className="btn btn-primary module-open-btn"
+                    <ExecutiveLaunchButton
+                      label="Open Tasks Board"
+                      sublabel="Priorities &amp; active tracking"
+                      icon={<ClipboardIcon size={16} />}
                       onClick={() => setActiveDashboardBoard('tasks')}
                       title="Open Tasks Workspace"
-                    >
-                      <span>Open Dashboard →</span>
-                    </button>
+                      soundEnabled={soundEnabled}
+                    />
                   </div>
                 </div>
               </div>
@@ -1178,6 +1192,7 @@ export default function App() {
         onChangePalette={setPalette}
         soundEnabled={soundEnabled}
         onToggleSound={() => setSoundEnabled(!soundEnabled)}
+        onTriggerWelcomeAnimation={handleTriggerWelcomeAnimation}
       />
 
       <AuthModal

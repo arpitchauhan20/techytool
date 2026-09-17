@@ -5066,13 +5066,6 @@ body {
   gap: 12px;
   position: relative;
   overflow: hidden;
-  transition: all var(--duration-fast, 0.2s) cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.dashboard-module-card:hover {
-  background: var(--surface-card-hover, rgba(30, 41, 59, 0.75));
-  border-color: rgba(99, 102, 241, 0.35);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
 }
 
 .module-card-top {
@@ -5154,21 +5147,286 @@ body {
   padding-top: 6px;
 }
 
-.module-open-btn {
+/* ==========================================================================
+   EXECUTIVE LAUNCH BUTTON (UNIQUE INTERACTIVE SYSTEM)
+   ========================================================================== */
+.executive-launch-btn {
+  position: relative;
   width: 100%;
-  padding: 10px 18px;
-  font-size: 13.5px;
-  font-weight: 700;
-  border-radius: 9px;
-  justify-content: center;
-  letter-spacing: 0.2px;
-  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+  padding: 9px 12px;
+  border-radius: 12px;
+  background: var(--surface-input, rgba(12, 20, 36, 0.7));
+  border: 1px solid var(--border-default, rgba(255, 255, 255, 0.12));
+  color: var(--text-primary, #ffffff);
+  cursor: pointer;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  user-select: none;
+  text-align: left;
+  outline: none;
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.24s ease,
+              box-shadow 0.24s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.24s ease;
 }
 
-.module-open-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+/* Light theme support */
+[data-theme^="light-"] .executive-launch-btn {
+  background: var(--surface-card, rgba(255, 255, 255, 0.88));
+  border-color: var(--border-default, rgba(0, 0, 0, 0.1));
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+/* Theme-Adaptive Hover Effect (Keep ONLY on buttons) */
+.executive-launch-btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+  background: var(--surface-row-hover, rgba(22, 34, 61, 0.88));
+  box-shadow: 0 10px 24px -4px var(--accent-glow),
+              0 0 16px -2px var(--accent-glow),
+              0 0 0 1px var(--accent);
+}
+
+[data-theme^="light-"] .executive-launch-btn:hover {
+  background: #ffffff;
+  border-color: var(--accent);
+  box-shadow: 0 8px 22px -3px var(--accent-glow),
+              0 0 12px var(--accent-glow),
+              0 0 0 1px var(--accent);
+}
+
+.executive-launch-btn:active,
+.executive-launch-btn.is-launching {
+  transform: translateY(0px) scale(0.985);
+  box-shadow: 0 4px 12px var(--accent-glow), 0 0 0 1px var(--accent);
+}
+
+/* Interactive Cursor-Tracking Spotlight Layer */
+.launch-btn-spotlight {
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(130px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), var(--accent-glow) 0%, transparent 80%);
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.executive-launch-btn:hover .launch-btn-spotlight {
+  opacity: 1;
+}
+
+/* Animated Diagonal Specular Shimmer */
+.launch-btn-shimmer {
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.08) 50%,
+    transparent 100%
+  );
+  transform: skewX(-24deg);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.executive-launch-btn:hover .launch-btn-shimmer {
+  animation: launchShimmerSweep 1.1s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+@keyframes launchShimmerSweep {
+  0% {
+    left: -120%;
+  }
+  100% {
+    left: 220%;
+  }
+}
+
+/* Localized Click Ripple */
+.launch-btn-ripple {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+  transform: translate(-50%, -50%) scale(0);
+  animation: launchRippleExpand 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  pointer-events: none;
+  z-index: 2;
+}
+
+@keyframes launchRippleExpand {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0.85;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(28);
+    opacity: 0;
+  }
+}
+
+/* Content Flex Container */
+.launch-btn-content {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Left Icon Pill with Live Telemetry Radar Beacon */
+.launch-badge-pill {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: var(--accent-subtle);
+  border: 1px solid var(--border-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--accent-hover);
+  transition: all 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.executive-launch-btn:hover .launch-badge-pill {
+  background: var(--accent);
+  color: #ffffff;
+  border-color: var(--accent-hover);
+  transform: scale(1.06);
+  box-shadow: 0 2px 10px var(--accent-glow);
+}
+
+/* Radar Beacon in corner */
+.launch-radar-beacon {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 8px;
+  height: 8px;
+  pointer-events: none;
+}
+
+.launch-radar-beacon .radar-core {
+  position: absolute;
+  inset: 1px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 6px var(--accent);
+}
+
+.launch-radar-beacon .radar-wave {
+  position: absolute;
+  inset: -1px;
+  border-radius: 50%;
+  border: 1.5px solid var(--accent);
+  animation: radarPing 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes radarPing {
+  0% {
+    transform: scale(0.9);
+    opacity: 1;
+  }
+  75%, 100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+.launch-badge-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Center Titles */
+.launch-text-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex: 1;
+  min-width: 0;
+}
+
+.launch-main-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: -0.15px;
+  color: var(--text-primary);
+  line-height: 1.25;
+  transition: color 0.2s ease;
+}
+
+.launch-sub-title {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  letter-spacing: 0.1px;
+  transition: color 0.2s ease;
+}
+
+.executive-launch-btn:hover .launch-sub-title {
+  color: var(--accent-hover);
+}
+
+/* Right Interactive Action Capsule */
+.launch-action-capsule {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px 5px 12px;
+  border-radius: 20px;
+  background: var(--surface-row, rgba(255, 255, 255, 0.06));
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.executive-launch-btn:hover .launch-action-capsule {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+  border-color: var(--accent-hover);
+  color: #ffffff;
+  padding-left: 14px;
+  padding-right: 12px;
+  box-shadow: 0 2px 10px var(--accent-glow);
+}
+
+.launch-capsule-label {
+  line-height: 1;
+}
+
+.launch-arrow-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.executive-launch-btn:hover .launch-arrow-wrap {
+  transform: translateX(4px);
+}
+
+.executive-launch-btn.is-launching .launch-arrow-wrap {
+  transform: translateX(8px) scale(1.15);
 }
 
 /* Topbar Board Header (Integrated seamlessly in sticky main topbar) */
@@ -6482,14 +6740,6 @@ body {
 
 .nav-item:active {
   transform: scale(0.98);
-}
-
-.dashboard-module-card {
-  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.dashboard-module-card:active {
-  transform: scale(0.99);
 }
 
 .stat-card {
