@@ -139,14 +139,14 @@ export function GreetingHero({
     }
   }, [typingStep, typedSubtitleLength, fullSubtitle.length]);
 
-  // Step 3: Smoothly shrink greeting, reveal module cards fast one by one, then finish
+  // Step 3: Smoothly shrink greeting, reveal module cards one by one at a graceful pace, then finish
   useEffect(() => {
     if (typingStep !== 'shrinking') return;
 
     // Timeline after subtitle typing finishes:
     // T = 150ms: Begin smooth size reduction
     // T = 500ms (150ms + 350ms): Size reduction complete -> REVEAL CARDS one by one!
-    // T = 900ms (500ms + 400ms): Cards entrance done -> complete welcome animation
+    // T = 1300ms (500ms + 800ms): Both cards finished graceful staggered entrance -> complete welcome animation
     const t1 = setTimeout(() => {
       setIsEnlarged(false);
     }, 150);
@@ -162,7 +162,7 @@ export function GreetingHero({
       if (onWelcomeAnimationCompleteRef.current) {
         onWelcomeAnimationCompleteRef.current();
       }
-    }, 900);
+    }, 1300);
 
     return () => {
       clearTimeout(t1);
