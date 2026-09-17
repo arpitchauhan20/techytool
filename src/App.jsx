@@ -1030,11 +1030,9 @@ export default function App() {
                   {/* Executive Interactive Launch Button */}
                   <div className="module-card-center-action">
                     <ExecutiveLaunchButton
-                      label="Open Calendar Suite"
-                      sublabel="Direct events &amp; Google sync"
-                      icon={<CalendarIcon size={16} />}
+                      text="Launch"
                       onClick={() => setActiveDashboardBoard('calendar')}
-                      title="Open Calendar Reminder Suite"
+                      title="Launch Calendar Suite"
                       soundEnabled={soundEnabled}
                     />
                   </div>
@@ -1070,11 +1068,9 @@ export default function App() {
                   {/* Executive Interactive Launch Button */}
                   <div className="module-card-center-action">
                     <ExecutiveLaunchButton
-                      label="Open Tasks Board"
-                      sublabel="Priorities &amp; active tracking"
-                      icon={<ClipboardIcon size={16} />}
+                      text="Launch"
                       onClick={() => setActiveDashboardBoard('tasks')}
-                      title="Open Tasks Workspace"
+                      title="Launch Tasks Workspace"
                       soundEnabled={soundEnabled}
                     />
                   </div>

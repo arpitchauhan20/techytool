@@ -2,11 +2,9 @@ import React, { useState, useRef } from 'react';
 import { SoundFX } from '../services/soundEngine';
 
 export default function ExecutiveLaunchButton({
-  label = 'Open Dashboard',
-  sublabel = 'Enter Workspace',
-  icon,
+  text = 'Launch',
   onClick,
-  title = 'Open Dashboard',
+  title = 'Launch Dashboard',
   soundEnabled = true,
   className = '',
 }) {
@@ -19,9 +17,10 @@ export default function ExecutiveLaunchButton({
   const handleMouseMove = (e) => {
     if (!btnRef.current) return;
     const rect = btnRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    setMousePos({ x, y });
+    setMousePos({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
   };
 
   const handleMouseEnter = (e) => {
@@ -42,27 +41,25 @@ export default function ExecutiveLaunchButton({
       setRipples((prev) => [...prev, { id: rippleId, x: rippleX, y: rippleY }]);
       setTimeout(() => {
         setRipples((prev) => prev.filter((r) => r.id !== rippleId));
-      }, 600);
+      }, 500);
     }
 
     if (soundEnabled && SoundFX.playLaunchChord) {
       SoundFX.playLaunchChord(soundEnabled);
-    } else if (soundEnabled && SoundFX.unlockAudio) {
-      SoundFX.unlockAudio();
     }
 
     setIsLaunching(true);
     setTimeout(() => {
       setIsLaunching(false);
       if (onClick) onClick();
-    }, 140);
+    }, 130);
   };
 
   return (
     <button
       ref={btnRef}
       type="button"
-      className={`executive-launch-btn ${isHovered ? 'is-hovered' : ''} ${isLaunching ? 'is-launching' : ''} ${className}`}
+      className={`cyber-launch-btn ${isHovered ? 'is-hovered' : ''} ${isLaunching ? 'is-launching' : ''} ${className}`}
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -73,47 +70,38 @@ export default function ExecutiveLaunchButton({
         '--mouse-y': `${mousePos.y}px`,
       }}
     >
-      {/* Interactive Cursor Spotlight */}
-      <span className="launch-btn-spotlight" aria-hidden="true" />
+      {/* Dynamic Animated Orbital Laser Border */}
+      <span className="cyber-border-beam" aria-hidden="true" />
 
-      {/* Diagonal Shimmer Sheen */}
-      <span className="launch-btn-shimmer" aria-hidden="true" />
+      {/* Internal Glass Core */}
+      <span className="cyber-glass-core">
+        {/* Mouse Position Spotlight */}
+        <span className="cyber-spotlight" aria-hidden="true" />
 
-      {/* Ripple Bursts */}
-      {ripples.map((r) => (
-        <span
-          key={r.id}
-          className="launch-btn-ripple"
-          style={{ left: `${r.x}px`, top: `${r.y}px` }}
-          aria-hidden="true"
-        />
-      ))}
+        {/* Ambient Specular Shimmer */}
+        <span className="cyber-shimmer" aria-hidden="true" />
 
-      {/* Main Content Layout */}
-      <span className="launch-btn-content">
-        {/* Left Indicator Pill with Radar Pulse */}
-        <span className="launch-badge-pill">
-          <span className="launch-radar-beacon" aria-hidden="true">
-            <span className="radar-core" />
-            <span className="radar-wave" />
+        {/* Click Ripple */}
+        {ripples.map((r) => (
+          <span
+            key={r.id}
+            className="cyber-ripple"
+            style={{ left: `${r.x}px`, top: `${r.y}px` }}
+            aria-hidden="true"
+          />
+        ))}
+
+        {/* Small, Clean Button Content: [✦ Launch →] */}
+        <span className="cyber-content">
+          <span className="cyber-spark-dot" aria-hidden="true">
+            <span className="spark-ping" />
+            <span className="spark-solid" />
           </span>
-          {icon && <span className="launch-badge-icon">{icon}</span>}
-        </span>
-
-        {/* Center Typography */}
-        <span className="launch-text-wrap">
-          <span className="launch-main-title">{label}</span>
-          {sublabel && <span className="launch-sub-title">{sublabel}</span>}
-        </span>
-
-        {/* Right Arrow Action Capsule */}
-        <span className="launch-action-capsule">
-          <span className="launch-capsule-label">Launch</span>
-          <span className="launch-arrow-wrap">
+          <span className="cyber-label">{text}</span>
+          <span className="cyber-arrow" aria-hidden="true">
             <svg
-              className="launch-arrow-svg"
-              width="14"
-              height="14"
+              width="13"
+              height="13"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
