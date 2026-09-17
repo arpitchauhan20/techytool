@@ -372,52 +372,6 @@ export default function CalendarReminderCard({
 
   return (
     <div className="calendar-board-wrapper tab-view-animated">
-      {/* Top Header Strip with Breadcrumb, Status, and Action */}
-      <div className="calendar-header-banner">
-        <div className="calendar-header-left">
-          {onBack && (
-            <button
-              type="button"
-              className="btn btn-back-nav"
-              onClick={onBack}
-              title="Return to Overview Hub"
-            >
-              <ArrowLeftIcon size={14} />
-              <span>Overview</span>
-            </button>
-          )}
-          <div className="calendar-title-group">
-            <h2 className="calendar-main-title">Calendar &amp; Reminders</h2>
-            <div className="calendar-status-pills">
-              <span
-                className={`badge-status-pill ${isCalendarConnected ? 'active' : ''}`}
-                onClick={!isCalendarConnected ? handleConnectClick : undefined}
-                style={{ cursor: !isCalendarConnected ? 'pointer' : 'default' }}
-                title={isCalendarConnected ? 'Google Calendar Synced' : 'Click to connect Google Calendar'}
-              >
-                {isCalendarConnected ? '✓ Google Synced' : '⚪ Google Offline (Click to Connect)'}
-              </span>
-              <span className="badge-tz-pill">
-                <GlobeIcon size={11} style={{ marginRight: '3px', verticalAlign: '-1px' }} />
-                {localTimeZone}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <div className="calendar-header-right">
-          <button
-            type="button"
-            className="btn btn-primary btn-add-reminder-top"
-            onClick={() => handleOpenModal()}
-            title="Create and schedule a new reminder"
-          >
-            <PlusIcon size={15} style={{ marginRight: '6px' }} />
-            <span>Add Reminder</span>
-          </button>
-        </div>
-      </div>
-
       {/* Main Calendar View Section */}
       <div className="calendar-card-clean">
         {/* Calendar Nav & Controls */}

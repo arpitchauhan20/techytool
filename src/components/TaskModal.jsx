@@ -283,13 +283,6 @@ export default function TaskModal({
                 </button>
                 <button
                   type="button"
-                  className={`reminder-pill-btn ${reminderMode === 'exact' ? 'active' : ''}`}
-                  onClick={() => setReminderMode('exact')}
-                >
-                  Exact Time
-                </button>
-                <button
-                  type="button"
                   className={`reminder-pill-btn ${reminderMode === 'none' ? 'active' : ''}`}
                   onClick={() => setReminderMode('none')}
                 >
@@ -318,18 +311,6 @@ export default function TaskModal({
                     <option value="hours">Hours before deadline</option>
                     <option value="days">Days before deadline</option>
                   </select>
-                </div>
-              )}
-
-              {/* Exact Time Input */}
-              {reminderMode === 'exact' && (
-                <div style={{ marginBottom: '12px' }}>
-                  <input
-                    className="form-input"
-                    type="datetime-local"
-                    value={reminderExact}
-                    onChange={e => setReminderExact(e.target.value)}
-                  />
                 </div>
               )}
 

@@ -46,18 +46,6 @@ export default function Header({
           </svg>
         </button>
 
-        {activeDashboardBoard && onBack && (
-          <button
-            type="button"
-            className="topbar-back-btn"
-            onClick={onBack}
-            title="Back to Overview"
-            aria-label="Back to Overview"
-          >
-            <ArrowLeftIcon size={14} />
-          </button>
-        )}
-
         <div className="topbar-section-title-wrap">
           <h1 className="topbar-section-title">{getSectionTitle()}</h1>
         </div>

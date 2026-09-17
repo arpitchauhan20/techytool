@@ -279,14 +279,6 @@ export default function TaskEditorPanel({
             </button>
             <button
               type="button"
-              className={`mode-segment-btn ${reminderMode === 'exact' ? 'active' : ''}`}
-              onClick={() => setReminderMode('exact')}
-            >
-              <CalendarIcon size={13} style={{ marginRight: '6px' }} />
-              <span>Exact Time</span>
-            </button>
-            <button
-              type="button"
               className={`mode-segment-btn ${reminderMode === 'none' ? 'active' : ''}`}
               onClick={() => setReminderMode('none')}
             >
@@ -353,21 +345,6 @@ export default function TaskEditorPanel({
                   <option value="days">Days before deadline</option>
                 </select>
               </div>
-            </div>
-          )}
-
-          {/* Exact Time Panel */}
-          {reminderMode === 'exact' && (
-            <div className="reminder-options-body animate-fade-in">
-              <div className="options-section-header">
-                <span className="options-label">EXACT NOTIFICATION DATE &amp; TIME:</span>
-              </div>
-              <input
-                type="datetime-local"
-                className="form-input"
-                value={reminderExact}
-                onChange={e => setReminderExact(e.target.value)}
-              />
             </div>
           )}
 
