@@ -4,7 +4,7 @@
    Auto-Update System for instant seamless deploys
    ========================================================================== */
 
-const CACHE_NAME = 'techytool-pwa-v8';
+const CACHE_NAME = 'techytool-pwa-v9';
 
 // Install — activate immediately
 self.addEventListener('install', (event) => {

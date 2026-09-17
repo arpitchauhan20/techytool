@@ -4596,10 +4596,10 @@ body {
    IN-WORKSPACE TASK CREATOR & EDITOR PANEL (Modern Non-Popup UI)
    ========================================================================== */
 .task-inline-creator-card {
-  max-width: 740px;
+  max-width: 980px;
   width: 100%;
-  margin: 16px auto 24px auto;
-  padding: 24px 28px;
+  margin: 16px auto 26px auto;
+  padding: 28px 32px;
   background: var(--surface-card, rgba(17, 24, 39, 0.75));
   border: 1px solid var(--border-default);
   border-radius: 18px;
@@ -7782,13 +7782,13 @@ body {
    TASK CREATOR & INLINE EDITOR PANEL (Zero Popup Architecture)
    ========================================================================== */
 .task-inline-creator-card {
-  max-width: 740px;
+  max-width: 980px;
   width: 100%;
-  margin: 0 auto 24px auto;
+  margin: 0 auto 26px auto;
   background: var(--surface-card);
   border: 1.5px solid var(--border-default);
   border-radius: 18px;
-  padding: 22px 26px;
+  padding: 26px 30px;
   box-shadow: 0 14px 36px rgba(0, 0, 0, 0.28);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
