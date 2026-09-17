@@ -77,6 +77,7 @@ export function GreetingHero({
   const [typedTitleLength, setTypedTitleLength] = useState(() => isWelcomeAnimating ? 0 : fullTitle.length);
   const [typedSubtitleLength, setTypedSubtitleLength] = useState(() => isWelcomeAnimating ? 0 : fullSubtitle.length);
   const [typingStep, setTypingStep] = useState(() => isWelcomeAnimating ? 'title' : 'done');
+  const [isEnlarged, setIsEnlarged] = useState(() => Boolean(isWelcomeAnimating));
 
   // Trigger typing when isWelcomeAnimating is true
   useEffect(() => {
@@ -84,12 +85,14 @@ export function GreetingHero({
       setTypedTitleLength(fullTitle.length);
       setTypedSubtitleLength(fullSubtitle.length);
       setTypingStep('done');
+      setIsEnlarged(false);
       return;
     }
 
     setTypedTitleLength(0);
     setTypedSubtitleLength(0);
     setTypingStep('title');
+    setIsEnlarged(true);
   }, [isWelcomeAnimating, fullTitle, fullSubtitle]);
 
   // Step 1: Type Title
@@ -109,7 +112,7 @@ export function GreetingHero({
     }
   }, [typingStep, typedTitleLength, fullTitle.length]);
 
-  // Step 2: Type Subtitle
+  // Step 2: Type Subtitle, then shrink greeting smoothly, then reveal cards one by one
   useEffect(() => {
     if (typingStep !== 'subtitle') return;
 
@@ -119,17 +122,30 @@ export function GreetingHero({
       }, 18);
       return () => clearTimeout(timer);
     } else {
-      // Subtitle typing completed! Tell parent to reveal module cards one by one!
-      setTypingStep('done');
-      if (onCardsReady) {
-        onCardsReady();
-      }
-      const finishTimer = setTimeout(() => {
-        if (onWelcomeAnimationComplete) {
-          onWelcomeAnimationComplete();
-        }
-      }, 650);
-      return () => clearTimeout(finishTimer);
+      // Subtitle typing completed!
+      setTypingStep('shrinking');
+      // Hold briefly, then smoothly reduce font size
+      const holdTimer = setTimeout(() => {
+        setIsEnlarged(false);
+
+        // After the shrink transition completes (360ms), reveal the module cards one by one!
+        const revealTimer = setTimeout(() => {
+          setTypingStep('done');
+          if (onCardsReady) {
+            onCardsReady();
+          }
+          const finishTimer = setTimeout(() => {
+            if (onWelcomeAnimationComplete) {
+              onWelcomeAnimationComplete();
+            }
+          }, 450);
+          return () => clearTimeout(finishTimer);
+        }, 360);
+
+        return () => clearTimeout(revealTimer);
+      }, 180);
+
+      return () => clearTimeout(holdTimer);
     }
   }, [typingStep, typedSubtitleLength, fullSubtitle.length, onCardsReady, onWelcomeAnimationComplete]);
 
@@ -143,7 +159,7 @@ export function GreetingHero({
 
   return (
     <section className="canvas-hero">
-      <div className="greeting-block">
+      <div className={`greeting-block ${isEnlarged ? 'is-typing-focus' : ''}`}>
         <h1 className="greeting-text">
           {prefixPart}
           {namePart && <span className="greeting-name">{namePart}</span>}
