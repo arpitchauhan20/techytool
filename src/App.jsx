@@ -11,6 +11,7 @@ import AuthModal from './components/AuthModal';
 import AuthGate from './components/AuthGate';
 import CalendarConnectionCard from './components/CalendarConnectionCard';
 import CalendarReminderCard from './components/CalendarReminderCard';
+import DashboardSkeleton from './components/DashboardSkeleton';
 import ToastContainer from './components/ToastContainer';
 import { ZapIcon, RefreshCwIcon, CalendarIcon, ClipboardIcon, ArrowLeftIcon, GlobeIcon } from './components/Icons';
 import { SoundFX } from './services/soundEngine';
@@ -102,12 +103,8 @@ export default function App() {
     }, duration);
   }, []);
 
-  // Mobile Pull-to-Refresh Gesture Refs & State
+  // Scroll Ref
   const scrollRef = useRef(null);
-  const [pullDistance, setPullDistance] = useState(0);
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const touchStartY = useRef(0);
-  const isPulling = useRef(false);
 
   // Check existing session on load & listen for ?resetToken in URL
   useEffect(() => {
@@ -845,6 +842,47 @@ export default function App() {
   };
 
   if (isAuthChecking) {
+    if (currentUser) {
+      return (
+        <div className="app-layout">
+          <Sidebar
+            isOpen={isMobileSidebarOpen}
+            onClose={() => setIsMobileSidebarOpen(false)}
+            isCollapsed={isSidebarCollapsed}
+            onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+            activeDashboardBoard={activeDashboardBoard}
+            onSelectDashboardBoard={setActiveDashboardBoard}
+            currentFilter={currentFilter}
+            onSelectFilter={setCurrentFilter}
+            taskCounts={taskCounts}
+            isCalendarConnected={isCalendarConnected}
+            currentPalette={palette}
+            onChangePalette={setPalette}
+            soundEnabled={soundEnabled}
+            onToggleSound={() => setSoundEnabled(!soundEnabled)}
+            userName={userName}
+            onOpenSettings={() => setIsSettingsModalOpen(true)}
+            onOpenNewTask={() => handleOpenTaskEditor(null)}
+            currentUser={currentUser}
+            onOpenAuthModal={handleOpenAuthModal}
+            onLogout={handleLogout}
+          />
+          <main className="app-main">
+            <Header
+              activeDashboardBoard={activeDashboardBoard}
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+              onOpenMobileMenu={() => setIsMobileSidebarOpen(true)}
+              onBack={() => setActiveDashboardBoard(null)}
+            />
+            <div className="main-content-scroll">
+              <DashboardSkeleton activeDashboardBoard={activeDashboardBoard} />
+            </div>
+          </main>
+        </div>
+      );
+    }
+
     return (
       <div className="techy-preloader">
         <div className="techy-preloader-grid" />
@@ -854,7 +892,11 @@ export default function App() {
             <div className="techy-ring-outer" />
             <div className="techy-ring-inner" />
             <div className="techy-logo-core">
-              <ZapIcon size={24} />
+              <img
+                src="/icons/icon-192.png"
+                alt="Techy Tool Logo"
+                style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%', display: 'block' }}
+              />
             </div>
           </div>
           <div className="techy-brand-wrap">
@@ -930,29 +972,8 @@ export default function App() {
           onBack={() => setActiveDashboardBoard(null)}
         />
 
-        {/* Scrollable Canvas Area with Mobile Pull-to-Refresh */}
-        <div
-          ref={scrollRef}
-          className="main-content-scroll"
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
-        >
-          {/* Mobile Pull-to-Refresh Visual Indicator */}
-          {pullDistance > 0 && (
-            <div
-              className={`pull-indicator ${pullDistance >= 48 ? 'ready' : ''} ${isRefreshing ? 'refreshing' : ''}`}
-              style={{ height: `${pullDistance}px` }}
-            >
-              <div className="pull-indicator-pill">
-                <RefreshCwIcon size={16} className={`pull-icon ${isRefreshing ? 'spinning' : ''}`} style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: '6px' }} />
-                <span className="pull-text">
-                  {isRefreshing ? 'Refreshing application...' : pullDistance >= 48 ? 'Release to refresh' : 'Pull down to refresh'}
-                </span>
-              </div>
-            </div>
-          )}
-          {/* Canvas Hero & Metrics Strip */}
+        {/* Scrollable Canvas Area (Standard Smooth Native Scrolling) */}
+        <div ref={scrollRef} className="main-content-scroll">
           {/* Condition 1: Overview Mode (No specific board opened) */}
           {activeDashboardBoard === null && (
             <div className="dashboard-overview-container tab-view-animated">

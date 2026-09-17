@@ -581,6 +581,8 @@ body {
   height: 100dvh;
   overflow: hidden;
   position: relative;
+  overscroll-behavior: none;
+  -webkit-overscroll-behavior: none;
 }
 
 /* ==========================================================================
@@ -1677,60 +1679,8 @@ body {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-y: contain;
+  overscroll-behavior: contain;
   padding: 20px 28px 48px;
-}
-
-/* Mobile Pull-to-Refresh Indicator */
-.pull-indicator {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  width: 100%;
-  margin-bottom: 8px;
-  user-select: none;
-}
-
-.pull-indicator-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--surface-row);
-  border: 1px solid var(--border-default);
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--text-secondary);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
-  transition: all 0.2s ease;
-}
-
-.pull-indicator.ready .pull-indicator-pill {
-  border-color: var(--accent);
-  color: var(--accent-hover);
-  background: var(--surface-row-hover);
-  box-shadow: 0 4px 16px var(--accent-glow);
-}
-
-.pull-icon {
-  font-size: 13px;
-  display: inline-block;
-  transition: transform 0.2s ease;
-}
-
-.pull-indicator.ready .pull-icon {
-  transform: rotate(180deg);
-}
-
-.pull-icon.spinning {
-  animation: ptrSpin 0.7s linear infinite;
-}
-
-@keyframes ptrSpin {
-  100% {
-    transform: rotate(360deg);
-  }
 }
 
 .refresh-btn {
@@ -8452,4 +8402,240 @@ body {
   color: var(--danger, #f43f5e);
   border-color: rgba(244, 63, 94, 0.35);
 }
+
+/* ==========================================================================
+   YOUTUBE-STYLE IN-APP DASHBOARD SKELETON LOADER
+   ========================================================================== */
+.dashboard-skeleton-view {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  animation: fadeIn 0.2s ease;
+}
+
+.skeleton-shimmer-box {
+  background: var(--surface-card, rgba(15, 21, 36, 0.8));
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.05));
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-shimmer-box::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.04) 35%,
+    rgba(99, 102, 241, 0.09) 50%,
+    rgba(255, 255, 255, 0.04) 65%,
+    transparent 100%
+  );
+  animation: skeletonShimmer 1.5s infinite ease-in-out;
+}
+
+/* Overview Layout Skeleton */
+.skeleton-overview-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.skeleton-hero-card {
+  padding: 24px 28px;
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.skeleton-hero-title {
+  height: 28px;
+  width: 45%;
+  min-width: 220px;
+  border-radius: 8px;
+}
+
+.skeleton-hero-sub {
+  height: 16px;
+  width: 65%;
+  min-width: 260px;
+  border-radius: 6px;
+}
+
+.skeleton-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .skeleton-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.skeleton-module-card {
+  padding: 24px;
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.skeleton-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.skeleton-icon-box {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+}
+
+.skeleton-badge-box {
+  width: 90px;
+  height: 24px;
+  border-radius: 20px;
+}
+
+.skeleton-text-line-lg {
+  height: 22px;
+  width: 60%;
+  border-radius: 6px;
+}
+
+.skeleton-text-line-md {
+  height: 16px;
+  width: 85%;
+  border-radius: 6px;
+}
+
+.skeleton-btn-box {
+  height: 40px;
+  width: 140px;
+  margin: 8px auto 0 auto;
+  border-radius: 10px;
+}
+
+/* Calendar Skeleton */
+.skeleton-calendar-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.skeleton-calendar-card {
+  padding: 24px;
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.skeleton-cal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.skeleton-cal-title {
+  width: 180px;
+  height: 24px;
+  border-radius: 8px;
+}
+
+.skeleton-cal-actions {
+  width: 120px;
+  height: 32px;
+  border-radius: 8px;
+}
+
+.skeleton-cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+
+.skeleton-cal-day {
+  height: 52px;
+  border-radius: 10px;
+}
+
+.skeleton-reminders-card {
+  padding: 22px;
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.skeleton-section-heading {
+  width: 160px;
+  height: 20px;
+  border-radius: 6px;
+}
+
+.skeleton-reminders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.skeleton-reminder-item {
+  height: 54px;
+  width: 100%;
+  border-radius: 12px;
+}
+
+/* Tasks Skeleton */
+.skeleton-tasks-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.skeleton-metrics-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 768px) {
+  .skeleton-metrics-strip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.skeleton-metric-pill {
+  height: 48px;
+  border-radius: 12px;
+}
+
+.skeleton-tasks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.skeleton-task-row {
+  height: 64px;
+  width: 100%;
+  border-radius: 14px;
+}
+
 
